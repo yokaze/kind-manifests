@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: sample-daemon
+spec:
+  selector:
+    matchLabels:
+      app: sample-daemon
+  template:
+    metadata:
+      labels:
+        app: sample-daemon
+    spec:
+      containers:
+        - name: ubuntu
+          image: quay.io/cybozu/ubuntu:18.04
+          command: ["pause"]

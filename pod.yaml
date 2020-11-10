@@ -1,0 +1,9 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: sample
+spec:
+  containers:
+    - name: ubuntu
+      image: quay.io/cybozu/ubuntu:18.04
+      command: ["pause"]
