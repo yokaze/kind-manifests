@@ -14,6 +14,13 @@ data:
             labels:
               job: audit
               __path__: /var/log/kube-apiserver/*.log
+        pipeline_stages:
+          - json:
+              expressions:
+                timestamp: stageTimestamp
+          - timestamp:
+              format: RFC3339Nano
+              source: timestamp
 ---
 apiVersion: v1
 kind: Pod

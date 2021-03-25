@@ -8,8 +8,8 @@ kubeadmConfigPatches:
     name: config
   apiServer:
     extraArgs:
-      audit-log-path: /var/log/audit.log
       audit-policy-file: /etc/audit-policy/audit-policy.yaml
+      audit-log-path: /var/log/audit.log
     extraVolumes:
     - name: host
       hostPath: /etc/audit-policy
