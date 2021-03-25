@@ -1,0 +1,19 @@
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+        - localhost:9090
+  - job_name: promtail
+    kubernetes_sd_configs:
+      - role: endpoints
+    relabel_configs:
+      - source_labels: ["__meta_kubernetes_endpoints_name"]
+        regex: promtail
+        action: keep
+  - job_name: loki
+    kubernetes_sd_configs:
+      - role: endpoints
+    relabel_configs:
+      - source_labels: ["__meta_kubernetes_endpoints_name"]
+        regex: loki
+        action: keep

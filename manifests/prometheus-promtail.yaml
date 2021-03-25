@@ -8,9 +8,16 @@ kind: ClusterRole
 metadata:
   name: prometheus
 rules:
-- apiGroups: [""]
-  resources: ["endpoints", "pods", "services"]
-  verbs: ["get", "watch", "list"]
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+      - pods
+      - services
+    verbs:
+      - get
+      - watch
+      - list
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -22,13 +29,10 @@ roleRef:
   name: prometheus
 subjects:
   - kind: ServiceAccount
-    namespace: default
     name: prometheus
+    namespace: default
 ---
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: prometheus
 data:
   prometheus.yml: |
     scrape_configs:
@@ -50,36 +54,39 @@ data:
           - source_labels: ["__meta_kubernetes_endpoints_name"]
             regex: loki
             action: keep
+kind: ConfigMap
+metadata:
+  name: prometheus
 ---
 apiVersion: v1
 kind: Pod
 metadata:
-  name: prometheus
   labels:
     app: prometheus
+  name: prometheus
 spec:
-  serviceAccountName: prometheus
   containers:
-    - name: prometheus
-      image: prom/prometheus:v2.25.0
+    - image: prom/prometheus:v2.25.0
+      name: prometheus
       volumeMounts:
-        - name: config
-          mountPath: /etc/prometheus
+        - mountPath: /etc/prometheus
+          name: config
           readOnly: true
+  serviceAccountName: prometheus
   volumes:
-    - name: config
-      configMap:
-        name: prometheus
+    - configMap:
         items:
           - key: prometheus.yml
             path: prometheus.yml
+        name: prometheus
+      name: config
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: prometheus
 spec:
-  selector:
-    app: prometheus
   ports:
     - port: 9090
+  selector:
+    app: prometheus

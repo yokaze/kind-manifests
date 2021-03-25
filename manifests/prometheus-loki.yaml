@@ -8,10 +8,6 @@ kind: ClusterRole
 metadata:
   name: prometheus
 rules:
-  - nonResourceURLs:
-      - /metrics
-    verbs:
-      - get
   - apiGroups:
       - ""
     resources:

@@ -61,6 +61,13 @@ data:
         static_configs:
           - targets:
             - localhost:9090
+      - job_name: promtail
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: ["__meta_kubernetes_endpoints_name"]
+            regex: promtail
+            action: keep
       - job_name: loki
         kubernetes_sd_configs:
           - role: endpoints
@@ -167,3 +174,85 @@ spec:
             path: loki.yaml
         name: grafana-datasource
       name: datasources
+---
+apiVersion: v1
+data:
+  config.yml: |
+    clients:
+      - url: http://loki:3100/loki/api/v1/push
+    scrape_configs:
+      - job_name: sample
+        static_configs:
+          - labels:
+              job: sample
+              __path__: /var/log/sample.log
+        pipeline_stages:
+          - regex:
+              expression: '^(?P<timestamp>[^\s]+)\s(?P<content>.*)$'
+          - timestamp:
+              format: RFC3339Nano
+              source: timestamp
+          - output:
+              source: content
+  generate.sh: |
+    cat <<EOF > /var/log/sample.log
+    $(date +%Y-%m-%dT%H):00:01.111111111Z sample 1
+    $(date +%Y-%m-%dT%H):00:02.222222222Z sample 2
+    $(date +%Y-%m-%dT%H):00:03.333333333Z sample 3
+    EOF
+kind: ConfigMap
+metadata:
+  name: promtail
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: promtail
+  name: promtail
+spec:
+  containers:
+    - image: grafana/promtail:2.2.0
+      name: promtail
+      volumeMounts:
+        - mountPath: /etc/promtail
+          name: config
+          readOnly: true
+        - mountPath: /var/log
+          name: log
+          readOnly: false
+  initContainers:
+    - command:
+        - bash
+        - -c
+        - source /etc/promtail/generate.sh
+      image: bash:5.1.4
+      name: generate
+      volumeMounts:
+        - mountPath: /etc/promtail
+          name: config
+          readOnly: true
+        - mountPath: /var/log
+          name: log
+          readOnly: false
+  volumes:
+    - configMap:
+        items:
+          - key: config.yml
+            path: config.yml
+          - key: generate.sh
+            path: generate.sh
+        name: promtail
+      name: config
+    - emptyDir: {}
+      name: log
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: promtail
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: promtail

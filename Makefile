@@ -13,6 +13,8 @@ manifests:
 	$(MAKE) generate-prometheus
 	$(MAKE) generate-prometheus-apiserver
 	$(MAKE) generate-prometheus-loki
+	$(MAKE) generate-prometheus-promtail
+	$(MAKE) generate-promtail-sample
 
 .PHONY: grafana
 grafana: jsonnet-grafana
@@ -31,3 +33,9 @@ prometheus-apiserver: jsonnet-prometheus-apiserver
 
 .PHONY: prometheus-loki
 prometheus-loki: jsonnet-prometheus-loki
+
+.PHONY: prometheus-promtail
+prometheus-promtail: jsonnet-prometheus-promtail
+
+.PHONY: promtail-sample
+promtail-sample: jsonnet-promtail-sample

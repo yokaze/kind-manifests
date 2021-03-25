@@ -1,0 +1,16 @@
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+scrape_configs:
+  - job_name: sample
+    static_configs:
+      - labels:
+          job: sample
+          __path__: /var/log/sample.log
+    pipeline_stages:
+      - regex:
+          expression: '^(?P<timestamp>[^\s]+)\s(?P<content>.*)$'
+      - timestamp:
+          format: RFC3339Nano
+          source: timestamp
+      - output:
+          source: content
