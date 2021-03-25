@@ -5,7 +5,7 @@
     "name": "promtail"
   },
   "data": {
-    "config.yml": importstr "resources/sample-config.yml",
-    "generate.sh": importstr "resources/sample-generate.sh"
+    "config.yml": importstr "resources/config-sample.yml",
+    "generate.sh": importstr "resources/generate-sample.sh"
   },
 }

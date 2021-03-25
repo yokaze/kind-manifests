@@ -1,3 +1,9 @@
+mount:
+	./mount.sh
+
+umount:
+	./umount.sh
+
 jsonnet-%:
 	@jsonnet $*.jsonnet | yq eval '.[] | splitDoc' - -P
 
@@ -14,6 +20,7 @@ manifests:
 	$(MAKE) generate-prometheus-apiserver
 	$(MAKE) generate-prometheus-loki
 	$(MAKE) generate-prometheus-promtail
+	$(MAKE) generate-promtail-audit
 	$(MAKE) generate-promtail-sample
 
 .PHONY: grafana
@@ -36,6 +43,9 @@ prometheus-loki: jsonnet-prometheus-loki
 
 .PHONY: prometheus-promtail
 prometheus-promtail: jsonnet-prometheus-promtail
+
+.PHONY: promtail-audit
+promtail-audit: jsonnet-promtail-audit
 
 .PHONY: promtail-sample
 promtail-sample: jsonnet-promtail-sample

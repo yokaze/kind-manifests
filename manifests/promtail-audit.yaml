@@ -1,0 +1,244 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: loki
+  name: loki
+spec:
+  containers:
+    - image: grafana/loki:2.2.0
+      name: loki
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loki
+spec:
+  ports:
+    - port: 3100
+  selector:
+    app: loki
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+      - pods
+      - services
+    verbs:
+      - get
+      - watch
+      - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: default
+---
+apiVersion: v1
+data:
+  prometheus.yml: |
+    scrape_configs:
+      - job_name: prometheus
+        static_configs:
+          - targets:
+            - localhost:9090
+      - job_name: promtail
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: ["__meta_kubernetes_endpoints_name"]
+            regex: promtail
+            action: keep
+      - job_name: loki
+        kubernetes_sd_configs:
+          - role: endpoints
+        relabel_configs:
+          - source_labels: ["__meta_kubernetes_endpoints_name"]
+            regex: loki
+            action: keep
+kind: ConfigMap
+metadata:
+  name: prometheus
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus
+spec:
+  containers:
+    - image: prom/prometheus:v2.25.0
+      name: prometheus
+      volumeMounts:
+        - mountPath: /etc/prometheus
+          name: config
+          readOnly: true
+  serviceAccountName: prometheus
+  volumes:
+    - configMap:
+        items:
+          - key: prometheus.yml
+            path: prometheus.yml
+        name: prometheus
+      name: config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  ports:
+    - port: 9090
+  selector:
+    app: prometheus
+---
+apiVersion: v1
+data:
+  password: cGFzc3dvcmQ=
+  username: YWRtaW4=
+kind: Secret
+metadata:
+  name: grafana
+type: Opaque
+---
+apiVersion: v1
+data:
+  loki.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Loki
+        type: loki
+        url: http://loki:3100
+  prometheus.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus:9090
+        isDefault: true
+kind: ConfigMap
+metadata:
+  name: grafana-datasource
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: grafana
+spec:
+  containers:
+    - env:
+        - name: GF_SECURITY_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: grafana
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: grafana
+        - name: GF_PATHS_PROVISIONING
+          value: /usr/share/grafana/conf/provisioning
+      image: grafana/grafana:7.4.3
+      name: grafana
+      volumeMounts:
+        - mountPath: /usr/share/grafana/conf/provisioning/datasources
+          name: datasources
+          readOnly: true
+  volumes:
+    - configMap:
+        items:
+          - key: prometheus.yaml
+            path: prometheus.yaml
+          - key: loki.yaml
+            path: loki.yaml
+        name: grafana-datasource
+      name: datasources
+---
+apiVersion: v1
+data:
+  config.yml: |
+    clients:
+      - url: http://loki:3100/loki/api/v1/push
+    scrape_configs:
+      - job_name: audit
+        static_configs:
+          - targets:
+              - localhost
+            labels:
+              job: audit
+              __path__: /var/log/kube-apiserver/*.log
+        pipeline_stages:
+          - json:
+              expressions:
+                timestamp: stageTimestamp
+          - timestamp:
+              format: RFC3339Nano
+              source: timestamp
+kind: ConfigMap
+metadata:
+  name: promtail
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: promtail
+  name: promtail
+spec:
+  containers:
+    - image: grafana/promtail:2.2.0
+      name: promtail
+      volumeMounts:
+        - mountPath: /etc/promtail
+          name: config
+          readOnly: true
+        - mountPath: /var/log/kube-apiserver
+          name: log
+          readOnly: true
+  nodeSelector:
+    kubernetes.io/hostname: kind-control-plane
+  tolerations:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/master
+      operator: Exists
+  volumes:
+    - configMap:
+        items:
+          - key: config.yml
+            path: config.yml
+        name: promtail
+      name: config
+    - hostPath:
+        path: /var/log/kube-apiserver
+      name: log
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: promtail
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: promtail
