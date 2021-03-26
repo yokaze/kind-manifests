@@ -15,6 +15,7 @@ generate-%:
 manifests:
 	$(MAKE) generate-grafana
 	$(MAKE) generate-grafana-loki
+	$(MAKE) generate-kubectl
 	$(MAKE) generate-loki
 	$(MAKE) generate-prometheus
 	$(MAKE) generate-prometheus-apiserver
@@ -28,6 +29,9 @@ grafana: jsonnet-grafana
 
 .PHONY: grafana-loki
 grafana-loki: jsonnet-grafana-loki
+
+.PHONY: kubectl
+kubectl: jsonnet-kubectl
 
 .PHONY: loki
 loki: jsonnet-loki
