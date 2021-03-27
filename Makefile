@@ -13,6 +13,7 @@ generate-%:
 
 .PHONY: manifests
 manifests:
+	$(MAKE) generate-alpine
 	$(MAKE) generate-grafana
 	$(MAKE) generate-grafana-loki
 	$(MAKE) generate-kubectl
@@ -23,6 +24,9 @@ manifests:
 	$(MAKE) generate-prometheus-promtail
 	$(MAKE) generate-promtail-audit
 	$(MAKE) generate-promtail-sample
+
+.PHONY: alpine
+alpine: jsonnet-alpine
 
 .PHONY: grafana
 grafana: jsonnet-grafana
