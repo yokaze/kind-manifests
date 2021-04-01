@@ -21,6 +21,10 @@ generate-%:
 
 .PHONY: format
 format:
+	@for i in $(shell find . -name '*.json'); do \
+		echo $$i; \
+		jq . $$i | sponge $$i; \
+	done
 	@for i in $(shell find . -name '*.jsonnet'); do \
 		echo $$i; \
 		jsonnetfmt -i $$i; \
