@@ -1,9 +1,17 @@
+# Rules for cluster
+.PHONY: cluster
+cluster:
+	kind create cluster --config cluster/cluster.yaml
+
+.PHONY: mount
 mount:
 	./mount.sh
 
+.PHONY: umount
 umount:
 	./umount.sh
 
+# Rules for manifests
 jsonnet-%:
 	@jsonnet $*.jsonnet | yq eval '.[] | splitDoc' - -P
 
