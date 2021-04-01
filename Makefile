@@ -16,6 +16,7 @@ manifests:
 	$(MAKE) generate-alpine
 	$(MAKE) generate-grafana
 	$(MAKE) generate-grafana-loki
+	$(MAKE) generate-host-network
 	$(MAKE) generate-kubectl
 	$(MAKE) generate-loki
 	$(MAKE) generate-prometheus
@@ -33,6 +34,9 @@ grafana: jsonnet-grafana
 
 .PHONY: grafana-loki
 grafana-loki: jsonnet-grafana-loki
+
+.PHONY: host-network
+host-network: jsonnet-host-network
 
 .PHONY: kubectl
 kubectl: jsonnet-kubectl
