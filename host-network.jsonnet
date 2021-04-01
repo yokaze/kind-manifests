@@ -1,3 +1,3 @@
 [
-    import "pod/host-network.json"
+  import 'pod/host-network.json',
 ]

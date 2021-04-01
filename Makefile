@@ -19,6 +19,13 @@ generate-%:
 	mkdir -p manifests
 	$(MAKE) --no-print-directory jsonnet-$* > manifests/$*.yaml
 
+.PHONY: format
+format:
+	@for i in $(shell find . -name '*.jsonnet'); do \
+		echo $$i; \
+		jsonnetfmt -i $$i; \
+	done
+
 .PHONY: manifests
 manifests:
 	$(MAKE) generate-alpine

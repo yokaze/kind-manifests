@@ -1,5 +1,5 @@
-std.mergePatch(import "pod.json", {
+std.mergePatch(import 'pod.json', {
   spec: {
-    serviceAccountName: "prometheus",
+    serviceAccountName: 'prometheus',
   },
 })

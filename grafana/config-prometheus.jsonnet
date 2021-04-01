@@ -1,10 +1,10 @@
 {
-  "apiVersion": "v1",
-  "kind": "ConfigMap",
-  "metadata": {
-    "name": "grafana-datasource"
+  apiVersion: 'v1',
+  kind: 'ConfigMap',
+  metadata: {
+    name: 'grafana-datasource',
   },
-  "data": {
-    "prometheus.yaml": importstr "resources/datasource-prometheus.yaml"
-  }
+  data: {
+    'prometheus.yaml': importstr 'resources/datasource-prometheus.yaml',
+  },
 }

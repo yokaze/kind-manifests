@@ -1,10 +1,10 @@
 {
-  "apiVersion": "v1",
-  "kind": "ConfigMap",
-  "metadata": {
-    "name": "prometheus"
+  apiVersion: 'v1',
+  kind: 'ConfigMap',
+  metadata: {
+    name: 'prometheus',
   },
-  "data": {
-    "prometheus.yml": importstr "resources/scrape-prometheus.yml"
-  }
+  data: {
+    'prometheus.yml': importstr 'resources/scrape-prometheus.yml',
+  },
 }

@@ -1,5 +1,5 @@
 [
-    import "prometheus/config.jsonnet",
-    import "prometheus/pod.json",
-    import "prometheus/service.json"
+  import 'prometheus/config.jsonnet',
+  import 'prometheus/pod.json',
+  import 'prometheus/service.json',
 ]
