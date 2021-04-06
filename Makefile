@@ -38,6 +38,7 @@ manifests:
 	$(MAKE) generate-host-network
 	$(MAKE) generate-kubectl
 	$(MAKE) generate-loki
+	$(MAKE) generate-mount-configmap
 	$(MAKE) generate-prometheus
 	$(MAKE) generate-prometheus-apiserver
 	$(MAKE) generate-prometheus-loki
@@ -62,6 +63,9 @@ kubectl: jsonnet-kubectl
 
 .PHONY: loki
 loki: jsonnet-loki
+
+.PHONY: mount-configmap
+mount-configmap: jsonnet-mount-configmap
 
 .PHONY: prometheus
 prometheus: jsonnet-prometheus
