@@ -26,9 +26,6 @@ spec:
           readOnly: true
   volumes:
     - configMap:
-        items:
-          - key: prometheus.yml
-            path: prometheus.yml
         name: prometheus
       name: config
 ---
@@ -91,8 +88,5 @@ spec:
           readOnly: true
   volumes:
     - configMap:
-        items:
-          - key: prometheus.yaml
-            path: prometheus.yaml
         name: grafana-datasource
       name: datasources

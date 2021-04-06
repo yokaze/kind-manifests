@@ -26,9 +26,6 @@ spec:
           readOnly: true
   volumes:
     - configMap:
-        items:
-          - key: prometheus.yml
-            path: prometheus.yml
         name: prometheus
       name: config
 ---

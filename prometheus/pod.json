@@ -25,13 +25,7 @@
       {
         "name": "config",
         "configMap": {
-          "name": "prometheus",
-          "items": [
-            {
-              "key": "prometheus.yml",
-              "path": "prometheus.yml"
-            }
-          ]
+          "name": "prometheus"
         }
       }
     ]

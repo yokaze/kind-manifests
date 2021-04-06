@@ -46,13 +46,7 @@
       {
         "name": "datasources",
         "configMap": {
-          "name": "grafana-datasource",
-          "items": [
-            {
-              "key": "prometheus.yaml",
-              "path": "prometheus.yaml"
-            }
-          ]
+          "name": "grafana-datasource"
         }
       }
     ]

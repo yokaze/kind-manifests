@@ -96,9 +96,6 @@ spec:
   serviceAccountName: prometheus
   volumes:
     - configMap:
-        items:
-          - key: prometheus.yml
-            path: prometheus.yml
         name: prometheus
       name: config
 ---
@@ -167,11 +164,6 @@ spec:
           readOnly: true
   volumes:
     - configMap:
-        items:
-          - key: prometheus.yaml
-            path: prometheus.yaml
-          - key: loki.yaml
-            path: loki.yaml
         name: grafana-datasource
       name: datasources
 ---
@@ -237,11 +229,6 @@ spec:
           readOnly: false
   volumes:
     - configMap:
-        items:
-          - key: config.yml
-            path: config.yml
-          - key: generate.sh
-            path: generate.sh
         name: promtail
       name: config
     - emptyDir: {}

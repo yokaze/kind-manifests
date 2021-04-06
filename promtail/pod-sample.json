@@ -53,17 +53,7 @@
       {
         "name": "config",
         "configMap": {
-          "name": "promtail",
-          "items": [
-            {
-              "key": "config.yml",
-              "path": "config.yml"
-            },
-            {
-              "key": "generate.sh",
-              "path": "generate.sh"
-            }
-          ]
+          "name": "promtail"
         }
       },
       {

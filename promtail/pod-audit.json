@@ -40,13 +40,7 @@
       {
         "name": "config",
         "configMap": {
-          "name": "promtail",
-          "items": [
-            {
-              "key": "config.yml",
-              "path": "config.yml"
-            }
-          ]
+          "name": "promtail"
         }
       },
       {
