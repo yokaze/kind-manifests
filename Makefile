@@ -84,3 +84,27 @@ promtail-audit: jsonnet-promtail-audit
 
 .PHONY: promtail-sample
 promtail-sample: jsonnet-promtail-sample
+
+# Rules for deploying
+.PHONY: deploy-prometheus-operator
+deploy-prometheus-operator:
+	kubectl apply -f upstream/prometheus-operator/bundle.yaml
+
+.PHONY: delete-prometheus-operator
+delete-prometheus-operator:
+	kubectl delete -f upstream/prometheus-operator/bundle.yaml
+
+# Rules for upstream manifests
+PROMETHEUS_OPERATOR_VERSION=0.46.0
+
+.PHONY: clean
+clean:
+	rm -rf upstream
+
+.PHONY: upstream
+upstream: upstream-prometheus-operator
+
+.PHONY: upstream-prometheus-operator
+upstream-prometheus-operator:
+	mkdir -p upstream/prometheus-operator
+	wget -O upstream/prometheus-operator/bundle.yaml https://github.com/prometheus-operator/prometheus-operator/raw/v$(PROMETHEUS_OPERATOR_VERSION)/bundle.yaml
