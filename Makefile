@@ -35,6 +35,7 @@ manifests:
 	$(MAKE) generate-alpine
 	$(MAKE) generate-grafana
 	$(MAKE) generate-grafana-loki
+	$(MAKE) generate-grafana-operator
 	$(MAKE) generate-host-network
 	$(MAKE) generate-kubectl
 	$(MAKE) generate-loki
@@ -55,6 +56,9 @@ grafana: jsonnet-grafana
 
 .PHONY: grafana-loki
 grafana-loki: jsonnet-grafana-loki
+
+.PHONY: grafana-operator
+grafana-operator: jsonnet-grafana-operator
 
 .PHONY: host-network
 host-network: jsonnet-host-network

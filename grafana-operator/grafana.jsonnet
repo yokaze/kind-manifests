@@ -1,0 +1,10 @@
+[
+  {
+    apiVersion: 'integreatly.org/v1alpha1',
+    kind: 'Grafana',
+    metadata: {
+      name: 'grafana',
+    },
+    spec: {},
+  },
+]
