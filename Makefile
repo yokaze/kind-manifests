@@ -99,7 +99,7 @@ delete-prometheus-operator:
 	kubectl delete -f upstream/prometheus-operator/bundle.yaml
 
 # Rules for upstream manifests
-PROMETHEUS_OPERATOR_VERSION=0.46.0
+PROMETHEUS_OPERATOR_VERSION = 0.47.0
 
 .PHONY: clean
 clean:
