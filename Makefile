@@ -90,6 +90,34 @@ promtail-audit: jsonnet-promtail-audit
 promtail-sample: jsonnet-promtail-sample
 
 # Rules for deploying
+.PHONY: deploy-grafana-operator
+deploy-grafana-operator:
+	kubectl apply -f upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml
+	kubectl apply -f upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_view.yaml
+	kubectl apply -f upstream/grafana-operator/cluster_roles/cluster_role_binding_grafana_operator.yaml
+	kubectl apply -f upstream/grafana-operator/cluster_roles/cluster_role_grafana_operator.yaml
+	kubectl apply -f upstream/grafana-operator/crds/Grafana.yaml
+	kubectl apply -f upstream/grafana-operator/crds/GrafanaDashboard.yaml
+	kubectl apply -f upstream/grafana-operator/crds/GrafanaDataSource.yaml
+	kubectl apply -f upstream/grafana-operator/roles/role.yaml
+	kubectl apply -f upstream/grafana-operator/roles/role_binding.yaml
+	kubectl apply -f upstream/grafana-operator/roles/service_account.yaml
+	kubectl apply -f upstream/grafana-operator/operator.yaml
+
+.PHONY: delete-grafana-operator
+delete-grafana-operator:
+	kubectl delete -f upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml
+	kubectl delete -f upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_view.yaml
+	kubectl delete -f upstream/grafana-operator/cluster_roles/cluster_role_binding_grafana_operator.yaml
+	kubectl delete -f upstream/grafana-operator/cluster_roles/cluster_role_grafana_operator.yaml
+	kubectl delete -f upstream/grafana-operator/crds/Grafana.yaml
+	kubectl delete -f upstream/grafana-operator/crds/GrafanaDashboard.yaml
+	kubectl delete -f upstream/grafana-operator/crds/GrafanaDataSource.yaml
+	kubectl delete -f upstream/grafana-operator/roles/role.yaml
+	kubectl delete -f upstream/grafana-operator/roles/role_binding.yaml
+	kubectl delete -f upstream/grafana-operator/roles/service_account.yaml
+	kubectl delete -f upstream/grafana-operator/operator.yaml
+
 .PHONY: deploy-prometheus-operator
 deploy-prometheus-operator:
 	kubectl apply -f upstream/prometheus-operator/bundle.yaml
@@ -99,6 +127,7 @@ delete-prometheus-operator:
 	kubectl delete -f upstream/prometheus-operator/bundle.yaml
 
 # Rules for upstream manifests
+GRAFANA_OPERATOR_VERSION := 3.9.0
 PROMETHEUS_OPERATOR_VERSION = 0.47.0
 
 .PHONY: clean
@@ -106,7 +135,27 @@ clean:
 	rm -rf upstream
 
 .PHONY: upstream
-upstream: upstream-prometheus-operator
+upstream: \
+	upstream-grafana-operator \
+	upstream-prometheus-operator
+
+.PHONY: upstream-grafana-operator
+upstream-grafana-operator: URL := https://raw.githubusercontent.com/integr8ly/grafana-operator/v$(GRAFANA_OPERATOR_VERSION)/deploy
+upstream-grafana-operator:
+	mkdir -p upstream/grafana-operator/cluster_roles
+	mkdir -p upstream/grafana-operator/crds
+	mkdir -p upstream/grafana-operator/roles
+	wget -O upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml $(URL)/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml
+	wget -O upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_view.yaml $(URL)/cluster_roles/cluster_role_aggregate_grafana_view.yaml
+	wget -O upstream/grafana-operator/cluster_roles/cluster_role_binding_grafana_operator.yaml $(URL)/cluster_roles/cluster_role_binding_grafana_operator.yaml
+	wget -O upstream/grafana-operator/cluster_roles/cluster_role_grafana_operator.yaml $(URL)/cluster_roles/cluster_role_grafana_operator.yaml
+	wget -O upstream/grafana-operator/crds/Grafana.yaml $(URL)/crds/Grafana.yaml
+	wget -O upstream/grafana-operator/crds/GrafanaDashboard.yaml $(URL)/crds/GrafanaDashboard.yaml
+	wget -O upstream/grafana-operator/crds/GrafanaDataSource.yaml $(URL)/crds/GrafanaDataSource.yaml
+	wget -O upstream/grafana-operator/roles/role.yaml $(URL)/roles/role.yaml
+	wget -O upstream/grafana-operator/roles/role_binding.yaml $(URL)/roles/role_binding.yaml
+	wget -O upstream/grafana-operator/roles/service_account.yaml $(URL)/roles/service_account.yaml
+	wget -O upstream/grafana-operator/operator.yaml $(URL)/operator.yaml
 
 .PHONY: upstream-prometheus-operator
 upstream-prometheus-operator:
