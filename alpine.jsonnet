@@ -1,3 +1,0 @@
-[
-  import 'alpine/pod.json',
-]

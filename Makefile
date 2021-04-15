@@ -13,7 +13,7 @@ umount:
 
 # Rules for manifests
 jsonnet-%:
-	@jsonnet $*.jsonnet | yq eval '.[] | splitDoc' - -P
+	@jsonnet jsonnet/$*.jsonnet | yq eval '.[] | splitDoc' - -P
 
 generate-%:
 	mkdir -p manifests
