@@ -42,6 +42,7 @@ manifests:
 	$(MAKE) generate-prometheus
 	$(MAKE) generate-prometheus-apiserver
 	$(MAKE) generate-prometheus-loki
+	$(MAKE) generate-prometheus-operator
 	$(MAKE) generate-prometheus-promtail
 	$(MAKE) generate-promtail-audit
 	$(MAKE) generate-promtail-sample
@@ -75,6 +76,9 @@ prometheus-apiserver: jsonnet-prometheus-apiserver
 
 .PHONY: prometheus-loki
 prometheus-loki: jsonnet-prometheus-loki
+
+.PHONY: prometheus-operator
+prometheus-operator: jsonnet-prometheus-operator
 
 .PHONY: prometheus-promtail
 prometheus-promtail: jsonnet-prometheus-promtail
