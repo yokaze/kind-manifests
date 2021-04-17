@@ -35,7 +35,7 @@ manifests:
 	$(MAKE) generate-alpine
 	$(MAKE) generate-grafana
 	$(MAKE) generate-grafana-loki
-	$(MAKE) generate-grafana-operator
+	$(MAKE) generate-grafana-operator-grafana
 	$(MAKE) generate-host-network
 	$(MAKE) generate-kubectl
 	$(MAKE) generate-loki
@@ -43,7 +43,7 @@ manifests:
 	$(MAKE) generate-prometheus
 	$(MAKE) generate-prometheus-apiserver
 	$(MAKE) generate-prometheus-loki
-	$(MAKE) generate-prometheus-operator
+	$(MAKE) generate-prometheus-operator-prometheus
 	$(MAKE) generate-prometheus-promtail
 	$(MAKE) generate-promtail-audit
 	$(MAKE) generate-promtail-sample
@@ -57,8 +57,8 @@ grafana: jsonnet-grafana
 .PHONY: grafana-loki
 grafana-loki: jsonnet-grafana-loki
 
-.PHONY: grafana-operator
-grafana-operator: jsonnet-grafana-operator
+.PHONY: grafana-operator-grafana
+grafana-operator-grafana: jsonnet-grafana-operator-grafana
 
 .PHONY: host-network
 host-network: jsonnet-host-network
@@ -81,8 +81,8 @@ prometheus-apiserver: jsonnet-prometheus-apiserver
 .PHONY: prometheus-loki
 prometheus-loki: jsonnet-prometheus-loki
 
-.PHONY: prometheus-operator
-prometheus-operator: jsonnet-prometheus-operator
+.PHONY: prometheus-operator-prometheus
+prometheus-operator-prometheus: jsonnet-prometheus-operator-prometheus
 
 .PHONY: prometheus-promtail
 prometheus-promtail: jsonnet-prometheus-promtail
