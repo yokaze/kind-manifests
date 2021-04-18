@@ -45,6 +45,7 @@ manifests:
 	$(MAKE) generate-prometheus
 	$(MAKE) generate-prometheus-apiserver
 	$(MAKE) generate-prometheus-loki
+	$(MAKE) generate-prometheus-operator-monitor-prometheus
 	$(MAKE) generate-prometheus-operator-prometheus
 	$(MAKE) generate-prometheus-promtail
 	$(MAKE) generate-promtail-audit
@@ -88,6 +89,9 @@ prometheus-apiserver: jsonnet-prometheus-apiserver
 
 .PHONY: prometheus-loki
 prometheus-loki: jsonnet-prometheus-loki
+
+.PHONY: prometheus-operator-monitor-prometheus
+prometheus-operator-monitor-prometheus: jsonnet-prometheus-operator-monitor-prometheus
 
 .PHONY: prometheus-operator-prometheus
 prometheus-operator-prometheus: jsonnet-prometheus-operator-prometheus
@@ -144,6 +148,7 @@ PROMETHEUS_OPERATOR_VERSION = 0.47.0
 
 .PHONY: clean
 clean:
+	rm -rf manifests
 	rm -rf upstream
 
 .PHONY: upstream
