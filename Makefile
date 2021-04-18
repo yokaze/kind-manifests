@@ -36,9 +36,11 @@ manifests:
 	$(MAKE) generate-grafana
 	$(MAKE) generate-grafana-loki
 	$(MAKE) generate-grafana-operator-grafana
+	$(MAKE) generate-grafana-operator-prometheus
 	$(MAKE) generate-host-network
 	$(MAKE) generate-kubectl
 	$(MAKE) generate-loki
+	$(MAKE) generate-monitoring
 	$(MAKE) generate-mount-configmap
 	$(MAKE) generate-prometheus
 	$(MAKE) generate-prometheus-apiserver
@@ -60,6 +62,9 @@ grafana-loki: jsonnet-grafana-loki
 .PHONY: grafana-operator-grafana
 grafana-operator-grafana: jsonnet-grafana-operator-grafana
 
+.PHONY: grafana-operator-prometheus
+grafana-operator-prometheus: jsonnet-grafana-operator-prometheus
+
 .PHONY: host-network
 host-network: jsonnet-host-network
 
@@ -68,6 +73,9 @@ kubectl: jsonnet-kubectl
 
 .PHONY: loki
 loki: jsonnet-loki
+
+.PHONY: monitoring
+monitoring: jsonnet-monitoring
 
 .PHONY: mount-configmap
 mount-configmap: jsonnet-mount-configmap
