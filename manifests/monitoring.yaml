@@ -37,8 +37,21 @@ kind: Prometheus
 metadata:
   name: prometheus
 spec:
+  podMetadata:
+    labels:
+      app: prometheus
   serviceAccountName: prometheus
   serviceMonitorSelector: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  ports:
+    - port: 9090
+  selector:
+    app: prometheus
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -66,5 +79,5 @@ spec:
     - isDefault: true
       name: Prometheus
       type: prometheus
-      url: http://prometheus-operated:9090
+      url: http://prometheus:9090
   name: prometheus

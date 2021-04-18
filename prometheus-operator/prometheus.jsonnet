@@ -56,8 +56,28 @@
       name: 'prometheus',
     },
     spec: {
+      podMetadata: {
+        labels: {
+          app: 'prometheus',
+        },
+      },
       serviceAccountName: 'prometheus',
       serviceMonitorSelector: {},
+    },
+  },
+  {
+    apiVersion: 'v1',
+    kind: 'Service',
+    metadata: {
+      name: 'prometheus',
+    },
+    spec: {
+      ports: [{
+        port: 9090,
+      }],
+      selector: {
+        app: 'prometheus',
+      },
     },
   },
 ]

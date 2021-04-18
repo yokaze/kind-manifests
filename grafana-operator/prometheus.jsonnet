@@ -10,7 +10,7 @@
       datasources: [{
         name: 'Prometheus',
         type: 'prometheus',
-        url: 'http://prometheus-operated:9090',
+        url: 'http://prometheus:9090',
         isDefault: true,
       }],
     },
