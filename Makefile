@@ -3,6 +3,10 @@
 cluster:
 	kind create cluster --config cluster/cluster.yaml
 
+.PHONY: cluster-ipvs
+cluster-ipvs:
+	kind create cluster --config cluster/cluster-ipvs.yaml
+
 .PHONY: mount
 mount:
 	./mount.sh
