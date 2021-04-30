@@ -33,6 +33,7 @@ format:
 .PHONY: manifests
 manifests:
 	$(MAKE) generate-alpine
+	$(MAKE) generate-cluster-first-with-host-net
 	$(MAKE) generate-grafana
 	$(MAKE) generate-grafana-loki
 	$(MAKE) generate-grafana-operator-grafana
@@ -53,6 +54,9 @@ manifests:
 
 .PHONY: alpine
 alpine: jsonnet-alpine
+
+.PHONY: cluster-first-with-host-net
+cluster-first-with-host-net: jsonnet-cluster-first-with-host-net
 
 .PHONY: grafana
 grafana: jsonnet-grafana
