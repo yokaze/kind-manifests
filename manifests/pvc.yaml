@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sample
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc
+spec:
+  containers:
+    - command:
+        - sleep
+        - inf
+      image: alpine:3.13.3
+      name: alpine
+      volumeMounts:
+        - mountPath: /sample
+          name: vol
+  volumes:
+    - name: vol
+      persistentVolumeClaim:
+        claimName: sample

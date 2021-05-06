@@ -55,6 +55,7 @@ manifests:
 	$(MAKE) generate-prometheus-promtail
 	$(MAKE) generate-promtail-audit
 	$(MAKE) generate-promtail-sample
+	$(MAKE) generate-pvc
 
 .PHONY: alpine
 alpine: jsonnet-alpine
@@ -112,6 +113,9 @@ promtail-audit: jsonnet-promtail-audit
 
 .PHONY: promtail-sample
 promtail-sample: jsonnet-promtail-sample
+
+.PHONY: pvc
+pvc: jsonnet-pvc
 
 # Rules for deploying
 .PHONY: deploy-grafana-operator
