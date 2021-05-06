@@ -16,6 +16,6 @@
       },
     ],
     hostNetwork: true,
-    dnsPolicy: 'ClusterFirstWithHostNet'
+    dnsPolicy: 'ClusterFirstWithHostNet',
   },
 }]
