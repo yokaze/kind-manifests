@@ -1,3 +1,4 @@
+local images = import '../images.jsonnet';
 {
   apiVersion: 'v1',
   kind: 'Pod',
@@ -8,7 +9,7 @@
     containers: [
       {
         name: 'alpine',
-        image: 'alpine:3.13.3',
+        image: images.alpine,
         command: [
           'sleep',
           'inf',
