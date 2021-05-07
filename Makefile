@@ -118,6 +118,10 @@ promtail-sample: jsonnet-promtail-sample
 pvc: jsonnet-pvc
 
 # Rules for deploying
+.PHONY: deploy-cert-manager
+deploy-cert-manager:
+	kubectl apply -f upstream/cert-manager/cert-manager.yaml
+
 .PHONY: deploy-grafana-operator
 deploy-grafana-operator:
 	kubectl apply -f upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml
@@ -155,6 +159,7 @@ delete-prometheus-operator:
 	kubectl delete -f upstream/prometheus-operator/bundle.yaml
 
 # Rules for upstream manifests
+CERT_MANAGER_VERSION := 1.3.1
 GRAFANA_OPERATOR_VERSION := 3.9.0
 PROMETHEUS_OPERATOR_VERSION = 0.47.0
 
@@ -165,8 +170,14 @@ clean:
 
 .PHONY: upstream
 upstream: \
+	upstream-cert-manager \
 	upstream-grafana-operator \
 	upstream-prometheus-operator
+
+.PHONY: upstream-cert-manager
+upstream-cert-manager:
+	mkdir -p upstream/cert-manager
+	wget -O upstream/cert-manager/cert-manager.yaml https://github.com/jetstack/cert-manager/releases/download/v$(CERT_MANAGER_VERSION)/cert-manager.yaml
 
 .PHONY: upstream-grafana-operator
 upstream-grafana-operator: URL := https://raw.githubusercontent.com/integr8ly/grafana-operator/v$(GRAFANA_OPERATOR_VERSION)/deploy
