@@ -150,6 +150,10 @@ delete-grafana-operator:
 	kubectl delete -f upstream/grafana-operator/roles/service_account.yaml
 	kubectl delete -f upstream/grafana-operator/operator.yaml
 
+.PHONY: deploy-moco
+deploy-moco:
+	kubectl apply -f upstream/moco/moco.yaml
+
 .PHONY: deploy-prometheus-operator
 deploy-prometheus-operator:
 	kubectl apply -f upstream/prometheus-operator/bundle.yaml
@@ -161,6 +165,7 @@ delete-prometheus-operator:
 # Rules for upstream manifests
 CERT_MANAGER_VERSION := 1.3.1
 GRAFANA_OPERATOR_VERSION := 3.9.0
+MOCO_VERSION := 0.8.1
 PROMETHEUS_OPERATOR_VERSION = 0.47.0
 
 .PHONY: clean
@@ -172,6 +177,7 @@ clean:
 upstream: \
 	upstream-cert-manager \
 	upstream-grafana-operator \
+	upstream-moco \
 	upstream-prometheus-operator
 
 .PHONY: upstream-cert-manager
@@ -196,6 +202,11 @@ upstream-grafana-operator:
 	wget -O upstream/grafana-operator/roles/role_binding.yaml $(URL)/roles/role_binding.yaml
 	wget -O upstream/grafana-operator/roles/service_account.yaml $(URL)/roles/service_account.yaml
 	wget -O upstream/grafana-operator/operator.yaml $(URL)/operator.yaml
+
+.PHONY: upstream-moco
+upstream-moco:
+	mkdir -p upstream/moco
+	wget -O upstream/moco/moco.yaml https://github.com/cybozu-go/moco/releases/download/v$(MOCO_VERSION)/moco.yaml
 
 .PHONY: upstream-prometheus-operator
 upstream-prometheus-operator:
