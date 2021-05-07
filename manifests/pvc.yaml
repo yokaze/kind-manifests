@@ -18,7 +18,7 @@ spec:
     - command:
         - sleep
         - inf
-      image: alpine:3.13.3
+      image: alpine:3.13.5
       name: alpine
       volumeMounts:
         - mountPath: /sample
