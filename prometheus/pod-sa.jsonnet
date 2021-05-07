@@ -1,4 +1,4 @@
-std.mergePatch(import 'pod.json', {
+std.mergePatch(import 'pod.jsonnet', {
   spec: {
     serviceAccountName: 'prometheus',
   },

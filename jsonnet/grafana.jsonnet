@@ -1,5 +1,5 @@
 (import 'prometheus.jsonnet') + [
-  import '../grafana/secret.json',
+  import '../grafana/secret.jsonnet',
   import '../grafana/config-prometheus.jsonnet',
-  import '../grafana/pod.json',
+  import '../grafana/pod.jsonnet',
 ]

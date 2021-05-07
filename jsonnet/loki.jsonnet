@@ -1,4 +1,4 @@
 [
-  import '../loki/pod.json',
-  import '../loki/service.json',
+  import '../loki/pod.jsonnet',
+  import '../loki/service.jsonnet',
 ]

@@ -1,3 +1,3 @@
 [
-  import '../alpine/pod.json',
+  import '../alpine/pod.jsonnet',
 ]

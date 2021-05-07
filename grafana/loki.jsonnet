@@ -1,5 +1,5 @@
 [
-  import 'secret.json',
+  import 'secret.jsonnet',
   import 'config-loki.jsonnet',
-  import 'pod.json',
+  import 'pod.jsonnet',
 ]

@@ -1,6 +1,6 @@
 [
-  import '../kubectl/clusterrole.json',
-  import '../kubectl/clusterrolebinding.json',
-  import '../kubectl/sa.json',
-  import '../kubectl/pod.json',
+  import '../kubectl/clusterrole.jsonnet',
+  import '../kubectl/clusterrolebinding.jsonnet',
+  import '../kubectl/sa.jsonnet',
+  import '../kubectl/pod.jsonnet',
 ]

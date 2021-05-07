@@ -1,0 +1,12 @@
+{
+  apiVersion: 'v1',
+  kind: 'Secret',
+  metadata: {
+    name: 'grafana',
+  },
+  type: 'Opaque',
+  data: {
+    username: 'YWRtaW4=',
+    password: 'cGFzc3dvcmQ=',
+  },
+}

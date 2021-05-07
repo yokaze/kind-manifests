@@ -1,8 +1,8 @@
 [
-  import '../prometheus/sa.json',
-  import '../prometheus/clusterrole-k8s-discovery.json',
-  import '../prometheus/clusterrolebinding.json',
+  import '../prometheus/sa.jsonnet',
+  import '../prometheus/clusterrole-k8s-discovery.jsonnet',
+  import '../prometheus/clusterrolebinding.jsonnet',
   import '../prometheus/config-promtail.jsonnet',
   import '../prometheus/pod-sa.jsonnet',
-  import '../prometheus/service.json',
+  import '../prometheus/service.jsonnet',
 ]
