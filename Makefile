@@ -2,10 +2,12 @@
 .PHONY: cluster
 cluster:
 	kind create cluster --config cluster/cluster.yaml
+	@$(MAKE) --no-print-directory wait-nodes
 
 .PHONY: cluster-ipvs
 cluster-ipvs:
 	kind create cluster --config cluster/cluster-ipvs.yaml
+	@$(MAKE) --no-print-directory wait-nodes
 
 .PHONY: mount
 mount:
@@ -14,6 +16,19 @@ mount:
 .PHONY: umount
 umount:
 	./umount.sh
+
+wait-nodes:
+	while ! kubectl get nodes > /dev/null 2>&1; do sleep 1; done
+	while test "$$(kubectl get nodes -o yaml | yq e '.items[]|.status.conditions[-1]|select(.type != "Ready" or .status != "True")' -)"; do sleep 1; done
+	@$(MAKE) --no-print-directory wait-pods
+
+wait-pods:
+	for n in $$(kubectl get ns -o yaml | yq e '.items[].metadata.name' -); do \
+		for i in $$(kubectl get deploy -n $$n -o name); do \
+			kubectl rollout status -n $$n $$i -w > /dev/null; \
+		done; \
+	done
+	while test "$$(kubectl get pods -A -o yaml | yq e '.items[]|select(.status.containerStatuses[] as $$i ireduce(false; . or ($$i.ready == false)))' -)"; do sleep 1; done
 
 # Rules for manifests
 jsonnet-%:
@@ -121,6 +136,7 @@ pvc: jsonnet-pvc
 .PHONY: deploy-cert-manager
 deploy-cert-manager:
 	kubectl apply -f upstream/cert-manager/cert-manager.yaml
+	@$(MAKE) --no-print-directory wait-pods
 
 .PHONY: deploy-grafana-operator
 deploy-grafana-operator:
@@ -135,6 +151,7 @@ deploy-grafana-operator:
 	kubectl apply -f upstream/grafana-operator/roles/role_binding.yaml
 	kubectl apply -f upstream/grafana-operator/roles/service_account.yaml
 	kubectl apply -f upstream/grafana-operator/operator.yaml
+	@$(MAKE) --no-print-directory wait-pods
 
 .PHONY: delete-grafana-operator
 delete-grafana-operator:
@@ -153,10 +170,12 @@ delete-grafana-operator:
 .PHONY: deploy-moco
 deploy-moco:
 	kubectl apply -f upstream/moco/moco.yaml
+	@$(MAKE) --no-print-directory wait-pods
 
 .PHONY: deploy-prometheus-operator
 deploy-prometheus-operator:
 	kubectl apply -f upstream/prometheus-operator/bundle.yaml
+	@$(MAKE) --no-print-directory wait-pods
 
 .PHONY: delete-prometheus-operator
 delete-prometheus-operator:
