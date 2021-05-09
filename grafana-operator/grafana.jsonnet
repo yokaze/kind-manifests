@@ -5,6 +5,16 @@
     metadata: {
       name: 'grafana',
     },
-    spec: {},
+    spec: {
+      config: {
+        security: {
+          admin_user: 'admin',
+          admin_password: 'password',
+        },
+      },
+      service: {
+        name: 'grafana',
+      },
+    },
   },
 ]
