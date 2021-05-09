@@ -142,6 +142,10 @@ deploy-cert-manager:
 	kubectl apply -f upstream/cert-manager/cert-manager.yaml
 	@$(MAKE) --no-print-directory wait-pods
 
+.PHONY: delete-cert-manager
+delete-cert-manager:
+	kubectl delete -f upstream/cert-manager/cert-manager.yaml
+
 .PHONY: deploy-grafana-operator
 deploy-grafana-operator:
 	kubectl apply -f upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml
@@ -175,6 +179,10 @@ delete-grafana-operator:
 deploy-moco:
 	kubectl apply -f upstream/moco/moco.yaml
 	@$(MAKE) --no-print-directory wait-pods
+
+.PHONY: delete-moco
+delete-moco:
+	kubectl delete -f upstream/moco/moco.yaml
 
 .PHONY: deploy-prometheus-operator
 deploy-prometheus-operator:
