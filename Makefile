@@ -60,6 +60,7 @@ manifests:
 	$(MAKE) generate-host-network
 	$(MAKE) generate-kubectl
 	$(MAKE) generate-loki
+	$(MAKE) generate-moco
 	$(MAKE) generate-monitoring
 	$(MAKE) generate-mount-configmap
 	$(MAKE) generate-prometheus
@@ -98,6 +99,9 @@ kubectl: jsonnet-kubectl
 
 .PHONY: loki
 loki: jsonnet-loki
+
+.PHONY: moco
+moco: jsonnet-moco
 
 .PHONY: monitoring
 monitoring: jsonnet-monitoring

@@ -1,0 +1,1 @@
+[import '../moco/sample.jsonnet']
