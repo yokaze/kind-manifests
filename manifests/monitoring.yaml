@@ -46,6 +46,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app: prometheus
   name: prometheus
 spec:
   ports:
@@ -59,10 +61,10 @@ metadata:
   name: prometheus
 spec:
   endpoints:
-    - port: web
+    - targetPort: 9090
   selector:
     matchLabels:
-      operated-prometheus: "true"
+      app: prometheus
 ---
 apiVersion: integreatly.org/v1alpha1
 kind: Grafana

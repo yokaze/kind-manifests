@@ -6,11 +6,11 @@
   },
   spec: {
     endpoints: [{
-      port: 'web',
+      targetPort: 9090,
     }],
     selector: {
       matchLabels: {
-        'operated-prometheus': 'true',
+        app: 'prometheus',
       },
     },
   },

@@ -46,6 +46,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app: prometheus
   name: prometheus
 spec:
   ports:

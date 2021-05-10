@@ -70,6 +70,9 @@
     kind: 'Service',
     metadata: {
       name: 'prometheus',
+      labels: {
+        app: 'prometheus',
+      },
     },
     spec: {
       ports: [{
