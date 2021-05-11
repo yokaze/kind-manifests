@@ -175,6 +175,14 @@ delete-grafana-operator:
 	kubectl delete -f upstream/grafana-operator/roles/service_account.yaml
 	kubectl delete -f upstream/grafana-operator/operator.yaml
 
+.PHONY: deploy-hnc
+deploy-hnc:
+	kubectl apply -f upstream/hnc/hnc-manager.yaml
+
+.PHONY: delete-hnc
+delete-hnc:
+	kubectl delete -f upstream/hnc/hnc-manager.yaml
+
 .PHONY: deploy-moco
 deploy-moco:
 	kubectl apply -f upstream/moco/moco.yaml
@@ -196,6 +204,7 @@ delete-prometheus-operator:
 # Rules for upstream manifests
 CERT_MANAGER_VERSION := 1.3.1
 GRAFANA_OPERATOR_VERSION := 3.9.0
+HNC_VERSION := 0.8.0
 MOCO_VERSION := 0.8.1
 PROMETHEUS_OPERATOR_VERSION = 0.47.0
 
@@ -208,6 +217,7 @@ clean:
 upstream: \
 	upstream-cert-manager \
 	upstream-grafana-operator \
+	upstream-hnc \
 	upstream-moco \
 	upstream-prometheus-operator
 
@@ -233,6 +243,11 @@ upstream-grafana-operator:
 	wget -O upstream/grafana-operator/roles/role_binding.yaml $(URL)/roles/role_binding.yaml
 	wget -O upstream/grafana-operator/roles/service_account.yaml $(URL)/roles/service_account.yaml
 	wget -O upstream/grafana-operator/operator.yaml $(URL)/operator.yaml
+
+.PHONY: upstream-hnc
+upstream-hnc:
+	mkdir -p upstream/hnc
+	wget -O upstream/hnc/hnc-manager.yaml https://github.com/kubernetes-sigs/multi-tenancy/releases/download/hnc-v$(HNC_VERSION)/hnc-manager.yaml
 
 .PHONY: upstream-moco
 upstream-moco:
