@@ -158,6 +158,9 @@ spec:
           value: /usr/share/grafana/conf/provisioning
       image: grafana/grafana:7.4.3
       name: grafana
+      ports:
+        - containerPort: 3000
+          name: web
       volumeMounts:
         - mountPath: /usr/share/grafana/conf/provisioning/datasources
           name: datasources

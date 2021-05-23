@@ -40,6 +40,10 @@
             readOnly: true,
           },
         ],
+        ports: [{
+          name: 'web',
+          containerPort: 3000,
+        }],
       },
     ],
     volumes: [

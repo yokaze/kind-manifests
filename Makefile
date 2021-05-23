@@ -54,6 +54,7 @@ manifests:
 	$(MAKE) generate-alpine
 	$(MAKE) generate-cluster-first-with-host-net
 	$(MAKE) generate-grafana
+	$(MAKE) generate-grafana-basic
 	$(MAKE) generate-grafana-loki
 	$(MAKE) generate-grafana-operator-grafana
 	$(MAKE) generate-grafana-operator-prometheus
@@ -81,6 +82,9 @@ cluster-first-with-host-net: jsonnet-cluster-first-with-host-net
 
 .PHONY: grafana
 grafana: jsonnet-grafana
+
+.PHONY: grafana-basic
+grafana-basic: jsonnet-grafana-basic
 
 .PHONY: grafana-loki
 grafana-loki: jsonnet-grafana-loki
