@@ -6,14 +6,12 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: prometheus
+  name: prometheus-pods
 rules:
   - apiGroups:
       - ""
     resources:
-      - endpoints
       - pods
-      - services
     verbs:
       - get
       - watch
@@ -22,11 +20,11 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: prometheus
+  name: prometheus-pods
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: prometheus
+  name: prometheus-pods
 subjects:
   - kind: ServiceAccount
     name: prometheus

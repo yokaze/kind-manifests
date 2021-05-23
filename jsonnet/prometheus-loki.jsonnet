@@ -1,7 +1,6 @@
-[
-  import '../prometheus/sa.jsonnet',
-  import '../prometheus/clusterrole-k8s-discovery.jsonnet',
-  import '../prometheus/clusterrolebinding.jsonnet',
+[import '../prometheus/sa.jsonnet'] +
+(import '../prometheus/clusterrole-pod.jsonnet') +
+(import '../prometheus/clusterrole-service.jsonnet') + [
   import '../prometheus/config-loki.jsonnet',
   import '../prometheus/pod-sa.jsonnet',
   import '../prometheus/service.jsonnet',
