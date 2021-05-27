@@ -4,6 +4,11 @@ cluster:
 	kind create cluster --config cluster/cluster.yaml
 	@$(MAKE) --no-print-directory wait-nodes
 
+.PHONY: cluster-audit
+cluster-audit: mount
+	kind create cluster --config cluster/cluster-audit.yaml
+	@$(MAKE) --no-print-directory wait-nodes
+
 .PHONY: cluster-ipvs
 cluster-ipvs:
 	kind create cluster --config cluster/cluster-ipvs.yaml
