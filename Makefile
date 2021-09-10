@@ -33,6 +33,7 @@ wait-pods:
 			kubectl rollout status -n $$n $$i -w > /dev/null; \
 		done; \
 	done
+	while test "$$(kubectl get pods -A -o yaml | yq e '.items[]|select(.status.conditions[] as $$i ireduce(false; . or ($$i.status != "True")))' -)"; do sleep 1; done
 	while test "$$(kubectl get pods -A -o yaml | yq e '.items[]|select(.status.containerStatuses[] as $$i ireduce(false; . or ($$i.ready == false)))' -)"; do sleep 1; done
 
 # Rules for manifests
@@ -148,6 +149,7 @@ pvc: jsonnet-pvc
 # Rules for deploying
 .PHONY: deploy-accurate
 deploy-accurate:
+	@$(MAKE) --no-print-directory ensure-cert-manager
 	./upstream/accurate/bin/kustomize build ./upstream/accurate/ | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-pods
 
@@ -163,6 +165,12 @@ deploy-cert-manager:
 .PHONY: delete-cert-manager
 delete-cert-manager:
 	kubectl delete -f upstream/cert-manager/cert-manager.yaml
+
+.PHONY: ensure-cert-manager
+ensure-cert-manager:
+	if ! kubectl get ns cert-manager > /dev/null 2>&1; then \
+		$(MAKE) --no-print-directory deploy-cert-manager; \
+	fi
 
 .PHONY: deploy-grafana-operator
 deploy-grafana-operator:
@@ -203,6 +211,7 @@ delete-hnc:
 
 .PHONY: deploy-moco
 deploy-moco:
+	@$(MAKE) --no-print-directory ensure-cert-manager
 	kubectl apply -f upstream/moco/moco.yaml
 	@$(MAKE) --no-print-directory wait-pods
 
