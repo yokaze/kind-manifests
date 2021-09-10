@@ -146,6 +146,15 @@ promtail-sample: jsonnet-promtail-sample
 pvc: jsonnet-pvc
 
 # Rules for deploying
+.PHONY: deploy-accurate
+deploy-accurate:
+	./upstream/accurate/bin/kustomize build ./upstream/accurate/ | kubectl apply -f -
+	@$(MAKE) --no-print-directory wait-pods
+
+.PHONY: delete-accurate
+delete-accurate:
+	./upstream/accurate/bin/kustomize build ./upstream/accurate/ | kubectl delete -f -
+
 .PHONY: deploy-cert-manager
 deploy-cert-manager:
 	kubectl apply -f upstream/cert-manager/cert-manager.yaml
@@ -211,6 +220,7 @@ delete-prometheus-operator:
 	kubectl delete -f upstream/prometheus-operator/bundle.yaml
 
 # Rules for upstream manifests
+ACCURATE_VERSION := 0.1.0
 CERT_MANAGER_VERSION := 1.3.1
 GRAFANA_OPERATOR_VERSION := 3.9.0
 HNC_VERSION := 0.8.0
@@ -224,11 +234,19 @@ clean:
 
 .PHONY: upstream
 upstream: \
+	upstream-accurate \
 	upstream-cert-manager \
 	upstream-grafana-operator \
 	upstream-hnc \
 	upstream-moco \
 	upstream-prometheus-operator
+
+.PHONY: upstream-accurate
+upstream-accurate:
+	mkdir -p upstream/accurate/tar
+	wget -O upstream/accurate/tar/accurate.tar.gz https://github.com/cybozu-go/accurate/archive/refs/tags/v$(ACCURATE_VERSION).tar.gz
+	tar xzf upstream/accurate/tar/accurate.tar.gz --strip-components=1 -C upstream/accurate
+	$(MAKE) -C upstream/accurate kustomize
 
 .PHONY: upstream-cert-manager
 upstream-cert-manager:
