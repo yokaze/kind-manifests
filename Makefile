@@ -234,7 +234,7 @@ delete-prometheus-operator:
 
 # Rules for upstream manifests
 ACCURATE_VERSION := 0.1.0
-CERT_MANAGER_VERSION := 1.3.1
+CERT_MANAGER_VERSION := 1.5.3
 GRAFANA_OPERATOR_VERSION := 3.9.0
 HNC_VERSION := 0.8.0
 MOCO_VERSION := 0.10.5
