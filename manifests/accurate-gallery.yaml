@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    accurate.cybozu.com/type: template
+  name: sample-template
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    accurate.cybozu.com/template: sample-template
+    accurate.cybozu.com/type: root
+  name: sample-root
+---
+apiVersion: accurate.cybozu.com/v1
+kind: SubNamespace
+metadata:
+  name: sample-sub
+  namespace: sample-root
+---
+apiVersion: v1
+data:
+  key: dGVtcGxhdGU=
+kind: Secret
+metadata:
+  annotations:
+    accurate.cybozu.com/propagate: update
+  name: sample-template
+  namespace: sample-template
+---
+apiVersion: v1
+data:
+  key: cm9vdA==
+kind: Secret
+metadata:
+  annotations:
+    accurate.cybozu.com/propagate: update
+  name: sample-root
+  namespace: sample-root

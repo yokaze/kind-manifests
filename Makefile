@@ -57,6 +57,7 @@ format:
 
 .PHONY: manifests
 manifests:
+	$(MAKE) generate-accurate-gallery
 	$(MAKE) generate-alpine
 	$(MAKE) generate-cluster-first-with-host-net
 	$(MAKE) generate-grafana
@@ -79,6 +80,9 @@ manifests:
 	$(MAKE) generate-promtail-audit
 	$(MAKE) generate-promtail-sample
 	$(MAKE) generate-pvc
+
+.PHONY: accurate-gallery
+accurate-gallery: jsonnet-accurate-gallery
 
 .PHONY: alpine
 alpine: jsonnet-alpine
