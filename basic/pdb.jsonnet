@@ -1,0 +1,15 @@
+[{
+  apiVersion: 'policy/v1beta1',
+  kind: 'PodDisruptionBudget',
+  metadata: {
+    name: 'sample',
+  },
+  spec: {
+    maxUnavailable: 1,
+    selector: {
+      matchLabels: {
+        app: 'sample',
+      },
+    },
+  },
+}]

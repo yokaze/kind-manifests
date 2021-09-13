@@ -1,30 +1,33 @@
-kind: StatefulSet
 apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   name: sample
 spec:
-  serviceName: sample
   replicas: 3
   selector:
     matchLabels:
       app: sample
+  serviceName: sample
   template:
     metadata:
       labels:
         app: sample
     spec:
       containers:
-        - name: ubuntu
-          image: quay.io/cybozu/ubuntu:18.04
-          command: ["pause"]
+        - command:
+            - sleep
+            - inf
+          image: alpine:3.13.5
+          name: alpine
           volumeMounts:
-            - name: vol
-              mountPath: /sample
+            - mountPath: /sample
+              name: vol
   volumeClaimTemplates:
     - metadata:
         name: vol
       spec:
-        accessModes: ["ReadWriteOnce"]
+        accessModes:
+          - ReadWriteOnce
         resources:
           requests:
             storage: 100Mi

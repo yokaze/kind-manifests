@@ -60,6 +60,8 @@ manifests:
 	$(MAKE) generate-accurate-gallery
 	$(MAKE) generate-alpine
 	$(MAKE) generate-cluster-first-with-host-net
+	$(MAKE) generate-daemon
+	$(MAKE) generate-deploy
 	$(MAKE) generate-grafana
 	$(MAKE) generate-grafana-basic
 	$(MAKE) generate-grafana-loki
@@ -72,6 +74,7 @@ manifests:
 	$(MAKE) generate-monitoring
 	$(MAKE) generate-mount-configmap
 	$(MAKE) generate-ns
+	$(MAKE) generate-pdb
 	$(MAKE) generate-pod
 	$(MAKE) generate-prometheus
 	$(MAKE) generate-prometheus-apiserver
@@ -82,6 +85,8 @@ manifests:
 	$(MAKE) generate-promtail-audit
 	$(MAKE) generate-promtail-sample
 	$(MAKE) generate-pvc
+	$(MAKE) generate-replica
+	$(MAKE) generate-sts
 
 .PHONY: accurate-gallery
 accurate-gallery: jsonnet-accurate-gallery
@@ -91,6 +96,12 @@ alpine: jsonnet-alpine
 
 .PHONY: cluster-first-with-host-net
 cluster-first-with-host-net: jsonnet-cluster-first-with-host-net
+
+.PHONY: daemon
+daemon: jsonnet-daemon
+
+.PHONY: deploy
+deploy: jsonnet-deploy
 
 .PHONY: grafana
 grafana: jsonnet-grafana
@@ -128,6 +139,9 @@ mount-configmap: jsonnet-mount-configmap
 .PHONY: ns
 ns: jsonnet-ns
 
+.PHONY: pdb
+pdb: jsonnet-pdb
+
 .PHONY: pod
 pod: jsonnet-pod
 
@@ -157,6 +171,12 @@ promtail-sample: jsonnet-promtail-sample
 
 .PHONY: pvc
 pvc: jsonnet-pvc
+
+.PHONY: replica
+replica: jsonnet-replica
+
+.PHONY: sts
+sts: jsonnet-sts
 
 # Rules for deploying
 .PHONY: deploy-accurate

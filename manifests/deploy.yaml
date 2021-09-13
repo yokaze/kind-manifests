@@ -13,6 +13,8 @@ spec:
         app: sample
     spec:
       containers:
-        - name: ubuntu
-          image: quay.io/cybozu/ubuntu:18.04
-          command: ["pause"]
+        - command:
+            - sleep
+            - inf
+          image: alpine:3.13.5
+          name: alpine
