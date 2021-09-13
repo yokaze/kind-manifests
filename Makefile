@@ -71,6 +71,8 @@ manifests:
 	$(MAKE) generate-moco
 	$(MAKE) generate-monitoring
 	$(MAKE) generate-mount-configmap
+	$(MAKE) generate-ns
+	$(MAKE) generate-pod
 	$(MAKE) generate-prometheus
 	$(MAKE) generate-prometheus-apiserver
 	$(MAKE) generate-prometheus-loki
@@ -122,6 +124,12 @@ monitoring: jsonnet-monitoring
 
 .PHONY: mount-configmap
 mount-configmap: jsonnet-mount-configmap
+
+.PHONY: ns
+ns: jsonnet-ns
+
+.PHONY: pod
+pod: jsonnet-pod
 
 .PHONY: prometheus
 prometheus: jsonnet-prometheus
