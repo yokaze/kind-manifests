@@ -189,6 +189,17 @@ deploy-accurate:
 delete-accurate:
 	./upstream/accurate/bin/kustomize build ./upstream/accurate/ | kubectl delete -f -
 
+.PHONY: deploy-argocd
+deploy-argocd:
+	kubectl create ns argocd
+	kubectl apply -n argocd -f upstream/argocd/install.yaml
+	@$(MAKE) --no-print-directory wait-pods
+
+.PHONY: delete-argocd
+delete-argocd:
+	kubectl delete -n argocd -f upstream/argocd/install.yaml
+	kubectl delete ns argocd
+
 .PHONY: deploy-cert-manager
 deploy-cert-manager:
 	kubectl apply -f upstream/cert-manager/cert-manager.yaml
@@ -262,6 +273,7 @@ delete-prometheus-operator:
 
 # Rules for upstream manifests
 ACCURATE_VERSION := 0.1.0
+ARGOCD_VERSION := 2.1.2
 CERT_MANAGER_VERSION := 1.5.3
 GRAFANA_OPERATOR_VERSION := 3.9.0
 HNC_VERSION := 0.8.0
@@ -276,6 +288,7 @@ clean:
 .PHONY: upstream
 upstream: \
 	upstream-accurate \
+	upstream-argocd \
 	upstream-cert-manager \
 	upstream-grafana-operator \
 	upstream-hnc \
@@ -288,6 +301,11 @@ upstream-accurate:
 	wget -O upstream/accurate/tar/accurate.tar.gz https://github.com/cybozu-go/accurate/archive/refs/tags/v$(ACCURATE_VERSION).tar.gz
 	tar xzf upstream/accurate/tar/accurate.tar.gz --strip-components=1 -C upstream/accurate
 	$(MAKE) -C upstream/accurate kustomize
+
+.PHONY: upstream-argocd
+upstream-argocd:
+	mkdir -p upstream/argocd
+	wget -O upstream/argocd/install.yaml https://raw.githubusercontent.com/argoproj/argo-cd/v$(ARGOCD_VERSION)/manifests/install.yaml
 
 .PHONY: upstream-cert-manager
 upstream-cert-manager:
