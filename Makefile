@@ -59,6 +59,7 @@ format:
 manifests:
 	$(MAKE) generate-accurate-gallery
 	$(MAKE) generate-alpine
+	$(MAKE) generate-burstable
 	$(MAKE) generate-cluster-first-with-host-net
 	$(MAKE) generate-daemon
 	$(MAKE) generate-deploy
@@ -93,6 +94,9 @@ accurate-gallery: jsonnet-accurate-gallery
 
 .PHONY: alpine
 alpine: jsonnet-alpine
+
+.PHONY: burstable
+burstable: jsonnet-burstable
 
 .PHONY: cluster-first-with-host-net
 cluster-first-with-host-net: jsonnet-cluster-first-with-host-net
