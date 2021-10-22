@@ -1,10 +1,10 @@
 {
-  alpine: 'alpine:3.13.5',
-  bash: 'bash:5.1.4',
-  grafana: 'grafana/grafana:7.4.3',
-  kubectl: 'bitnami/kubectl:1.19.8',
-  loki: 'grafana/loki:2.2.0',
+  alpine: 'alpine:3.14.2',
+  bash: 'bash:5.1.8',
+  grafana: 'grafana/grafana:8.2.2',
+  kubectl: 'bitnami/kubectl:1.21.5',
+  loki: 'grafana/loki:2.3.0',
   mysql: 'quay.io/cybozu/moco-mysql:8.0.24',
-  prometheus: 'prom/prometheus:v2.25.0',
-  promtail: 'grafana/promtail:2.2.0',
+  prometheus: 'prom/prometheus:v2.30.3',
+  promtail: 'grafana/promtail:2.3.0',
 }

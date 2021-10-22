@@ -18,7 +18,7 @@ metadata:
   name: prometheus
 spec:
   containers:
-    - image: prom/prometheus:v2.25.0
+    - image: prom/prometheus:v2.30.3
       name: prometheus
       volumeMounts:
         - mountPath: /etc/prometheus

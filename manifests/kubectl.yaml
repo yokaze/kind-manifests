@@ -41,6 +41,6 @@ spec:
     - command:
         - sleep
         - inf
-      image: bitnami/kubectl:1.19.8
+      image: bitnami/kubectl:1.21.5
       name: kubectl
   serviceAccountName: kubectl
