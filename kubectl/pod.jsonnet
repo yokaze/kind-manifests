@@ -1,3 +1,4 @@
+local images = import '../images.jsonnet';
 {
   kind: 'Pod',
   apiVersion: 'v1',
@@ -9,7 +10,7 @@
     containers: [
       {
         name: 'kubectl',
-        image: 'bitnami/kubectl:1.19.8',
+        image: images.kubectl,
         command: [
           'sleep',
           'inf',

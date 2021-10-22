@@ -1,3 +1,4 @@
+local images = import '../images.jsonnet';
 {
   apiVersion: 'moco.cybozu.com/v1beta1',
   kind: 'MySQLCluster',
@@ -38,7 +39,7 @@
         containers: [
           {
             name: 'mysqld',
-            image: 'quay.io/cybozu/moco-mysql:8.0.24',
+            image: images.mysql,
           },
         ],
       },

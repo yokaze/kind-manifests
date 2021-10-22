@@ -1,3 +1,4 @@
+local images = import '../images.jsonnet';
 {
   apiVersion: 'v1',
   kind: 'Pod',
@@ -11,7 +12,7 @@
     containers: [
       {
         name: 'loki',
-        image: 'grafana/loki:2.2.0',
+        image: images.loki,
       },
     ],
   },

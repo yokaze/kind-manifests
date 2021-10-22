@@ -1,3 +1,4 @@
+local images = import '../images.jsonnet';
 {
   apiVersion: 'v1',
   kind: 'Pod',
@@ -11,7 +12,7 @@
     containers: [
       {
         name: 'prometheus',
-        image: 'prom/prometheus:v2.25.0',
+        image: images.prometheus,
         volumeMounts: [
           {
             name: 'config',

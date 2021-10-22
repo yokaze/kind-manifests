@@ -1,3 +1,4 @@
+local images = import '../images.jsonnet';
 {
   apiVersion: 'v1',
   kind: 'Pod',
@@ -21,7 +22,7 @@
     containers: [
       {
         name: 'promtail',
-        image: 'grafana/promtail:2.2.0',
+        image: images.promtail,
         volumeMounts: [
           {
             name: 'config',

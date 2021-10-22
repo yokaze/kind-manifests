@@ -1,3 +1,4 @@
+local images = import '../images.jsonnet';
 {
   apiVersion: 'v1',
   kind: 'Pod',
@@ -8,7 +9,7 @@
     containers: [
       {
         name: 'grafana',
-        image: 'grafana/grafana:7.4.3',
+        image: images.grafana,
         env: [
           {
             name: 'GF_SECURITY_ADMIN_USER',
