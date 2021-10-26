@@ -87,6 +87,7 @@ manifests:
 	$(MAKE) generate-promtail-sample
 	$(MAKE) generate-pvc
 	$(MAKE) generate-replica
+	$(MAKE) generate-secret
 	$(MAKE) generate-sts
 
 .PHONY: accurate-gallery
@@ -178,6 +179,9 @@ pvc: jsonnet-pvc
 
 .PHONY: replica
 replica: jsonnet-replica
+
+.PHONY: secret
+secret: jsonnet-secret
 
 .PHONY: sts
 sts: jsonnet-sts
