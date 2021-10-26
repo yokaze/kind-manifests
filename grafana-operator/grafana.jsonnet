@@ -7,8 +7,8 @@
     },
     type: 'Opaque',
     data: {
-      GF_SECURITY_ADMIN_USER: 'YWRtaW4=',
-      GF_SECURITY_ADMIN_PASSWORD: 'cGFzc3dvcmQ=',
+      GF_SECURITY_ADMIN_USER: std.base64('admin'),
+      GF_SECURITY_ADMIN_PASSWORD: std.base64('password'),
     },
   },
   {

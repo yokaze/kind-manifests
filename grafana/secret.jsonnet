@@ -6,7 +6,7 @@
   },
   type: 'Opaque',
   data: {
-    username: 'YWRtaW4=',
-    password: 'cGFzc3dvcmQ=',
+    username: std.base64('admin'),
+    password: std.base64('password'),
   },
 }

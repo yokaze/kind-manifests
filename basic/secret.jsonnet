@@ -6,6 +6,6 @@
   },
   type: 'Opaque',
   data: {
-    sample: 'c2FtcGxl',
+    sample: std.base64('sample'),
   },
 }]

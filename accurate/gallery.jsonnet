@@ -39,7 +39,7 @@
       },
     },
     data: {
-      key: 'dGVtcGxhdGU=',
+      key: std.base64('template'),
     },
   },
   {
@@ -53,7 +53,7 @@
       },
     },
     data: {
-      key: 'cm9vdA==',
+      key: std.base64('root'),
     },
   },
 ]
