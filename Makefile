@@ -95,12 +95,13 @@ manifests:
 .PHONY: deploy-accurate
 deploy-accurate:
 	@$(MAKE) --no-print-directory ensure-cert-manager
-	./upstream/accurate/bin/kustomize build ./upstream/accurate/ | kubectl apply -f -
+	helm install --create-namespace --namespace accurate accurate accurate/accurate
 	@$(MAKE) --no-print-directory wait-pods
 
 .PHONY: delete-accurate
 delete-accurate:
-	./upstream/accurate/bin/kustomize build ./upstream/accurate/ | kubectl delete -f -
+	helm uninstall --namespace accurate accurate
+	kubectl delete ns accurate
 
 .PHONY: deploy-argocd
 deploy-argocd:
@@ -210,10 +211,8 @@ upstream: \
 
 .PHONY: upstream-accurate
 upstream-accurate:
-	mkdir -p upstream/accurate/tar
-	wget -O upstream/accurate/tar/accurate.tar.gz https://github.com/cybozu-go/accurate/archive/refs/tags/v$(ACCURATE_VERSION).tar.gz
-	tar xzf upstream/accurate/tar/accurate.tar.gz --strip-components=1 -C upstream/accurate
-	$(MAKE) -C upstream/accurate kustomize
+	helm repo add accurate https://cybozu-go.github.io/accurate/
+	helm repo update
 
 .PHONY: upstream-argocd
 upstream-argocd:
