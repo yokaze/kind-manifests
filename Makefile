@@ -62,6 +62,7 @@ manifests:
 	$(MAKE) generate-burstable
 	$(MAKE) generate-cluster-first-with-host-net
 	$(MAKE) generate-configmap
+	$(MAKE) generate-crd
 	$(MAKE) generate-daemon
 	$(MAKE) generate-deploy
 	$(MAKE) generate-grafana
