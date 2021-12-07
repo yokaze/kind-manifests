@@ -63,6 +63,7 @@ manifests:
 	$(MAKE) generate-cluster-first-with-host-net
 	$(MAKE) generate-configmap
 	$(MAKE) generate-crd
+	$(MAKE) generate-crd-resource
 	$(MAKE) generate-daemon
 	$(MAKE) generate-deploy
 	$(MAKE) generate-grafana
