@@ -5,6 +5,6 @@
     name: 'sample',
   },
   data: {
-    'sample': 'sample',
+    sample: 'sample',
   },
 }]
