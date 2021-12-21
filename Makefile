@@ -97,7 +97,7 @@ manifests:
 .PHONY: deploy-accurate
 deploy-accurate:
 	@$(MAKE) --no-print-directory ensure-cert-manager
-	helm install --create-namespace --namespace accurate accurate accurate/accurate
+	helm install accurate accurate/accurate --namespace accurate --create-namespace --values helm/accurate-values.yaml
 	@$(MAKE) --no-print-directory wait-pods
 
 .PHONY: delete-accurate
@@ -188,7 +188,6 @@ delete-prometheus-operator:
 	kubectl delete -f upstream/prometheus-operator/bundle.yaml
 
 # Rules for upstream manifests
-ACCURATE_VERSION := 0.1.0
 ARGOCD_VERSION := 2.1.2
 CERT_MANAGER_VERSION := 1.5.3
 GRAFANA_OPERATOR_VERSION := 3.9.0

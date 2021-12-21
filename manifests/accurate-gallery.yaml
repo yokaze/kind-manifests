@@ -3,6 +3,7 @@ kind: Namespace
 metadata:
   labels:
     accurate.cybozu.com/type: template
+    yokaze.github.io/template: template
   name: sample-template
 ---
 apiVersion: v1
@@ -11,6 +12,7 @@ metadata:
   labels:
     accurate.cybozu.com/template: sample-template
     accurate.cybozu.com/type: root
+    yokaze.github.io/root: root
   name: sample-root
 ---
 apiVersion: accurate.cybozu.com/v1
@@ -18,6 +20,9 @@ kind: SubNamespace
 metadata:
   name: sample-sub
   namespace: sample-root
+spec:
+  labels:
+    yokaze.github.io/sub-sample: sample
 ---
 apiVersion: v1
 data:

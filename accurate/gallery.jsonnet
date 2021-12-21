@@ -6,6 +6,7 @@
       name: 'sample-template',
       labels: {
         'accurate.cybozu.com/type': 'template',
+        'yokaze.github.io/template': 'template',
       },
     },
   },
@@ -17,6 +18,7 @@
       labels: {
         'accurate.cybozu.com/template': 'sample-template',
         'accurate.cybozu.com/type': 'root',
+        'yokaze.github.io/root': 'root',
       },
     },
   },
@@ -26,6 +28,11 @@
     metadata: {
       namespace: 'sample-root',
       name: 'sample-sub',
+    },
+    spec: {
+      labels: {
+        'yokaze.github.io/sub-sample': 'sample',
+      },
     },
   },
   {

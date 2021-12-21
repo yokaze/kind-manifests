@@ -1,0 +1,7 @@
+controller:
+  config:
+    labelKeys:
+      - yokaze.github.io/root
+      - yokaze.github.io/template
+    subNamespaceLabelKeys:
+      - yokaze.github.io/sub-sample
