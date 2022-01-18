@@ -66,6 +66,7 @@ manifests:
 	$(MAKE) generate-crd-resource
 	$(MAKE) generate-daemon
 	$(MAKE) generate-deploy
+	$(MAKE) generate-deploy-tsc
 	$(MAKE) generate-grafana
 	$(MAKE) generate-grafana-basic
 	$(MAKE) generate-grafana-loki
