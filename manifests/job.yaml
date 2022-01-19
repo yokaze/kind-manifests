@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sample
+spec:
+  template:
+    spec:
+      containers:
+        - command:
+            - echo
+            - hello
+          image: alpine:3.14.2
+          name: sample
+      restartPolicy: OnFailure

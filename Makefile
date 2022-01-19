@@ -73,6 +73,7 @@ manifests:
 	$(MAKE) generate-grafana-operator-grafana
 	$(MAKE) generate-grafana-operator-prometheus
 	$(MAKE) generate-host-network
+	$(MAKE) generate-job
 	$(MAKE) generate-kubectl
 	$(MAKE) generate-loki
 	$(MAKE) generate-moco
