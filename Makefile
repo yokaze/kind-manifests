@@ -189,6 +189,22 @@ deploy-prometheus-operator:
 delete-prometheus-operator:
 	kubectl delete -f upstream/prometheus-operator/bundle.yaml
 
+.PHONY: deploy-vault
+VAULT_CHART_VERSION := 0.18.0
+
+deploy-vault:
+	jsonnet helm/vault-values.jsonnet | yq e . - -P | helm install vault hashicorp/vault --version $(VAULT_CHART_VERSION) --namespace vault --create-namespace --values -
+	while [ $$(kubectl get sts -n vault vault -o yaml | yq e .status.currentReplicas -) != 3 ]; do sleep 1; done
+	kubectl wait -n vault pod/vault-0 pod/vault-1 pod/vault-2 --for condition=Initialized
+	jsonnet helm/vault-init.jsonnet | yq e '.[]|splitDoc' - -P | kubectl apply -f -
+	kubectl wait -n vault pod/vault-0 pod/vault-1 pod/vault-2 --for condition=Ready
+
+.PHONY: delete-vault
+delete-vault:
+	jsonnet helm/vault-init.jsonnet | yq e '.[]|splitDoc' - -P | kubectl delete -f -
+	helm uninstall vault --namespace vault
+	kubectl delete ns vault
+
 # Rules for upstream manifests
 ARGOCD_VERSION := 2.1.2
 CERT_MANAGER_VERSION := 1.5.3
@@ -259,3 +275,8 @@ upstream-moco:
 upstream-prometheus-operator:
 	mkdir -p upstream/prometheus-operator
 	wget -O upstream/prometheus-operator/bundle.yaml https://github.com/prometheus-operator/prometheus-operator/raw/v$(PROMETHEUS_OPERATOR_VERSION)/bundle.yaml
+
+.PHONY: upstream-vault
+upstream-vault:
+	helm repo add hashicorp https://helm.releases.hashicorp.com
+	helm repo update

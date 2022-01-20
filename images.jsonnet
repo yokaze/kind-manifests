@@ -7,4 +7,5 @@
   mysql: 'quay.io/cybozu/moco-mysql:8.0.24',
   prometheus: 'prom/prometheus:v2.30.3',
   promtail: 'grafana/promtail:2.3.0',
+  vault: 'hashicorp/vault:1.9.0',
 }
