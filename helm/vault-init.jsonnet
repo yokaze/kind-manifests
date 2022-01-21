@@ -32,22 +32,18 @@ local images = import '../images.jsonnet';
             name: 'init',
             image: images.vault,
             command: ['sh', '-c', '. /etc/vault-init/vault-init.sh'],
-            volumeMounts: [
-              {
-                name: 'vault-init',
-                mountPath: '/etc/vault-init',
-                readOnly: true,
-              },
-            ],
-          }],
-          volumes: [
-            {
+            volumeMounts: [{
               name: 'vault-init',
-              configMap: {
-                name: 'vault-init',
-              },
+              mountPath: '/etc/vault-init',
+              readOnly: true,
+            }],
+          }],
+          volumes: [{
+            name: 'vault-init',
+            configMap: {
+              name: 'vault-init',
             },
-          ],
+          }],
           restartPolicy: 'OnFailure',
         },
       },
