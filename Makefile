@@ -24,7 +24,7 @@ umount:
 
 wait-nodes:
 	while ! kubectl get nodes > /dev/null 2>&1; do sleep 1; done
-	while test "$$(kubectl get nodes -o yaml | yq e '.items[]|.status.conditions[-1]|select(.type != "Ready" or .status != "True")' -)"; do sleep 1; done
+	kubectl wait node --all --for condition=Ready
 	@$(MAKE) --no-print-directory wait-pods
 
 wait-pods:
