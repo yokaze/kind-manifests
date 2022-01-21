@@ -94,6 +94,7 @@ manifests:
 	$(MAKE) generate-replica
 	$(MAKE) generate-secret
 	$(MAKE) generate-sts
+	$(MAKE) generate-svc-different-ports
 
 # Rules for deploying
 .PHONY: deploy-accurate

@@ -5,6 +5,7 @@
   kubectl: 'bitnami/kubectl:1.21.5',
   loki: 'grafana/loki:2.3.0',
   mysql: 'quay.io/cybozu/moco-mysql:8.0.24',
+  nginx: 'nginx:1.21.5',
   prometheus: 'prom/prometheus:v2.30.3',
   promtail: 'grafana/promtail:2.3.0',
   vault: 'hashicorp/vault:1.9.0',
