@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bind-tools
+spec:
+  containers:
+    - command:
+        - sh
+        - -c
+        - apk add --no-cache bind-tools && sleep inf
+      image: alpine:3.14.2
+      name: alpine

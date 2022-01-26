@@ -59,6 +59,7 @@ format:
 manifests:
 	$(MAKE) generate-accurate-gallery
 	$(MAKE) generate-alpine
+	$(MAKE) generate-bind-tools
 	$(MAKE) generate-burstable
 	$(MAKE) generate-cluster-first-with-host-net
 	$(MAKE) generate-configmap
