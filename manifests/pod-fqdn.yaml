@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: sample
+  name: sample
+spec:
+  containers:
+    - image: nginx:1.21.5
+      name: nginx
+      ports:
+        - containerPort: 80
+  hostname: sample
+  subdomain: sample
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample
+spec:
+  clusterIP: None
+  ports:
+    - port: 80
+  selector:
+    app: sample
