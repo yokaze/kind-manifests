@@ -1,6 +1,7 @@
 {
   alpine: 'alpine:3.14.2',
   bash: 'bash:5.1.8',
+  etcd: 'bitnami/etcd:3.5.2',
   grafana: 'grafana/grafana:8.2.2',
   kubectl: 'bitnami/kubectl:1.21.5',
   loki: 'grafana/loki:2.3.0',

@@ -68,6 +68,7 @@ manifests:
 	$(MAKE) generate-daemon
 	$(MAKE) generate-deploy
 	$(MAKE) generate-deploy-tsc
+	$(MAKE) generate-etcdctl
 	$(MAKE) generate-grafana
 	$(MAKE) generate-grafana-basic
 	$(MAKE) generate-grafana-loki

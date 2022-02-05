@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: etcdctl
+spec:
+  containers:
+    - command:
+        - sleep
+        - inf
+      image: bitnami/etcd:3.5.2
+      name: etcd
