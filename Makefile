@@ -194,6 +194,20 @@ deploy-prometheus-operator:
 delete-prometheus-operator:
 	kubectl delete -f upstream/prometheus-operator/bundle.yaml
 
+.PHONY: deploy-remote-coredns
+deploy-remote-coredns:
+	kubectl create ns remote-coredns
+	jsonnet helm/remote-coredns-etcd-values.jsonnet | yq e . - -P | helm install remote-coredns-etcd bitnami/etcd --namespace remote-coredns --values -
+	@$(MAKE) --no-print-directory wait-pods
+	jsonnet helm/remote-coredns-values.jsonnet | yq e . - -P | helm install remote-coredns coredns/coredns --namespace remote-coredns --values -
+	@$(MAKE) --no-print-directory wait-pods
+
+.PHONY: delete-remote-coredns
+delete-remote-coredns:
+	helm uninstall remote-coredns --namespace remote-coredns
+	helm uninstall remote-coredns-etcd --namespace remote-coredns
+	kubectl delete ns remote-coredns
+
 .PHONY: deploy-vault
 VAULT_CHART_VERSION := 0.18.0
 
@@ -227,7 +241,9 @@ clean:
 upstream: \
 	upstream-accurate \
 	upstream-argocd \
+	upstream-bitnami \
 	upstream-cert-manager \
+	upstream-coredns \
 	upstream-grafana-operator \
 	upstream-hnc \
 	upstream-moco \
@@ -244,10 +260,19 @@ upstream-argocd:
 	mkdir -p upstream/argocd
 	wget -O upstream/argocd/install.yaml https://raw.githubusercontent.com/argoproj/argo-cd/v$(ARGOCD_VERSION)/manifests/install.yaml
 
+.PHONY: upstream-bitnami
+upstream-bitnami:
+	helm repo add bitnami https://charts.bitnami.com/bitnami
+	helm repo update
+
 .PHONY: upstream-cert-manager
 upstream-cert-manager:
 	mkdir -p upstream/cert-manager
 	wget -O upstream/cert-manager/cert-manager.yaml https://github.com/jetstack/cert-manager/releases/download/v$(CERT_MANAGER_VERSION)/cert-manager.yaml
+
+.PHONY: upstream-coredns
+upstream-coredns:
+	helm repo add coredns https://coredns.github.io/helm
 
 .PHONY: upstream-grafana-operator
 upstream-grafana-operator: URL := https://raw.githubusercontent.com/integr8ly/grafana-operator/v$(GRAFANA_OPERATOR_VERSION)/deploy

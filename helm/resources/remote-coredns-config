@@ -1,0 +1,2 @@
+path /skydns
+endpoint http://remote-coredns-etcd:2379
