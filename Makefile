@@ -138,6 +138,16 @@ ensure-cert-manager:
 		$(MAKE) --no-print-directory deploy-cert-manager; \
 	fi
 
+.PHONY: deploy-external-dns
+deploy-external-dns:
+	jsonnet helm/external-dns-values.jsonnet | yq e . - -P | helm install external-dns bitnami/external-dns --namespace external-dns --create-namespace --values -
+	@$(MAKE) --no-print-directory wait-pods
+
+.PHONY: delete-external-dns
+delete-external-dns:
+	helm uninstall external-dns --namespace external-dns
+	kubectl delete ns external-dns
+
 .PHONY: deploy-grafana-operator
 deploy-grafana-operator:
 	kubectl apply -f upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml
