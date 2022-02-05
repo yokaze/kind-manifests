@@ -230,7 +230,8 @@ upstream: \
 	upstream-grafana-operator \
 	upstream-hnc \
 	upstream-moco \
-	upstream-prometheus-operator
+	upstream-prometheus-operator \
+	upstream-vault
 
 .PHONY: upstream-accurate
 upstream-accurate:
