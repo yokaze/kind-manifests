@@ -1,1 +1,1 @@
-import '../basic/svc-headless.jsonnet'
+import '../svc/svc-headless.jsonnet'

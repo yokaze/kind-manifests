@@ -1,1 +1,1 @@
-import '../basic/svc-different-ports.jsonnet'
+import '../svc/svc-different-ports.jsonnet'
