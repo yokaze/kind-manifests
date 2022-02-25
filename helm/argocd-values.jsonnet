@@ -1,0 +1,7 @@
+{
+  server: {
+    extraArgs: [
+      '--insecure',
+    ],
+  },
+}

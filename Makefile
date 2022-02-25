@@ -116,12 +116,20 @@ delete-accurate:
 
 .PHONY: deploy-argocd
 deploy-argocd:
-	helm install argocd argo/argo-cd --namespace argocd --create-namespace
+	jsonnet helm/argocd-values.jsonnet | yq e . - -P | helm install argocd argo/argo-cd --namespace argocd --create-namespace --values -
 	@$(MAKE) --no-print-directory wait-pods
+
+.PHONY: forward-argocd
+forward-argocd:
+	kubectl port-forward -n argocd service/argocd-server 8080:80
+
+.PHONY: password-argocd
+password-argocd:
+	kubectl get secret -n argocd argocd-initial-admin-secret -o yaml | yq e .data.password - | base64 -d
 
 .PHONY: login-argocd
 login-argocd:
-	kubectl port-forward -n argocd service/argocd-server 8080:443 > /dev/null &
+	kubectl port-forward -n argocd service/argocd-server 8080:80 > /dev/null &
 	sleep 5
 	argocd login localhost:8080 --username admin --password $$(kubectl get secret -n argocd argocd-initial-admin-secret -o yaml | yq e .data.password - | base64 -d)
 
