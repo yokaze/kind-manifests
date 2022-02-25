@@ -275,17 +275,17 @@ upstream: \
 .PHONY: upstream-accurate
 upstream-accurate:
 	helm repo add accurate https://cybozu-go.github.io/accurate/
-	helm repo update
+	helm repo update accurate
 
 .PHONY: upstream-argocd
 upstream-argocd:
 	helm repo add argo https://argoproj.github.io/argo-helm
-	helm repo update
+	helm repo update argo
 
 .PHONY: upstream-bitnami
 upstream-bitnami:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
-	helm repo update
+	helm repo update bitnami
 
 .PHONY: upstream-cert-manager
 upstream-cert-manager:
@@ -295,6 +295,7 @@ upstream-cert-manager:
 .PHONY: upstream-coredns
 upstream-coredns:
 	helm repo add coredns https://coredns.github.io/helm
+	helm repo update coredns
 
 .PHONY: upstream-grafana-operator
 upstream-grafana-operator: URL := https://raw.githubusercontent.com/integr8ly/grafana-operator/v$(GRAFANA_OPERATOR_VERSION)/deploy
@@ -332,4 +333,4 @@ upstream-prometheus-operator:
 .PHONY: upstream-vault
 upstream-vault:
 	helm repo add hashicorp https://helm.releases.hashicorp.com
-	helm repo update
+	helm repo update hashicorp
