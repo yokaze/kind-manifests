@@ -115,13 +115,12 @@ delete-accurate:
 
 .PHONY: deploy-argocd
 deploy-argocd:
-	kubectl create ns argocd
-	kubectl apply -n argocd -f upstream/argocd/install.yaml
+	helm install argocd argo/argo-cd --namespace argocd --create-namespace
 	@$(MAKE) --no-print-directory wait-pods
 
 .PHONY: delete-argocd
 delete-argocd:
-	kubectl delete -n argocd -f upstream/argocd/install.yaml
+	helm uninstall argocd --namespace argocd
 	kubectl delete ns argocd
 
 .PHONY: deploy-cert-manager
@@ -268,8 +267,8 @@ upstream-accurate:
 
 .PHONY: upstream-argocd
 upstream-argocd:
-	mkdir -p upstream/argocd
-	wget -O upstream/argocd/install.yaml https://raw.githubusercontent.com/argoproj/argo-cd/v$(ARGOCD_VERSION)/manifests/install.yaml
+	helm repo add argo https://argoproj.github.io/argo-helm
+	helm repo update
 
 .PHONY: upstream-bitnami
 upstream-bitnami:
