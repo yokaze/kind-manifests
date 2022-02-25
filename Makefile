@@ -59,6 +59,7 @@ format:
 manifests:
 	$(MAKE) generate-accurate-gallery
 	$(MAKE) generate-alpine
+	$(MAKE) generate-argocd-app
 	$(MAKE) generate-bind-tools
 	$(MAKE) generate-burstable
 	$(MAKE) generate-cluster-first-with-host-net
@@ -117,6 +118,17 @@ delete-accurate:
 deploy-argocd:
 	helm install argocd argo/argo-cd --namespace argocd --create-namespace
 	@$(MAKE) --no-print-directory wait-pods
+
+.PHONY: login-argocd
+login-argocd:
+	kubectl port-forward -n argocd service/argocd-server 8080:443 > /dev/null &
+	sleep 5
+	argocd login localhost:8080 --username admin --password $$(kubectl get secret -n argocd argocd-initial-admin-secret -o yaml | yq e .data.password - | base64 -d)
+
+.PHONY: logout-argocd
+logout-argocd:
+	argocd logout localhost:8080
+	kill $$(pgrep kubectl)
 
 .PHONY: delete-argocd
 delete-argocd:
