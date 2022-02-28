@@ -143,6 +143,17 @@ delete-argocd:
 	helm uninstall argocd --namespace argocd
 	kubectl delete ns argocd
 
+.PHONY: deploy-cattage
+deploy-cattage:
+	@$(MAKE) --no-print-directory ensure-cert-manager
+	helm install cattage cattage/cattage --namespace cattage --create-namespace
+	@$(MAKE) --no-print-directory wait-pods
+
+.PHONY: delete-cattage
+delete-cattage:
+	helm uninstall cattage --namespace cattage
+	kubectl delete ns cattage
+
 .PHONY: deploy-cert-manager
 deploy-cert-manager:
 	kubectl apply -f upstream/cert-manager/cert-manager.yaml
@@ -272,6 +283,7 @@ upstream: \
 	upstream-accurate \
 	upstream-argocd \
 	upstream-bitnami \
+	upstream-cattage \
 	upstream-cert-manager \
 	upstream-coredns \
 	upstream-grafana-operator \
@@ -294,6 +306,11 @@ upstream-argocd:
 upstream-bitnami:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
 	helm repo update bitnami
+
+.PHONY: upstream-cattage
+upstream-cattage:
+	helm repo add cattage https://cybozu-go.github.io/cattage/
+	helm repo update cattage
 
 .PHONY: upstream-cert-manager
 upstream-cert-manager:
