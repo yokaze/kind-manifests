@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  name: sample-kustomize
+  namespace: argocd
+spec:
+  destination:
+    namespace: sample-kustomize
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: argocd/manifests/sample-kustomize
+    repoURL: https://github.com/yokaze/kind-manifests.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

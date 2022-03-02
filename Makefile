@@ -60,6 +60,7 @@ manifests:
 	$(MAKE) generate-accurate-gallery
 	$(MAKE) generate-alpine
 	$(MAKE) generate-argocd-app
+	$(MAKE) generate-argocd-app-kustomize
 	$(MAKE) generate-bind-tools
 	$(MAKE) generate-burstable
 	$(MAKE) generate-cluster-first-with-host-net
