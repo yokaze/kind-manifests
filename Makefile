@@ -86,6 +86,7 @@ manifests:
 	$(MAKE) generate-ns
 	$(MAKE) generate-pdb
 	$(MAKE) generate-pod
+	$(MAKE) generate-pod-env
 	$(MAKE) generate-pod-fqdn
 	$(MAKE) generate-prometheus
 	$(MAKE) generate-prometheus-apiserver
