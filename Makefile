@@ -41,7 +41,7 @@ jsonnet-%:
 	@jsonnet jsonnet/$*.jsonnet | yq eval '.[] | splitDoc' - -P
 
 generate-%:
-	mkdir -p manifests
+	@mkdir -p manifests
 	$(MAKE) --no-print-directory jsonnet-$* > manifests/$*.yaml
 
 .PHONY: format
@@ -57,52 +57,9 @@ format:
 
 .PHONY: manifests
 manifests:
-	$(MAKE) generate-accurate-gallery
-	$(MAKE) generate-alpine
-	$(MAKE) generate-argocd-app
-	$(MAKE) generate-argocd-app-kustomize
-	$(MAKE) generate-bind-tools
-	$(MAKE) generate-burstable
-	$(MAKE) generate-cluster-first-with-host-net
-	$(MAKE) generate-configmap
-	$(MAKE) generate-crd
-	$(MAKE) generate-crd-resource
-	$(MAKE) generate-daemon
-	$(MAKE) generate-deploy
-	$(MAKE) generate-deploy-tsc
-	$(MAKE) generate-etcdctl
-	$(MAKE) generate-grafana
-	$(MAKE) generate-grafana-basic
-	$(MAKE) generate-grafana-loki
-	$(MAKE) generate-grafana-operator-grafana
-	$(MAKE) generate-grafana-operator-prometheus
-	$(MAKE) generate-host-network
-	$(MAKE) generate-job
-	$(MAKE) generate-kubectl
-	$(MAKE) generate-loki
-	$(MAKE) generate-moco
-	$(MAKE) generate-monitoring
-	$(MAKE) generate-mount-configmap
-	$(MAKE) generate-ns
-	$(MAKE) generate-pdb
-	$(MAKE) generate-pod
-	$(MAKE) generate-pod-env
-	$(MAKE) generate-pod-fqdn
-	$(MAKE) generate-prometheus
-	$(MAKE) generate-prometheus-apiserver
-	$(MAKE) generate-prometheus-loki
-	$(MAKE) generate-prometheus-operator-monitor-prometheus
-	$(MAKE) generate-prometheus-operator-prometheus
-	$(MAKE) generate-prometheus-promtail
-	$(MAKE) generate-promtail-audit
-	$(MAKE) generate-promtail-sample
-	$(MAKE) generate-pvc
-	$(MAKE) generate-replica
-	$(MAKE) generate-secret
-	$(MAKE) generate-sts
-	$(MAKE) generate-svc-different-ports
-	$(MAKE) generate-svc-external-dns
-	$(MAKE) generate-svc-headless
+	@for i in $(shell ls manifests/); do \
+		$(MAKE) --no-print-directory generate-$$(basename $$i .yaml); \
+	done
 
 # Rules for deploying
 .PHONY: deploy-accurate
