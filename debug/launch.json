@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Accurate",
+            "type": "go",
+            "debugAdapter": "dlv-dap",
+            "request": "launch",
+            "mode": "exec",
+            "host": "localhost",
+            "port": 12345,
+            "program": "/work/accurate/accurate-controller",
+            "hideSystemGoroutines": true,
+            "substitutePath": [
+                {
+                    "from": "${workspaceFolder}",
+                    "to": "/work/accurate"
+                },
+                {
+                    "from": "${env:GOPATH}/pkg/mod",
+                    "to": "/go/pkg/mod"
+                }
+            ]
+        }
+    ]
+}

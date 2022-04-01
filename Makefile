@@ -116,6 +116,20 @@ delete-accurate:
 	helm uninstall --namespace accurate accurate
 	kubectl delete ns accurate
 
+.PHONY: debug-accurate
+debug-accurate:
+	@$(MAKE) --no-print-directory ensure-cert-manager
+	docker build -t accurate:debug debug/
+	kind load docker-image accurate:debug
+	kustomize build debug --enable-helm | kubectl apply -f -
+	while [ "$$(kubectl get -n accurate $$(kubectl get pod -n accurate -l app.kubernetes.io/name=accurate -o name) -o yaml 2>/dev/null | yq e .status.phase -)" != "Running" ]; do sleep 1; done
+	kubectl port-forward -n accurate $$(kubectl get pod -n accurate -l app.kubernetes.io/name=accurate -o name) 12345
+
+.PHONY: halt-accurate
+halt-accurate:
+	kubectl delete validatingwebhookconfiguration accurate-validating-webhook-configuration || true
+	kubectl delete ns accurate || true
+
 .PHONY: deploy-argocd
 deploy-argocd:
 	jsonnet helm/argocd-values.jsonnet | yq e . - -P | helm install argocd argo/argo-cd --namespace argocd --create-namespace --values -
