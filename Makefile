@@ -191,6 +191,14 @@ deploy-moco:
 delete-moco:
 	kubectl delete -f upstream/moco/moco.yaml
 
+.PHONY: deploy-neco-admission
+deploy-neco-admission: ensure-cert-manager
+	kustomize build neco-admission | kubectl apply -f -
+
+.PHONY: delete-neco-admission
+delete-neco-admission:
+	kustomize build neco-admission | kubectl delete -f -
+
 .PHONY: deploy-prometheus-operator
 deploy-prometheus-operator:
 	kubectl apply -f upstream/prometheus-operator/bundle.yaml
@@ -252,6 +260,7 @@ upstream: \
 	upstream-coredns \
 	upstream-grafana-operator \
 	upstream-moco \
+	upstream-neco-admission \
 	upstream-prometheus-operator \
 	upstream-vault
 
@@ -307,6 +316,11 @@ upstream-grafana-operator:
 upstream-moco:
 	mkdir -p upstream/moco
 	wget -O upstream/moco/moco.yaml https://github.com/cybozu-go/moco/releases/download/v$(MOCO_VERSION)/moco.yaml
+
+.PHONY: upstream-neco-admission
+upstream-neco-admission:
+	mkdir -p neco-admission/upstream
+	wget -O neco-admission/upstream/manifests.yaml https://raw.githubusercontent.com/cybozu/neco-containers/main/admission/config/webhook/manifests.yaml
 
 .PHONY: upstream-prometheus-operator
 upstream-prometheus-operator:

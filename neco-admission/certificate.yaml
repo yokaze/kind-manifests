@@ -1,0 +1,49 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: webhook-selfsign
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: webhook-ca
+spec:
+  secretName: webhook-ca
+  duration: 24h
+  issuerRef:
+    name: webhook-selfsign
+  commonName: "ca.webhook.neco-admission"
+  isCA: true
+  usages:
+    - digital signature
+    - key encipherment
+    - cert sign
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: webhook-ca
+spec:
+  ca:
+    secretName: webhook-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: neco-admission
+spec:
+  secretName: neco-admission-webhook
+  duration: 24h
+  issuerRef:
+    name: webhook-ca
+  dnsNames:
+    - neco-admission
+    - neco-admission.neco-admission
+    - neco-admission.neco-admission.svc
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+    - client auth
