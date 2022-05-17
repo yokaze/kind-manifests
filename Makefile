@@ -222,6 +222,11 @@ delete-remote-coredns:
 	helm uninstall remote-coredns-etcd --namespace remote-coredns
 	kubectl delete ns remote-coredns
 
+.PHONY: deploy-sealed-secrets
+deploy-sealed-secrets:
+	helm install sealed-secrets sealed-secrets/sealed-secrets --namespace sealed-secrets --create-namespace
+	@$(MAKE) --no-print-directory wait-pods
+
 .PHONY: deploy-vault
 VAULT_CHART_VERSION := 0.18.0
 
@@ -326,6 +331,11 @@ upstream-neco-admission:
 upstream-prometheus-operator:
 	mkdir -p upstream/prometheus-operator
 	wget -O upstream/prometheus-operator/bundle.yaml https://github.com/prometheus-operator/prometheus-operator/raw/v$(PROMETHEUS_OPERATOR_VERSION)/bundle.yaml
+
+.PHONY: upstream-sealed-secrets
+upstream-sealed-secrets:
+	helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+	helm repo update sealed-secrets
 
 .PHONY: upstream-vault
 upstream-vault:
