@@ -142,6 +142,16 @@ ensure-cert-manager:
 		$(MAKE) --no-print-directory deploy-cert-manager; \
 	fi
 
+.PHONY: deploy-contour
+deploy-contour:
+	helm install contour bitnami/contour --namespace contour --create-namespace
+	@$(MAKE) --no-print-directory wait-pods
+
+.PHONY: delete-contour
+delete-contour:
+	helm uninstall contour --namespace contour
+	kubectl delete ns contour
+
 .PHONY: deploy-external-dns
 deploy-external-dns:
 	jsonnet helm/external-dns-values.jsonnet | yq e . - -P | helm install external-dns bitnami/external-dns --namespace external-dns --create-namespace --values -
