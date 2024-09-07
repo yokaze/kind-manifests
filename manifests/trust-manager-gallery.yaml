@@ -1,0 +1,105 @@
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: cluster-ca
+spec:
+  sources:
+    - secret:
+        key: ca.crt
+        name: cluster-ca
+  target:
+    configMap:
+      key: ca.crt
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: https-server
+spec:
+  dnsNames:
+    - https-server.default.svc
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: cluster-ca
+  secretName: https-server
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app.kubernetes.io/name: https-server
+  name: https-server
+spec:
+  containers:
+    - command:
+        - python3
+        - /etc/https-server-script/script.py
+      image: python:latest
+      name: python
+      volumeMounts:
+        - mountPath: /etc/https-server
+          name: https-server
+          readOnly: true
+        - mountPath: /etc/https-server-script
+          name: https-server-script
+          readOnly: true
+  volumes:
+    - name: https-server
+      secret:
+        secretName: https-server
+    - configMap:
+        name: https-server-script
+      name: https-server-script
+---
+apiVersion: v1
+data:
+  script.py: |
+    import http.server
+    import ssl
+
+    ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+    ctx.load_cert_chain("/etc/https-server/tls.crt", keyfile="/etc/https-server/tls.key")
+
+    srv = http.server.HTTPServer(("", 8443), http.server.SimpleHTTPRequestHandler)
+    srv.socket = ctx.wrap_socket(srv.socket)
+    srv.serve_forever()
+kind: ConfigMap
+metadata:
+  name: https-server-script
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: https-server
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+    - name: https
+      port: 443
+      targetPort: 8443
+  selector:
+    app.kubernetes.io/name: https-server
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: https-client
+spec:
+  containers:
+    - command:
+        - bash
+        - -c
+        - apt-get update && apt install -y curl && apt remove --purge -y ca-certificates && sleep inf
+      image: ubuntu:24.04
+      name: ubuntu
+      volumeMounts:
+        - mountPath: /etc/cluster-ca
+          name: cluster-ca
+          readOnly: true
+  volumes:
+    - configMap:
+        name: cluster-ca
+      name: cluster-ca

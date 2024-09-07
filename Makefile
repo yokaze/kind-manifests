@@ -237,6 +237,11 @@ deploy-sealed-secrets:
 	helm install sealed-secrets sealed-secrets/sealed-secrets --namespace sealed-secrets --create-namespace
 	@$(MAKE) --no-print-directory wait-pods
 
+.PHONY: deploy-trust-manager
+deploy-trust-manager: ensure-cert-manager
+	jsonnet helm/trust-manager.jsonnet | yq -P | helm install trust-manager cert-manager/trust-manager --values -
+	@$(MAKE) --no-print-directory wait-pods
+
 .PHONY: deploy-vault
 VAULT_CHART_VERSION := 0.18.0
 
@@ -303,6 +308,8 @@ upstream-cattage:
 upstream-cert-manager:
 	mkdir -p upstream/cert-manager
 	wget -O upstream/cert-manager/cert-manager.yaml https://github.com/jetstack/cert-manager/releases/download/v$(CERT_MANAGER_VERSION)/cert-manager.yaml
+	helm repo add cert-manager https://charts.jetstack.io
+	helm repo update cert-manager
 
 .PHONY: upstream-coredns
 upstream-coredns:
