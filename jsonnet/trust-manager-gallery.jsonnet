@@ -6,14 +6,29 @@
       name: 'cluster-ca',
     },
     spec: {
-      sources: [
-        {
-          secret: {
-            name: 'cluster-ca',
-            key: 'ca.crt',
-          },
+      sources: [{
+        secret: {
+          name: 'cluster-ca',
+          key: 'ca.crt',
         },
-      ],
+      }],
+      target: {
+        configMap: {
+          key: 'ca.crt',
+        },
+      },
+    },
+  },
+  {
+    apiVersion: 'trust.cert-manager.io/v1alpha1',
+    kind: 'Bundle',
+    metadata: {
+      name: 'public-ca',
+    },
+    spec: {
+      sources: [{
+        useDefaultCAs: true,
+      }],
       target: {
         configMap: {
           key: 'ca.crt',
@@ -129,12 +144,21 @@
           name: 'cluster-ca',
           mountPath: '/etc/cluster-ca',
           readOnly: true,
+        }, {
+          name: 'public-ca',
+          mountPath: '/etc/public-ca',
+          readOnly: true,
         }],
       }],
       volumes: [{
         name: 'cluster-ca',
         configMap: {
           name: 'cluster-ca',
+        },
+      }, {
+        name: 'public-ca',
+        configMap: {
+          name: 'public-ca',
         },
       }],
     },
