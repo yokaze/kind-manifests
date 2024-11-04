@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cert-manager-spiffe
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cert-manager-spiffe
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cert-manager-edit
+subjects:
+  - kind: ServiceAccount
+    name: cert-manager-spiffe
+    namespace: default
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cert-manager-spiffe
+spec:
+  containers:
+    - command:
+        - sleep
+        - inf
+      image: alpine:3.14.2
+      name: alpine
+      resources:
+        limits:
+          cpu: 750m
+          memory: 192Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+      volumeMounts:
+        - mountPath: /var/run/secrets/spiffe.io
+          name: spiffe
+  serviceAccountName: cert-manager-spiffe
+  volumes:
+    - csi:
+        driver: spiffe.csi.cert-manager.io
+        readOnly: true
+      name: spiffe

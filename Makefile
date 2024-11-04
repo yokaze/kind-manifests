@@ -14,6 +14,10 @@ cluster-ipvs:
 	kind create cluster --config cluster/cluster-ipvs.yaml
 	@$(MAKE) --no-print-directory wait-nodes
 
+.PHONY: stop
+stop:
+	kind delete cluster
+
 .PHONY: mount
 mount:
 	./mount.sh
@@ -57,7 +61,7 @@ format:
 
 .PHONY: manifests
 manifests:
-	@for i in $(shell ls manifests/); do \
+	@for i in $$(ls manifests/); do \
 		$(MAKE) --no-print-directory generate-$$(basename $$i .yaml); \
 	done
 
@@ -129,18 +133,26 @@ delete-cattage:
 
 .PHONY: deploy-cert-manager
 deploy-cert-manager:
-	kubectl apply -f upstream/cert-manager/cert-manager.yaml
+	jsonnet helm/cert-manager.jsonnet | yq -P | helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --values -
 	@$(MAKE) --no-print-directory wait-pods
-
-.PHONY: delete-cert-manager
-delete-cert-manager:
-	kubectl delete -f upstream/cert-manager/cert-manager.yaml
 
 .PHONY: ensure-cert-manager
 ensure-cert-manager:
 	if ! kubectl get ns cert-manager > /dev/null 2>&1; then \
 		$(MAKE) --no-print-directory deploy-cert-manager; \
 	fi
+
+.PHONY: delete-cert-manager
+delete-cert-manager:
+	helm uninstall cert-manager --namespace cert-manager
+	kubectl delete ns cert-manager
+
+.PHONY: deploy-cert-manager-csi-driver-spiffe
+deploy-cert-manager-csi-driver-spiffe: ensure-cert-manager
+	kubectl apply -f upstream/cert-manager/csi-driver-spiffe/clusterissuer.yaml
+	sleep 5
+	cmctl approve -n cert-manager $$(kubectl get cr -n cert-manager -oname | cut -d/ -f2)
+	jsonnet helm/cert-manager-csi-driver-spiffe.jsonnet | yq -P | helm install cert-manager-csi-driver-spiffe jetstack/cert-manager-csi-driver-spiffe --namespace cert-manager --values -
 
 .PHONY: deploy-contour
 deploy-contour:
@@ -261,6 +273,7 @@ delete-vault:
 # Rules for upstream manifests
 ARGOCD_VERSION := 2.1.2
 CERT_MANAGER_VERSION := 1.5.3
+CSI_DRIVER_SPIFFE_VERSION := 0.8.1
 GRAFANA_OPERATOR_VERSION := 3.9.0
 MOCO_VERSION := 0.10.5
 PROMETHEUS_OPERATOR_VERSION = 0.47.0
@@ -276,9 +289,9 @@ upstream: \
 	upstream-argocd \
 	upstream-bitnami \
 	upstream-cattage \
-	upstream-cert-manager \
 	upstream-coredns \
 	upstream-grafana-operator \
+	upstream-jetstack \
 	upstream-moco \
 	upstream-neco-admission \
 	upstream-prometheus-operator \
@@ -304,12 +317,12 @@ upstream-cattage:
 	helm repo add cattage https://cybozu-go.github.io/cattage/
 	helm repo update cattage
 
-.PHONY: upstream-cert-manager
-upstream-cert-manager:
-	mkdir -p upstream/cert-manager
-	wget -O upstream/cert-manager/cert-manager.yaml https://github.com/jetstack/cert-manager/releases/download/v$(CERT_MANAGER_VERSION)/cert-manager.yaml
-	helm repo add cert-manager https://charts.jetstack.io
-	helm repo update cert-manager
+.PHONY: upstream-jetstack
+upstream-jetstack:
+	mkdir -p upstream/cert-manager/csi-driver-spiffe/
+	wget -O upstream/cert-manager/csi-driver-spiffe/clusterissuer.yaml https://raw.githubusercontent.com/cert-manager/csi-driver-spiffe/refs/tags/v$(CSI_DRIVER_SPIFFE_VERSION)/deploy/example/clusterissuer.yaml
+	helm repo add jetstack https://charts.jetstack.io
+	helm repo update jetstack
 
 .PHONY: upstream-coredns
 upstream-coredns:
