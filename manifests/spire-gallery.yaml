@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: spire-sample
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: gallery
+  namespace: spire-sample
+---
+apiVersion: v1
+data:
+  spiffe-helper.conf: |
+    agent_address = "/spiffe-workload-api/spire-agent.sock"
+    cert_dir = "/certs"
+    svid_file_name = "tls.crt"
+    svid_key_file_name = "tls.key"
+    svid_bundle_file_name = "ca.pem"
+kind: ConfigMap
+metadata:
+  name: sample
+  namespace: spire-sample
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sample
+  namespace: spire-sample
+spec:
+  containers:
+    - command:
+        - sleep
+        - inf
+      image: alpine:3.14.2
+      name: alpine
+      volumeMounts:
+        - mountPath: /spiffe-workload-api
+          name: spiffe-workload-api
+          readOnly: true
+        - mountPath: /certs
+          name: certdir
+    - args:
+        - -config
+        - /etc/spiffe-helper.conf
+      image: ghcr.io/spiffe/spiffe-helper:0.8.0
+      name: spiffe-helper
+      volumeMounts:
+        - mountPath: /spiffe-workload-api
+          name: spiffe-workload-api
+          readOnly: true
+        - mountPath: /etc/spiffe-helper.conf
+          name: config
+          readOnly: true
+          subPath: spiffe-helper.conf
+        - mountPath: /certs
+          name: certdir
+  serviceAccountName: gallery
+  volumes:
+    - csi:
+        driver: csi.spiffe.io
+        readOnly: true
+      name: spiffe-workload-api
+    - configMap:
+        name: sample
+      name: config
+    - emptyDir: {}
+      name: certdir

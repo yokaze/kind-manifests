@@ -249,6 +249,15 @@ deploy-sealed-secrets:
 	helm install sealed-secrets sealed-secrets/sealed-secrets --namespace sealed-secrets --create-namespace
 	@$(MAKE) --no-print-directory wait-pods
 
+.PHONY: deploy-spire
+deploy-spire:
+	helm install spire-crds spire/spire-crds
+	jsonnet helm/spire.jsonnet | yq -P | helm install spire spire/spire --values -
+
+.PHONY: template-spire
+template-spire:
+	jsonnet helm/spire.jsonnet | yq -P | helm template spire spire/spire --values -
+
 .PHONY: deploy-trust-manager
 deploy-trust-manager: ensure-cert-manager
 	jsonnet helm/trust-manager.jsonnet | yq -P | helm install trust-manager cert-manager/trust-manager --values -
@@ -295,6 +304,7 @@ upstream: \
 	upstream-moco \
 	upstream-neco-admission \
 	upstream-prometheus-operator \
+	upstream-spire \
 	upstream-vault
 
 .PHONY: upstream-accurate
@@ -366,6 +376,11 @@ upstream-prometheus-operator:
 upstream-sealed-secrets:
 	helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
 	helm repo update sealed-secrets
+
+.PHONY: upstream-spire
+upstream-spire:
+	helm repo add spire https://spiffe.github.io/helm-charts-hardened
+	helm repo update spire
 
 .PHONY: upstream-vault
 upstream-vault:
