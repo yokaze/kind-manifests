@@ -1,1 +1,0 @@
-import '../crd/resource.jsonnet'

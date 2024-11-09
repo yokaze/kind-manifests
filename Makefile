@@ -41,13 +41,6 @@ wait-pods:
 	while test "$$(kubectl get pods -A -o yaml | yq e '.items[]|select(.status.containerStatuses[] as $$i ireduce(false; . or ($$i.ready == false)))' -)"; do sleep 1; done
 
 # Rules for manifests
-jsonnet-%:
-	@jsonnet jsonnet/$*.jsonnet | yq eval '.[] | splitDoc' - -P
-
-generate-%:
-	@mkdir -p manifests
-	$(MAKE) --no-print-directory jsonnet-$* > manifests/$*.yaml
-
 .PHONY: format
 format:
 	@for i in $(shell find . -name '*.json'); do \
@@ -61,8 +54,13 @@ format:
 
 .PHONY: manifests
 manifests:
-	@for i in $$(ls manifests/); do \
-		$(MAKE) --no-print-directory generate-$$(basename $$i .yaml); \
+	rm -rf manifests
+	@for i in $$(find jsonnet -name '*.jsonnet' | sort); do \
+		echo $$i; \
+		OUTPUT_FILE=$$(echo $$i | sed 's/jsonnet/manifests/' | sed 's/jsonnet/yaml/'); \
+		OUTPUT_DIR=$$(dirname $${OUTPUT_FILE}); \
+		mkdir -p $${OUTPUT_DIR}; \
+		jsonnet $$i | yq -P '.[] | splitDoc' > $${OUTPUT_FILE}; \
 	done
 
 # Rules for deploying
