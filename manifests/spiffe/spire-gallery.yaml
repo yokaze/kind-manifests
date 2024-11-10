@@ -17,7 +17,7 @@ data:
     svid_file_name = "tls.crt"
     svid_key_file_name = "tls.key"
     svid_bundle_file_name = "ca.pem"
-    jwt_svids = [{jwt_audience="https://my-hydra/oauth2/token", jwt_svid_file_name="jwt_svid.token"}]
+    jwt_svids = [{jwt_audience="test", jwt_svid_file_name="jwt_svid.token"}]
 kind: ConfigMap
 metadata:
   name: sample
@@ -26,6 +26,8 @@ metadata:
 apiVersion: v1
 kind: Pod
 metadata:
+  annotations:
+    kubectl.kubernetes.io/default-container: ubuntu
   name: sample
   namespace: spire-sample
 spec:

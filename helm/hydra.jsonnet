@@ -1,6 +1,6 @@
 {
   hydra: {
-    # https://github.com/ory/hydra/blob/master/driver/config/provider.go
+    // https://github.com/ory/hydra/blob/master/driver/config/provider.go
     config: {
       dsn: 'memory',
       log: {
@@ -15,9 +15,12 @@
       },
       urls: {
         'self': {
-          issuer: 'https://my-hydra/',
+          issuer: 'https://hydra-public.hydra-system',
         },
       },
     },
+  },
+  maester: {
+    enabled: false,
   },
 }

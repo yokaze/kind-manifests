@@ -4,6 +4,9 @@ local images = import '../images.jsonnet';
   kind: 'Pod',
   metadata: {
     name: 'ubuntu',
+    annotations: {
+      'kubectl.kubernetes.io/default-container': 'ubuntu',
+    },
   },
   spec: {
     containers: [

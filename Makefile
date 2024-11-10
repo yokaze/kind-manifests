@@ -43,11 +43,15 @@ wait-pods:
 # Rules for manifests
 .PHONY: format
 format:
-	@for i in $(shell find . -name '*.json'); do \
+	@for i in $$(find . -name '*.json' | sort); do \
 		echo $$i; \
 		jq . $$i | sponge $$i; \
 	done
-	@for i in $(shell find . -name '*.jsonnet'); do \
+	@for i in $$(find . -name '*.jsonnet' | sort); do \
+		echo $$i; \
+		jsonnetfmt --no-use-implicit-plus -i $$i; \
+	done
+	@for i in $$(find . -name '*.libsonnet' | sort); do \
 		echo $$i; \
 		jsonnetfmt --no-use-implicit-plus -i $$i; \
 	done
@@ -91,7 +95,7 @@ halt-accurate:
 
 .PHONY: deploy-argocd
 deploy-argocd:
-	jsonnet helm/argocd-values.jsonnet | yq e . - -P | helm install argocd argo/argo-cd --namespace argocd --create-namespace --values -
+	jsonnet helm/argocd.jsonnet | yq e . - -P | helm install argocd argo/argo-cd --namespace argocd --create-namespace --values -
 	@$(MAKE) --no-print-directory wait-pods
 
 .PHONY: forward-argocd

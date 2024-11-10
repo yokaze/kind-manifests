@@ -1,27 +1,20 @@
-local images = import '../images.jsonnet';
-local pod_base = import 'pod.jsonnet';
-[
-  {
-    apiVersion: 'v1',
-    kind: 'Namespace',
-    metadata: {
-      name: 'spire-sample',
-    },
-  },
+local images = import '../../images.jsonnet';
+local pod_base = import '../pod.jsonnet';
+function(namespace, name, audience) [
   {
     apiVersion: 'v1',
     kind: 'ServiceAccount',
     metadata: {
-      namespace: 'spire-sample',
-      name: 'sample',
+      namespace: namespace,
+      name: name,
     },
   },
   {
     apiVersion: 'v1',
     kind: 'ConfigMap',
     metadata: {
-      namespace: 'spire-sample',
-      name: 'sample',
+      namespace: namespace,
+      name: name,
     },
     data: {
       'spiffe-helper.conf': |||
@@ -30,14 +23,14 @@ local pod_base = import 'pod.jsonnet';
         svid_file_name = "tls.crt"
         svid_key_file_name = "tls.key"
         svid_bundle_file_name = "ca.pem"
-        jwt_svids = [{jwt_audience="https://my-hydra/oauth2/token", jwt_svid_file_name="jwt_svid.token"}]
-      |||,
+        jwt_svids = [{jwt_audience="%s", jwt_svid_file_name="jwt_svid.token"}]
+      ||| % audience,
     },
   },
   pod_base[0] + {
     metadata+: {
-      namespace: 'spire-sample',
-      name: 'sample',
+      namespace: namespace,
+      name: name,
     },
     spec+: {
       containers: [
@@ -69,7 +62,7 @@ local pod_base = import 'pod.jsonnet';
           }],
         },
       ],
-      serviceAccountName: 'sample',
+      serviceAccountName: name,
       volumes+: [{
         name: 'spiffe-workload-api',
         csi: {
@@ -79,7 +72,7 @@ local pod_base = import 'pod.jsonnet';
       }, {
         name: 'config',
         configMap: {
-          name: 'sample',
+          name: name,
         },
       }, {
         name: 'certs',
