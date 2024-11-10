@@ -1,4 +1,5 @@
 local images = import '../images.jsonnet';
+local pod_base = import 'pod.jsonnet';
 [
   {
     apiVersion: 'v1',
@@ -12,7 +13,7 @@ local images = import '../images.jsonnet';
     kind: 'ServiceAccount',
     metadata: {
       namespace: 'spire-sample',
-      name: 'gallery',
+      name: 'sample',
     },
   },
   {
@@ -29,55 +30,47 @@ local images = import '../images.jsonnet';
         svid_file_name = "tls.crt"
         svid_key_file_name = "tls.key"
         svid_bundle_file_name = "ca.pem"
+        jwt_svids = [{jwt_audience="https://my-hydra/oauth2/token", jwt_svid_file_name="jwt_svid.token"}]
       |||,
     },
   },
-  {
-    apiVersion: 'v1',
-    kind: 'Pod',
-    metadata: {
+  pod_base[0] + {
+    metadata+: {
       namespace: 'spire-sample',
       name: 'sample',
     },
-    spec: {
-      serviceAccountName: 'gallery',
-      containers: [{
-        name: 'alpine',
-        image: images.alpine,
-        command: [
-          'sleep',
-          'inf',
-        ],
-        volumeMounts: [{
-          mountPath: '/spiffe-workload-api',
-          name: 'spiffe-workload-api',
-          readOnly: true,
-        }, {
-          name: 'certdir',
-          mountPath: '/certs',
-        }],
-      }, {
-        name: 'spiffe-helper',
-        image: 'ghcr.io/spiffe/spiffe-helper:0.8.0',
-        args: [
-          '-config',
-          '/etc/spiffe-helper.conf',
-        ],
-        volumeMounts: [{
-          mountPath: '/spiffe-workload-api',
-          name: 'spiffe-workload-api',
-          readOnly: true,
-        }, {
-          name: 'config',
-          mountPath: '/etc/spiffe-helper.conf',
-          subPath: 'spiffe-helper.conf',
-          readOnly: true,
-        }, {
-          name: 'certdir',
-          mountPath: '/certs',
-        }],
-      }],
-      volumes: [{
+    spec+: {
+      containers: [
+        pod_base[0].spec.containers[0] + {
+          volumeMounts+: [{
+            name: 'certs',
+            mountPath: '/certs',
+          }],
+        },
+        {
+          name: 'spiffe-helper',
+          image: images.spiffe_helper,
+          args: [
+            '-config',
+            '/etc/spiffe-helper.conf',
+          ],
+          volumeMounts: [{
+            mountPath: '/spiffe-workload-api',
+            name: 'spiffe-workload-api',
+            readOnly: true,
+          }, {
+            name: 'config',
+            mountPath: '/etc/spiffe-helper.conf',
+            subPath: 'spiffe-helper.conf',
+            readOnly: true,
+          }, {
+            name: 'certs',
+            mountPath: '/certs',
+          }],
+        },
+      ],
+      serviceAccountName: 'sample',
+      volumes+: [{
         name: 'spiffe-workload-api',
         csi: {
           driver: 'csi.spiffe.io',
@@ -89,7 +82,7 @@ local images = import '../images.jsonnet';
           name: 'sample',
         },
       }, {
-        name: 'certdir',
+        name: 'certs',
         emptyDir: {},
       }],
     },

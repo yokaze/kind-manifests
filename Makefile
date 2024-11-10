@@ -49,7 +49,7 @@ format:
 	done
 	@for i in $(shell find . -name '*.jsonnet'); do \
 		echo $$i; \
-		jsonnetfmt -i $$i; \
+		jsonnetfmt --no-use-implicit-plus -i $$i; \
 	done
 
 .PHONY: manifests
@@ -201,6 +201,15 @@ delete-grafana-operator:
 	kubectl delete -f upstream/grafana-operator/roles/service_account.yaml
 	kubectl delete -f upstream/grafana-operator/operator.yaml
 
+.PHONY: deploy-hydra
+deploy-hydra:
+	jsonnet helm/hydra.jsonnet | yq -P | helm install hydra ory/hydra --namespace hydra-system --create-namespace --values -
+	@$(MAKE) --no-print-directory wait-pods
+
+.PHONY: template-hydra
+template-hydra:
+	jsonnet helm/hydra.jsonnet | yq -P | helm template hydra ory/hydra --namespace hydra-system --values -
+
 .PHONY: deploy-moco
 deploy-moco:
 	@$(MAKE) --no-print-directory ensure-cert-manager
@@ -251,6 +260,7 @@ deploy-sealed-secrets:
 deploy-spire:
 	helm install spire-crds spire/spire-crds
 	jsonnet helm/spire.jsonnet | yq -P | helm install spire spire/spire --values -
+	@$(MAKE) --no-print-directory wait-pods
 
 .PHONY: template-spire
 template-spire:
@@ -301,6 +311,7 @@ upstream: \
 	upstream-jetstack \
 	upstream-moco \
 	upstream-neco-admission \
+	upstream-ory \
 	upstream-prometheus-operator \
 	upstream-spire \
 	upstream-vault
@@ -364,6 +375,11 @@ upstream-moco:
 upstream-neco-admission:
 	mkdir -p neco-admission/upstream
 	wget -O neco-admission/upstream/manifests.yaml https://raw.githubusercontent.com/cybozu/neco-containers/main/admission/config/webhook/manifests.yaml
+
+.PHONY: upstream-ory
+upstream-ory:
+	helm repo add ory https://k8s.ory.sh/helm/charts
+	helm repo update ory
 
 .PHONY: upstream-prometheus-operator
 upstream-prometheus-operator:

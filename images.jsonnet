@@ -9,5 +9,7 @@
   nginx: 'nginx:1.21.5',
   prometheus: 'prom/prometheus:v2.30.3',
   promtail: 'grafana/promtail:2.3.0',
+  spiffe_helper: 'ghcr.io/spiffe/spiffe-helper:0.8.0',
+  ubuntu: 'ghcr.io/cybozu/ubuntu-debug:22.04',
   vault: 'hashicorp/vault:1.9.0',
 }

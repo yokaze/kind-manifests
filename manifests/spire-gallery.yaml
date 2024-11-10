@@ -6,7 +6,7 @@ metadata:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: gallery
+  name: sample
   namespace: spire-sample
 ---
 apiVersion: v1
@@ -17,6 +17,7 @@ data:
     svid_file_name = "tls.crt"
     svid_key_file_name = "tls.key"
     svid_bundle_file_name = "ca.pem"
+    jwt_svids = [{jwt_audience="https://my-hydra/oauth2/token", jwt_svid_file_name="jwt_svid.token"}]
 kind: ConfigMap
 metadata:
   name: sample
@@ -30,16 +31,14 @@ metadata:
 spec:
   containers:
     - command:
-        - sleep
-        - inf
-      image: alpine:3.14.2
-      name: alpine
+        - pause
+      image: ghcr.io/cybozu/ubuntu-debug:22.04
+      name: ubuntu
       volumeMounts:
-        - mountPath: /spiffe-workload-api
-          name: spiffe-workload-api
-          readOnly: true
+        - mountPath: /tmp
+          name: tmp
         - mountPath: /certs
-          name: certdir
+          name: certs
     - args:
         - -config
         - /etc/spiffe-helper.conf
@@ -54,9 +53,11 @@ spec:
           readOnly: true
           subPath: spiffe-helper.conf
         - mountPath: /certs
-          name: certdir
-  serviceAccountName: gallery
+          name: certs
+  serviceAccountName: sample
   volumes:
+    - emptyDir: {}
+      name: tmp
     - csi:
         driver: csi.spiffe.io
         readOnly: true
@@ -65,4 +66,4 @@ spec:
         name: sample
       name: config
     - emptyDir: {}
-      name: certdir
+      name: certs
