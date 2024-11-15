@@ -52,11 +52,7 @@ format:
 		echo $$i; \
 		jq . $$i | sponge $$i; \
 	done
-	@for i in $$(find . -name '*.jsonnet' | sort); do \
-		echo $$i; \
-		jsonnetfmt --no-use-implicit-plus -i $$i; \
-	done
-	@for i in $$(find . -name '*.libsonnet' | sort); do \
+	@for i in $$(find . -name '*.*sonnet' | sort); do \
 		echo $$i; \
 		jsonnetfmt --no-use-implicit-plus -i $$i; \
 	done
@@ -311,50 +307,23 @@ clean:
 
 .PHONY: upstream
 upstream: \
-	upstream-accurate \
-	upstream-argocd \
-	upstream-bitnami \
-	upstream-cattage \
-	upstream-cilium \
-	upstream-coredns \
 	upstream-grafana-operator \
 	upstream-jetstack \
 	upstream-moco \
 	upstream-neco-admission \
-	upstream-ory \
-	upstream-prometheus-operator \
-	upstream-spire \
-	upstream-vault
-
-.PHONY: upstream-accurate
-upstream-accurate:
+	upstream-prometheus-operator
 	helm repo add accurate https://cybozu-go.github.io/accurate/
-	helm repo update accurate
-
-.PHONY: upstream-argocd
-upstream-argocd:
 	helm repo add argo https://argoproj.github.io/argo-helm
-	helm repo update argo
-
-.PHONY: upstream-bitnami
-upstream-bitnami:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
-	helm repo update bitnami
-
-.PHONY: upstream-cattage
-upstream-cattage:
 	helm repo add cattage https://cybozu-go.github.io/cattage/
-	helm repo update cattage
-
-.PHONY: upstream-cilium
-upstream-cilium:
 	helm repo add cilium https://helm.cilium.io/
-	helm repo update cilium
-
-.PHONY: upstream-coredns
-upstream-coredns:
 	helm repo add coredns https://coredns.github.io/helm
-	helm repo update coredns
+	helm repo add jetstack https://charts.jetstack.io
+	helm repo add ory https://k8s.ory.sh/helm/charts
+	helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+	helm repo add spire https://spiffe.github.io/helm-charts-hardened
+	helm repo add hashicorp https://helm.releases.hashicorp.com
+	helm repo update
 
 .PHONY: upstream-grafana-operator
 upstream-grafana-operator: URL := https://raw.githubusercontent.com/integr8ly/grafana-operator/v$(GRAFANA_OPERATOR_VERSION)/deploy
@@ -378,8 +347,6 @@ upstream-grafana-operator:
 upstream-jetstack:
 	mkdir -p upstream/cert-manager/csi-driver-spiffe/
 	wget -O upstream/cert-manager/csi-driver-spiffe/clusterissuer.yaml https://raw.githubusercontent.com/cert-manager/csi-driver-spiffe/refs/tags/v$(CSI_DRIVER_SPIFFE_VERSION)/deploy/example/clusterissuer.yaml
-	helm repo add jetstack https://charts.jetstack.io
-	helm repo update jetstack
 
 .PHONY: upstream-moco
 upstream-moco:
@@ -391,27 +358,7 @@ upstream-neco-admission:
 	mkdir -p neco-admission/upstream
 	wget -O neco-admission/upstream/manifests.yaml https://raw.githubusercontent.com/cybozu/neco-containers/main/admission/config/webhook/manifests.yaml
 
-.PHONY: upstream-ory
-upstream-ory:
-	helm repo add ory https://k8s.ory.sh/helm/charts
-	helm repo update ory
-
 .PHONY: upstream-prometheus-operator
 upstream-prometheus-operator:
 	mkdir -p upstream/prometheus-operator
 	wget -O upstream/prometheus-operator/bundle.yaml https://github.com/prometheus-operator/prometheus-operator/raw/v$(PROMETHEUS_OPERATOR_VERSION)/bundle.yaml
-
-.PHONY: upstream-sealed-secrets
-upstream-sealed-secrets:
-	helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
-	helm repo update sealed-secrets
-
-.PHONY: upstream-spire
-upstream-spire:
-	helm repo add spire https://spiffe.github.io/helm-charts-hardened
-	helm repo update spire
-
-.PHONY: upstream-vault
-upstream-vault:
-	helm repo add hashicorp https://helm.releases.hashicorp.com
-	helm repo update hashicorp
