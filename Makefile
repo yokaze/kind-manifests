@@ -1,7 +1,12 @@
+CILIUM_VERSION := 1.16.3
+
 # Rules for cluster
 .PHONY: cluster
 cluster:
+	docker pull quay.io/cilium/cilium:v$(CILIUM_VERSION)
 	kind create cluster --config cluster/cluster.yaml
+	kind load docker-image quay.io/cilium/cilium:v$(CILIUM_VERSION)
+	jsonnet helm/cilium.jsonnet | yq -P | helm install cilium cilium/cilium --namespace kube-system --version $(CILIUM_VERSION) --values -
 	@$(MAKE) --no-print-directory wait-nodes
 
 .PHONY: cluster-audit
@@ -310,6 +315,7 @@ upstream: \
 	upstream-argocd \
 	upstream-bitnami \
 	upstream-cattage \
+	upstream-cilium \
 	upstream-coredns \
 	upstream-grafana-operator \
 	upstream-jetstack \
@@ -340,12 +346,10 @@ upstream-cattage:
 	helm repo add cattage https://cybozu-go.github.io/cattage/
 	helm repo update cattage
 
-.PHONY: upstream-jetstack
-upstream-jetstack:
-	mkdir -p upstream/cert-manager/csi-driver-spiffe/
-	wget -O upstream/cert-manager/csi-driver-spiffe/clusterissuer.yaml https://raw.githubusercontent.com/cert-manager/csi-driver-spiffe/refs/tags/v$(CSI_DRIVER_SPIFFE_VERSION)/deploy/example/clusterissuer.yaml
-	helm repo add jetstack https://charts.jetstack.io
-	helm repo update jetstack
+.PHONY: upstream-cilium
+upstream-cilium:
+	helm repo add cilium https://helm.cilium.io/
+	helm repo update cilium
 
 .PHONY: upstream-coredns
 upstream-coredns:
@@ -369,6 +373,13 @@ upstream-grafana-operator:
 	wget -O upstream/grafana-operator/roles/role_binding.yaml $(URL)/roles/role_binding.yaml
 	wget -O upstream/grafana-operator/roles/service_account.yaml $(URL)/roles/service_account.yaml
 	wget -O upstream/grafana-operator/operator.yaml $(URL)/operator.yaml
+
+.PHONY: upstream-jetstack
+upstream-jetstack:
+	mkdir -p upstream/cert-manager/csi-driver-spiffe/
+	wget -O upstream/cert-manager/csi-driver-spiffe/clusterissuer.yaml https://raw.githubusercontent.com/cert-manager/csi-driver-spiffe/refs/tags/v$(CSI_DRIVER_SPIFFE_VERSION)/deploy/example/clusterissuer.yaml
+	helm repo add jetstack https://charts.jetstack.io
+	helm repo update jetstack
 
 .PHONY: upstream-moco
 upstream-moco:
