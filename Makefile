@@ -300,8 +300,15 @@ GRAFANA_OPERATOR_VERSION := 3.9.0
 MOCO_VERSION := 0.10.5
 PROMETHEUS_OPERATOR_VERSION = 0.47.0
 
+.PHONY: setup
+setup:
+	mkdir -p bin
+	wget -qO- https://github.com/cilium/hubble/releases/download/v1.16.3/hubble-linux-amd64.tar.gz | tar xzv -O hubble > bin/hubble
+	chmod +x bin/hubble
+
 .PHONY: clean
 clean:
+	rm -rf bin
 	rm -rf manifests
 	rm -rf upstream
 

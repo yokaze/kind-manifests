@@ -1,1 +1,7 @@
-{}
+{
+  hubble: {
+    relay: {
+      enabled: true,
+    },
+  },
+}
