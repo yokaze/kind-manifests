@@ -1,18 +1,19 @@
-local nested_arr(x, keys) =
-  if std.length(keys) == 0 then x else nested_arr(x[keys[0]], keys[1:]);
 {
-  nested(x, path)::
-    nested_arr(x, std.split(path, '.')),
-
-  nested_match(x, path, value)::
-    self.nested(x, path) == value,
+  nested_match(x, pred)::
+    if std.isObject(x) then
+      std.all(std.map(
+        function(kv)
+          if std.objectHas(x, kv.key) then
+            self.nested_match(x[kv.key], kv.value)
+          else
+            false
+        , std.objectKeysValues(pred)
+      ))
+    else
+      x == pred,
 
   transform_element(x, pred, func)::
-    if std.all(std.map(
-      function(kv)
-        self.nested_match(x, kv.key, kv.value),
-      std.objectKeysValues(pred)
-    )) then func(x) else x,
+    if self.nested_match(x, pred) then func(x) else x,
 
   transform(arr, pred, func)::
     std.map(

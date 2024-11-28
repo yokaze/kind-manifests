@@ -88,7 +88,9 @@ local workload_template = import 'workload-template.libsonnet';
   workload_template(namespace, 'client', 'https://hydra-public.hydra-system/oauth2/token'),
   {
     kind: 'Pod',
-    'metadata.name': 'client',
+    metadata: {
+      name: 'client',
+    },
   },
   function(r) r + {
     spec+: {
