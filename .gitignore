@@ -1,3 +1,4 @@
 *.swp
+/argocd/generated
 /bin
 /upstream

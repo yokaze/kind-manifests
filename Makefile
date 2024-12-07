@@ -1,6 +1,7 @@
 CILIUM_VERSION := 1.16.3
+HELM_VERSION ?= $(shell if [ -z "$(HELM_REPO)" ]; then echo latest; else helm show chart $(HELM_REPO) | yq .version; fi)
 
-# Rules for cluster
+# Cluster Targets
 .PHONY: registry
 registry:
 	docker run -d -p 5000:5000 -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io --name=mirror-docker --net=kind --restart=always registry:2
@@ -21,8 +22,10 @@ cluster:
 	docker pull quay.io/cilium/cilium:v$(CILIUM_VERSION)
 	kind create cluster --config cluster/cluster.yaml
 	kind load docker-image quay.io/cilium/cilium:v$(CILIUM_VERSION)
-	jsonnet helm/cilium.jsonnet | yq -P | helm install cilium cilium/cilium --namespace kube-system --version $(CILIUM_VERSION) --values -
-	@$(MAKE) --no-print-directory wait-nodes
+	kubectl create ns istio-system
+	kubectl apply -f argocd/generated/cilium/cilium.yaml
+	kubectl apply -f argocd/generated/istio-base/istio-base.yaml
+	kubectl apply -f argocd/generated/istio/istio.yaml
 
 .PHONY: cluster-audit
 cluster-audit: mount
@@ -55,7 +58,7 @@ wait-pods:
 	while test "$$(kubectl get pods -A -o yaml | yq e '.items[]|select(.status.conditions[] as $$i ireduce(false; . or ($$i.status != "True")))' -)"; do sleep 1; done
 	while test "$$(kubectl get pods -A -o yaml | yq e '.items[]|select(.status.containerStatuses[] as $$i ireduce(false; . or ($$i.ready == false)))' -)"; do sleep 1; done
 
-# Rules for manifests
+# Manifest Targets
 .PHONY: format
 format:
 	@for i in $$(find -name '*.json' | sort); do \
@@ -77,6 +80,18 @@ manifests:
 		mkdir -p $${OUTPUT_DIR}; \
 		jsonnet $$i | yq -P '.[] | splitDoc' > $${OUTPUT_FILE}; \
 	done
+
+.PHONY: render-template
+render-template:
+	mkdir -p argocd/generated/$(HELM_NAME)
+	jsonnet helm/$(HELM_NAME).jsonnet | yq -P | helm template $(HELM_NAME) $(HELM_REPO) -n $(HELM_NS) --version $(HELM_VERSION) --values - > argocd/generated/$(HELM_NAME)/$(HELM_NAME).yaml
+
+.PHONY: render
+render:
+	rm -rf argocd/generated
+	@$(MAKE) --no-print-directory HELM_NAME=cilium HELM_REPO=cilium/cilium HELM_NS=kube-system HELM_VERSION=$(CILIUM_VERSION) render-template
+	@$(MAKE) --no-print-directory HELM_NAME=istio-base HELM_REPO=istio/base HELM_NS=istio-system render-template
+	@$(MAKE) --no-print-directory HELM_NAME=istio HELM_REPO=istio/istiod HELM_NS=istio-system render-template
 
 # Rules for deploying
 .PHONY: deploy-accurate
@@ -335,6 +350,7 @@ upstream: \
 	helm repo add cattage https://cybozu-go.github.io/cattage/
 	helm repo add cilium https://helm.cilium.io/
 	helm repo add coredns https://coredns.github.io/helm
+	helm repo add istio https://istio-release.storage.googleapis.com/charts
 	helm repo add jetstack https://charts.jetstack.io
 	helm repo add ory https://k8s.ory.sh/helm/charts
 	helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
