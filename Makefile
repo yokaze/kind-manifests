@@ -4,11 +4,17 @@ CILIUM_VERSION := 1.16.3
 .PHONY: registry
 registry:
 	docker run -d -p 5000:5000 -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io --name=mirror-docker --net=kind --restart=always registry:2
+	docker run -d -p 5000:5000 -e REGISTRY_PROXY_REMOTEURL=https://ghcr.io --name=mirror-ghcr --net=kind --restart=always registry:2
+	docker run -d -p 5000:5000 -e REGISTRY_PROXY_REMOTEURL=https://quay.io --name=mirror-quay --net=kind --restart=always registry:2
 
 .PHONY: stop-registry
 stop-registry:
 	docker stop mirror-docker
+	docker stop mirror-ghcr
+	docker stop mirror-quay
 	docker rm mirror-docker
+	docker rm mirror-ghcr
+	docker rm mirror-quay
 
 .PHONY: cluster
 cluster:
@@ -21,11 +27,6 @@ cluster:
 .PHONY: cluster-audit
 cluster-audit: mount
 	kind create cluster --config cluster/cluster-audit.yaml
-	@$(MAKE) --no-print-directory wait-nodes
-
-.PHONY: cluster-ipvs
-cluster-ipvs:
-	kind create cluster --config cluster/cluster-ipvs.yaml
 	@$(MAKE) --no-print-directory wait-nodes
 
 .PHONY: stop
@@ -57,11 +58,11 @@ wait-pods:
 # Rules for manifests
 .PHONY: format
 format:
-	@for i in $$(find . -name '*.json' | sort); do \
+	@for i in $$(find -name '*.json' | sort); do \
 		echo $$i; \
 		jq . $$i | sponge $$i; \
 	done
-	@for i in $$(find . -name '*.*sonnet' | sort); do \
+	@for i in $$(find -name '*.*sonnet' | sort); do \
 		echo $$i; \
 		jsonnetfmt --no-use-implicit-plus -i $$i; \
 	done
