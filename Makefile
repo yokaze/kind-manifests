@@ -1,6 +1,15 @@
 CILIUM_VERSION := 1.16.3
 
 # Rules for cluster
+.PHONY: registry
+registry:
+	docker run -d -p 5000:5000 -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io --name=mirror-docker --net=kind --restart=always registry:2
+
+.PHONY: stop-registry
+stop-registry:
+	docker stop mirror-docker
+	docker rm mirror-docker
+
 .PHONY: cluster
 cluster:
 	docker pull quay.io/cilium/cilium:v$(CILIUM_VERSION)

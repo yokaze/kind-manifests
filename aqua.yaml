@@ -8,10 +8,11 @@
 #   - all
 registries:
 - type: standard
-  ref: v4.246.0  # renovate: depName=aquaproj/aqua-registry
+  ref: v4.269.0 # renovate: depName=aquaproj/aqua-registry
 packages:
 - name: cert-manager/cmctl@v2.1.1
-- name: cilium/cilium-cli@v0.16.20
+- name: cilium/cilium-cli@v0.16.21
 - name: google/go-jsonnet@v0.20.0
-- name: helm/helm@v3.16.1
-- name: kubernetes-sigs/kind@v0.24.0
+- name: helm/helm@v3.16.3
+- name: kubernetes-sigs/kind@v0.25.0
+- name: kubernetes/kubectl@v1.31.3
