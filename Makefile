@@ -4,18 +4,21 @@ HELM_VERSION ?= $(shell if [ -z "$(HELM_REPO)" ]; then echo latest; else helm sh
 # Cluster Targets
 .PHONY: registry
 registry:
-	docker run -d -p 5000:5000 -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io --name=mirror-docker --net=kind --restart=always registry:2
-	docker run -d -p 5000:5000 -e REGISTRY_PROXY_REMOTEURL=https://ghcr.io --name=mirror-ghcr --net=kind --restart=always registry:2
-	docker run -d -p 5000:5000 -e REGISTRY_PROXY_REMOTEURL=https://quay.io --name=mirror-quay --net=kind --restart=always registry:2
+	docker run -d --expose 5000 -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io --name=mirror-docker --restart=always registry:2
+	docker run -d --expose 5000 -e REGISTRY_PROXY_REMOTEURL=https://ghcr.io --name=mirror-ghcr --restart=always registry:2
+	docker run -d --expose 5000 -e REGISTRY_PROXY_REMOTEURL=https://quay.io --name=mirror-quay --restart=always registry:2
+	docker network connect kind mirror-docker
+	docker network connect kind mirror-ghcr
+	docker network connect kind mirror-quay
 
 .PHONY: stop-registry
 stop-registry:
-	docker stop mirror-docker
-	docker stop mirror-ghcr
-	docker stop mirror-quay
-	docker rm mirror-docker
-	docker rm mirror-ghcr
-	docker rm mirror-quay
+	docker stop mirror-docker || true
+	docker stop mirror-ghcr || true
+	docker stop mirror-quay || true
+	docker rm mirror-docker || true
+	docker rm mirror-ghcr || true
+	docker rm mirror-quay || true
 
 .PHONY: cluster
 cluster:
