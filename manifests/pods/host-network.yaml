@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kubectl.kubernetes.io/default-container: ubuntu
+  name: host-network
+spec:
+  containers:
+    - command:
+        - pause
+      image: ghcr.io/cybozu/ubuntu-debug:22.04
+      name: ubuntu
+      volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+  hostNetwork: true
+  volumes:
+    - emptyDir: {}
+      name: tmp
