@@ -1,1 +1,15 @@
-import '../basic/pdb.jsonnet'
+[{
+  apiVersion: 'policy/v1',
+  kind: 'PodDisruptionBudget',
+  metadata: {
+    name: 'sample',
+  },
+  spec: {
+    maxUnavailable: 1,
+    selector: {
+      matchLabels: {
+        app: 'sample',
+      },
+    },
+  },
+}]

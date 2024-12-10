@@ -1,1 +1,7 @@
-import '../basic/ns.jsonnet'
+[{
+  apiVersion: 'v1',
+  kind: 'Namespace',
+  metadata: {
+    name: 'sample',
+  },
+}]
