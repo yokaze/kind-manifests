@@ -1,7 +1,7 @@
-local images = import '../images.jsonnet';
+local images = import '../../images.jsonnet';
 [{
+  kind: 'ReplicaSet',
   apiVersion: 'apps/v1',
-  kind: 'Deployment',
   metadata: {
     name: 'sample',
   },

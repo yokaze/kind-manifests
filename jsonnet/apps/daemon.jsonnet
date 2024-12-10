@@ -1,4 +1,4 @@
-local images = import '../images.jsonnet';
+local images = import '../../images.jsonnet';
 [{
   apiVersion: 'apps/v1',
   kind: 'DaemonSet',

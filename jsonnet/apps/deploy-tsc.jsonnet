@@ -1,4 +1,4 @@
-local images = import '../images.jsonnet';
+local images = import '../../images.jsonnet';
 local deploy = import 'deploy.jsonnet';
 [std.mergePatch(deploy[0], {
   spec: {

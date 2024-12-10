@@ -1,4 +1,4 @@
-local images = import '../images.jsonnet';
+local images = import '../../images.jsonnet';
 [{
   kind: 'StatefulSet',
   apiVersion: 'apps/v1',
