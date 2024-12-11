@@ -1,1 +1,0 @@
-import '../argocd/app.jsonnet'

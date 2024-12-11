@@ -26,9 +26,20 @@ cluster:
 	kind create cluster --config cluster/cluster.yaml
 	kind load docker-image quay.io/cilium/cilium:v$(CILIUM_VERSION)
 	kubectl create ns istio-system
-	kubectl apply -f argocd/generated/cilium/cilium.yaml
-	kubectl apply -f argocd/generated/istio-base/istio-base.yaml
-	kubectl apply -f argocd/generated/istio/istio.yaml
+
+	kustomize build argocd/generated/cilium/ | kubectl apply -f -
+	@$(MAKE) --no-print-directory wait-pods
+
+	kustomize build argocd/generated/istio-base/ | kubectl apply -f -
+	@$(MAKE) --no-print-directory wait-pods
+
+	kustomize build argocd/generated/istio/ | kubectl apply -f -
+	@$(MAKE) --no-print-directory wait-pods
+
+	kubectl create ns argocd
+	kubectl label ns argocd istio-injection=enabled
+	kustomize build argocd/generated/argocd/ | kubectl apply -f -
+	@$(MAKE) --no-print-directory wait-pods
 
 .PHONY: cluster-audit
 cluster-audit: mount
@@ -84,17 +95,37 @@ manifests:
 		jsonnet $$i | yq -P '.[] | splitDoc' > $${OUTPUT_FILE}; \
 	done
 
-.PHONY: render-template
-render-template:
-	mkdir -p argocd/generated/$(HELM_NAME)
-	jsonnet helm/$(HELM_NAME).jsonnet | yq -P | helm template $(HELM_NAME) $(HELM_REPO) -n $(HELM_NS) --version $(HELM_VERSION) --values - > argocd/generated/$(HELM_NAME)/$(HELM_NAME).yaml
+.PHONY: render-apps
+render-apps:
+	mkdir -p argocd/generated/config
+	@for i in $$(find argocd/template -name '*.jsonnet' | sort); do \
+		echo $$i; \
+		jsonnet $$i | yq -P > argocd/generated/config/$$(basename $$i .jsonnet).yaml; \
+	done
+
+.PHONY: render-helm-template
+render-helm-template:
+	@mkdir -p argocd/generated/$(HELM_NAME)
+	@jsonnet helm/$(HELM_NAME).jsonnet | yq -P | helm template $(HELM_NAME) $(HELM_REPO) -n $(HELM_NS) --version $(HELM_VERSION) --values - | yq -o json | jq -c | jq -cn '[inputs]' > /tmp/$(HELM_NAME).json
+	@KINDS=$$(cat /tmp/$(HELM_NAME).json | jq -r '.[] | .kind' | sort | uniq | grep -v null); \
+	echo $${KINDS} | jq -nR '.resources = [inputs | split(" ") | .[] + ".yaml"]' | yq -P '.apiVersion="kustomize.config.k8s.io/v1beta1" | .kind="Kustomization" | sort_keys(.)' > argocd/generated/$(HELM_NAME)/kustomization.yaml; \
+	for i in $${KINDS}; do \
+		echo argocd/generated/$(HELM_NAME)/$$i.yaml; \
+		cat /tmp/$(HELM_NAME).json | jq "[.[] | select(.kind==\"$$i\")]" | yq -P '.[] | splitDoc' > argocd/generated/$(HELM_NAME)/$$i.yaml; \
+	done
+
+.PHONY: render-helm
+render-helm:
+	@$(MAKE) --no-print-directory HELM_NAME=argocd HELM_REPO=argo/argo-cd HELM_NS=argocd render-helm-template
+	@$(MAKE) --no-print-directory HELM_NAME=cilium HELM_REPO=cilium/cilium HELM_NS=kube-system HELM_VERSION=$(CILIUM_VERSION) render-helm-template
+	@$(MAKE) --no-print-directory HELM_NAME=istio-base HELM_REPO=istio/base HELM_NS=istio-system render-helm-template
+	@$(MAKE) --no-print-directory HELM_NAME=istio HELM_REPO=istio/istiod HELM_NS=istio-system render-helm-template
 
 .PHONY: render
 render:
 	rm -rf argocd/generated
-	@$(MAKE) --no-print-directory HELM_NAME=cilium HELM_REPO=cilium/cilium HELM_NS=kube-system HELM_VERSION=$(CILIUM_VERSION) render-template
-	@$(MAKE) --no-print-directory HELM_NAME=istio-base HELM_REPO=istio/base HELM_NS=istio-system render-template
-	@$(MAKE) --no-print-directory HELM_NAME=istio HELM_REPO=istio/istiod HELM_NS=istio-system render-template
+	@$(MAKE) --no-print-directory render-apps
+	@$(MAKE) --no-print-directory render-helm
 
 # Rules for deploying
 .PHONY: deploy-accurate
@@ -122,34 +153,10 @@ halt-accurate:
 	kubectl delete validatingwebhookconfiguration accurate-validating-webhook-configuration || true
 	kubectl delete ns accurate || true
 
-.PHONY: deploy-argocd
-deploy-argocd:
-	jsonnet helm/argocd.jsonnet | yq e . - -P | helm install argocd argo/argo-cd --namespace argocd --create-namespace --values -
-	@$(MAKE) --no-print-directory wait-pods
-
-.PHONY: forward-argocd
-forward-argocd:
-	kubectl port-forward -n argocd service/argocd-server 8080:80
-
-.PHONY: password-argocd
-password-argocd:
-	kubectl get secret -n argocd argocd-initial-admin-secret -o yaml | yq e .data.password - | base64 -d
-
 .PHONY: login-argocd
 login-argocd:
-	kubectl port-forward -n argocd service/argocd-server 8080:80 > /dev/null &
-	sleep 5
-	argocd login localhost:8080 --username admin --password $$(kubectl get secret -n argocd argocd-initial-admin-secret -o yaml | yq e .data.password - | base64 -d)
-
-.PHONY: logout-argocd
-logout-argocd:
-	argocd logout localhost:8080
-	kill $$(pgrep kubectl)
-
-.PHONY: delete-argocd
-delete-argocd:
-	helm uninstall argocd --namespace argocd
-	kubectl delete ns argocd
+	kubectl config set-context --current --namespace argocd
+	argocd login --core
 
 .PHONY: deploy-cattage
 deploy-cattage:
