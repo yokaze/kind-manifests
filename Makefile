@@ -48,6 +48,7 @@ cluster:
 	docker pull quay.io/cilium/cilium:v$(CILIUM_VERSION)
 	kind create cluster --config cluster/cluster.yaml
 	kind load docker-image quay.io/cilium/cilium:v$(CILIUM_VERSION)
+	kustomize build argocd/apps/crds/ | kubectl apply -f -
 	kustomize build argocd/apps/namespaces/ | kubectl apply -f -
 
 	kustomize build argocd/generated/cilium/ | kubectl apply -f -

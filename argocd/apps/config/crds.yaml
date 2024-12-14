@@ -5,7 +5,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "1"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  name: namespaces
+  name: crds
   namespace: argocd
 spec:
   destination:
@@ -13,7 +13,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: argocd/apps/namespaces
+    path: argocd/apps/crds
     repoURL: git://mirror-git:9418/kind-manifests.git
     targetRevision: main
   syncPolicy:
