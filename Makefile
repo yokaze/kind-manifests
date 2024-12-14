@@ -150,6 +150,12 @@ render:
 	@$(MAKE) --no-print-directory render-apps
 	@$(MAKE) --no-print-directory render-helm
 
+.PHONY: waves
+waves:
+	@for i in $$(find argocd/apps/config -name '*.yaml'); do \
+		yq '[.metadata.name, .metadata.annotations."argocd.argoproj.io/sync-wave"] | @tsv' $$i; \
+	done | sort -Vk2 | column -t
+
 # Rules for deploying
 .PHONY: deploy-accurate
 deploy-accurate:
