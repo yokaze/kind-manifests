@@ -1,0 +1,6 @@
+envoy:
+  enabled: false
+hubble:
+  relay:
+    enabled: true
+l7Proxy: false

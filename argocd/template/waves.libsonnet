@@ -8,5 +8,5 @@ local waves = {
   config: 10000,
 };
 function(name)
-  assert std.objectHas(waves, name): "appropriate wave is needed for %s" % name;
+  assert std.objectHas(waves, name) : 'appropriate wave is needed for %s' % name;
   waves[name]

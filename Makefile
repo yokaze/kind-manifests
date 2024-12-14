@@ -1,5 +1,5 @@
 ROOT_DIR := $(shell pwd)
-CILIUM_VERSION := 1.16.3
+CILIUM_VERSION := 1.16.4
 HELM_VERSION ?= $(shell if [ -z "$(HELM_REPO)" ]; then echo latest; else helm show chart $(HELM_REPO) | yq .version; fi)
 
 # Cluster Targets
@@ -48,7 +48,7 @@ cluster:
 	docker pull quay.io/cilium/cilium:v$(CILIUM_VERSION)
 	kind create cluster --config cluster/cluster.yaml
 	kind load docker-image quay.io/cilium/cilium:v$(CILIUM_VERSION)
-	kubectl create ns istio-system
+	kustomize build argocd/apps/namespaces/ | kubectl apply -f -
 
 	kustomize build argocd/generated/cilium/ | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
@@ -59,7 +59,6 @@ cluster:
 	kustomize build argocd/generated/istio/ | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
-	kubectl create ns argocd
 #	kubectl label ns argocd istio-injection=enabled
 	kustomize build argocd/generated/argocd/ | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
@@ -97,7 +96,7 @@ wait-all:
 # Manifest Targets
 .PHONY: format
 format:
-	@for i in $$(find -name '*.json' | sort); do \
+	@for i in $$(find -name '*.json' | grep -v '/charts/' | sort); do \
 		echo $$i; \
 		jq . $$i | sponge $$i; \
 	done
