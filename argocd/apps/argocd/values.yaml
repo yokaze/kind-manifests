@@ -2,3 +2,5 @@ configs:
   cm:
     kustomize.buildOptions: --enable-helm
     url: https://argocd-server.argocd
+  params:
+    server.insecure: "true"
