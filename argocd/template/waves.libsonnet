@@ -1,20 +1,21 @@
 local checkpoints = {
   argocd: 'checkpoints-argocd',
+  basic: 'checkpoints-basic',
   cni: 'checkpoints-cni',
-  essential: 'checkpoints-essential',
-  network: 'checkpoints-network',
+  istio: 'checkpoints-istio',
 };
 local dependency = {
-  accurate: [checkpoints.argocd],
-  argocd: [checkpoints.network],
-  cilium: [checkpoints.essential],
+  accurate: [checkpoints.argocd, 'cert-manager'],
+  argocd: [checkpoints.istio],
+  'cert-manager': [checkpoints.cni],
+  cilium: [checkpoints.basic],
   'grafana-operator': [checkpoints.argocd],
-  istio: ['istio-base', 'crds'],
+  istio: ['istio-base'],
   'istio-base': [checkpoints.cni],
   [checkpoints.argocd]: ['argocd'],
+  [checkpoints.basic]: ['crds', 'namespaces'],
   [checkpoints.cni]: ['cilium'],
-  [checkpoints.essential]: ['crds', 'namespaces'],
-  [checkpoints.network]: ['cilium', 'istio'],
+  [checkpoints.istio]: ['istio'],
 };
 local resolve_once = function(rest)
   std.flattenArrays(std.prune(std.map(function(x) std.get(dependency, x), rest)));

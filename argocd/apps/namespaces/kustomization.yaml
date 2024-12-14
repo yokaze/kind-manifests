@@ -4,4 +4,5 @@ resources:
 - accurate.yaml
 - argocd.yaml
 - grafana-operator.yaml
+- grafana.yaml
 - istio-system.yaml
