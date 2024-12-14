@@ -9,6 +9,7 @@ local dependency = {
   argocd: [checkpoints.istio],
   'cert-manager': [checkpoints.cni],
   cilium: [checkpoints.basic],
+  grafana: ['grafana-operator'],
   'grafana-operator': [checkpoints.argocd],
   istio: ['istio-base'],
   'istio-base': [checkpoints.cni],
