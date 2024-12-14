@@ -64,6 +64,12 @@ cluster:
 	kustomize build argocd/generated/argocd/ | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
+	@$(MAKE) --no-print-directory deploy-cert-manager
+	@$(MAKE) --no-print-directory wait-all
+
+	kubectl create ns accurate
+	kubectl apply -f argocd/generated/config/accurate.yaml
+
 .PHONY: cluster-audit
 cluster-audit: mount
 	kind create cluster --config cluster/cluster-audit.yaml
