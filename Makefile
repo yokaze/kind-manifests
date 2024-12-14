@@ -23,8 +23,8 @@ stop-registry:
 
 .PHONY: git
 git: sync-git
-	docker run -d --name mirror-git --mount type=bind,src=$(ROOT_DIR)/mirror-git,dst=/git ghcr.io/cybozu/ubuntu-dev:24.04 \
-		bash -c 'git daemon --reuseaddr --verbose --base-path=/git --export-all'
+	docker run -d --name mirror-git --restart=always --mount type=bind,src=$(ROOT_DIR)/mirror-git,dst=/git \
+		ghcr.io/cybozu/ubuntu-dev:24.04 bash -c 'git daemon --reuseaddr --verbose --base-path=/git --export-all'
 	docker network connect kind mirror-git
 
 .PHONY: sync-git
