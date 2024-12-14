@@ -20,14 +20,15 @@ local generate = function(spec) {
     },
     project: 'default',
     source: {
-      repoURL: 'https://github.com/yokaze/kind-manifests.git',
-      path: 'argocd/generated/%s' % spec.name,
+      repoURL: 'git://mirror-git:9418/kind-manifests.git',
+      targetRevision: 'main',
+      path: 'argocd/apps/%s' % spec.name,
     },
-  },
-  syncPolicy: {
-    automated: {
-      prune: true,
-      selfHeal: true,
+    syncPolicy: {
+      automated: {
+        prune: true,
+        selfHeal: true,
+      },
     },
   },
 };

@@ -1,4 +1,6 @@
 *.swp
+/argocd/apps/*/charts
 /argocd/generated
 /bin
+/mirror-git
 /upstream

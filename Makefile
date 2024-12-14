@@ -1,3 +1,4 @@
+ROOT_DIR := $(shell pwd)
 CILIUM_VERSION := 1.16.3
 HELM_VERSION ?= $(shell if [ -z "$(HELM_REPO)" ]; then echo latest; else helm show chart $(HELM_REPO) | yq .version; fi)
 
@@ -20,6 +21,28 @@ stop-registry:
 	docker rm mirror-ghcr || true
 	docker rm mirror-quay || true
 
+.PHONY: git
+git: sync-git
+	docker run -d --name mirror-git --mount type=bind,src=$(ROOT_DIR)/mirror-git,dst=/git ghcr.io/cybozu/ubuntu-dev:24.04 \
+		bash -c 'git daemon --reuseaddr --verbose --base-path=/git --export-all'
+	docker network connect kind mirror-git
+
+.PHONY: sync-git
+sync-git:
+	mkdir -p mirror-git
+	if [ ! -d "mirror-git/kind-manifests.git" ]; then \
+		git init --bare -b main mirror-git/kind-manifests.git; \
+	fi
+	if ! git remote | grep kind > /dev/null; then \
+		git remote add kind $(ROOT_DIR)/mirror-git/kind-manifests.git; \
+	fi
+	git push kind main
+
+.PHONY: stop-git
+stop-git:
+	docker stop mirror-git || true
+	docker rm mirror-git || true
+
 .PHONY: cluster
 cluster:
 	docker pull quay.io/cilium/cilium:v$(CILIUM_VERSION)
@@ -28,18 +51,18 @@ cluster:
 	kubectl create ns istio-system
 
 	kustomize build argocd/generated/cilium/ | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 	kustomize build argocd/generated/istio-base/ | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 	kustomize build argocd/generated/istio/ | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 	kubectl create ns argocd
-	kubectl label ns argocd istio-injection=enabled
+#	kubectl label ns argocd istio-injection=enabled
 	kustomize build argocd/generated/argocd/ | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: cluster-audit
 cluster-audit: mount
@@ -61,16 +84,10 @@ umount:
 wait-nodes:
 	while ! kubectl get nodes > /dev/null 2>&1; do sleep 1; done
 	kubectl wait node --all --for condition=Ready
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
-wait-pods:
-	for n in $$(kubectl get ns -o yaml | yq e '.items[].metadata.name' -); do \
-		for i in $$(kubectl get deploy -n $$n -o name); do \
-			kubectl rollout status -n $$n $$i -w > /dev/null; \
-		done; \
-	done
-	while test "$$(kubectl get pods -A -o yaml | yq e '.items[]|select(.status.conditions[] as $$i ireduce(false; . or ($$i.status != "True")))' -)"; do sleep 1; done
-	while test "$$(kubectl get pods -A -o yaml | yq e '.items[]|select(.status.containerStatuses[] as $$i ireduce(false; . or ($$i.ready == false)))' -)"; do sleep 1; done
+wait-all:
+	kubectl wait deployments -A --all --for condition=Available --timeout=-1s
 
 # Manifest Targets
 .PHONY: format
@@ -132,7 +149,7 @@ render:
 deploy-accurate:
 	@$(MAKE) --no-print-directory ensure-cert-manager
 	helm install accurate accurate/accurate --namespace accurate --create-namespace --values helm/accurate-values.yaml
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: delete-accurate
 delete-accurate:
@@ -158,11 +175,28 @@ login-argocd:
 	kubectl config set-context --current --namespace argocd
 	argocd login --core
 
+.PHONY: deploy-config
+deploy-config:
+	argocd app create config \
+		--upsert \
+		--repo https://github.com/yokaze/kind-manifests.git \
+		--path argocd/generated/config \
+		--dest-namespace argocd \
+		--dest-server https://kubernetes.default.svc \
+		--sync-policy none \
+		--revision dummy \
+		--validate=false
+	argocd app sync argocd/config --local argocd/generated/config --local-repo-root . --async
+	argocd app sync argocd/cilium --local argocd/generated/cilium --local-repo-root . --async
+	argocd app sync argocd/istio-base --local argocd/generated/istio-base --local-repo-root . --async
+	argocd app sync argocd/istio --local argocd/generated/istio --local-repo-root . --async
+	argocd app sync argocd/argocd --local argocd/generated/argocd --local-repo-root . --async
+
 .PHONY: deploy-cattage
 deploy-cattage:
 	@$(MAKE) --no-print-directory ensure-cert-manager
 	helm install cattage cattage/cattage --namespace cattage --create-namespace
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: delete-cattage
 delete-cattage:
@@ -172,7 +206,7 @@ delete-cattage:
 .PHONY: deploy-cert-manager
 deploy-cert-manager:
 	jsonnet helm/cert-manager.jsonnet | yq -P | helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --values -
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: ensure-cert-manager
 ensure-cert-manager:
@@ -195,7 +229,7 @@ deploy-cert-manager-csi-driver-spiffe: ensure-cert-manager
 .PHONY: deploy-contour
 deploy-contour:
 	helm install contour bitnami/contour --namespace contour --create-namespace
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: delete-contour
 delete-contour:
@@ -205,7 +239,7 @@ delete-contour:
 .PHONY: deploy-external-dns
 deploy-external-dns:
 	jsonnet helm/external-dns-values.jsonnet | yq e . - -P | helm install external-dns bitnami/external-dns --namespace external-dns --create-namespace --values -
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: delete-external-dns
 delete-external-dns:
@@ -225,7 +259,7 @@ deploy-grafana-operator:
 	kubectl apply -f upstream/grafana-operator/roles/role_binding.yaml
 	kubectl apply -f upstream/grafana-operator/roles/service_account.yaml
 	kubectl apply -f upstream/grafana-operator/operator.yaml
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: delete-grafana-operator
 delete-grafana-operator:
@@ -244,7 +278,7 @@ delete-grafana-operator:
 .PHONY: deploy-hydra
 deploy-hydra:
 	jsonnet helm/hydra.jsonnet | yq -P | helm install hydra ory/hydra --namespace hydra-system --create-namespace --values -
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: template-hydra
 template-hydra:
@@ -254,7 +288,7 @@ template-hydra:
 deploy-moco:
 	@$(MAKE) --no-print-directory ensure-cert-manager
 	kubectl apply -f upstream/moco/moco.yaml
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: delete-moco
 delete-moco:
@@ -271,7 +305,7 @@ delete-neco-admission:
 .PHONY: deploy-prometheus-operator
 deploy-prometheus-operator:
 	kubectl apply -f upstream/prometheus-operator/bundle.yaml
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: delete-prometheus-operator
 delete-prometheus-operator:
@@ -281,9 +315,9 @@ delete-prometheus-operator:
 deploy-remote-coredns:
 	kubectl create ns remote-coredns
 	jsonnet helm/remote-coredns-etcd-values.jsonnet | yq e . - -P | helm install remote-coredns-etcd bitnami/etcd --namespace remote-coredns --values -
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 	jsonnet helm/remote-coredns-values.jsonnet | yq e . - -P | helm install remote-coredns coredns/coredns --namespace remote-coredns --values -
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: delete-remote-coredns
 delete-remote-coredns:
@@ -294,13 +328,13 @@ delete-remote-coredns:
 .PHONY: deploy-sealed-secrets
 deploy-sealed-secrets:
 	helm install sealed-secrets sealed-secrets/sealed-secrets --namespace sealed-secrets --create-namespace
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: deploy-spire
 deploy-spire:
 	helm install spire-crds spire/spire-crds
 	jsonnet helm/spire.jsonnet | yq -P | helm install spire spire/spire --values -
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: template-spire
 template-spire:
@@ -309,7 +343,7 @@ template-spire:
 .PHONY: deploy-trust-manager
 deploy-trust-manager: ensure-cert-manager
 	jsonnet helm/trust-manager.jsonnet | yq -P | helm install trust-manager cert-manager/trust-manager --values -
-	@$(MAKE) --no-print-directory wait-pods
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: deploy-vault
 VAULT_CHART_VERSION := 0.18.0
