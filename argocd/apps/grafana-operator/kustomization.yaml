@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+helmCharts:
+- releaseName: grafana-operator
+  repo: oci://ghcr.io/grafana/helm-charts
+  name: grafana-operator
+  namespace: grafana-operator
+  version: v5.15.1

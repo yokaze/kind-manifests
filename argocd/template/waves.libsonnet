@@ -8,6 +8,7 @@ local dependency = {
   accurate: [checkpoints.argocd],
   argocd: [checkpoints.network],
   cilium: [checkpoints.essential],
+  'grafana-operator': [checkpoints.argocd],
   istio: ['istio-base', 'crds'],
   'istio-base': [checkpoints.cni],
   [checkpoints.argocd]: ['argocd'],
