@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - accurate.yaml
 - argocd.yaml
+- cert-manager.yaml
 - grafana-operator.yaml
 - grafana.yaml
 - istio-system.yaml

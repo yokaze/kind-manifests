@@ -36,7 +36,7 @@ sync-git:
 	if ! git remote | grep kind > /dev/null; then \
 		git remote add kind $(ROOT_DIR)/mirror-git/kind-manifests.git; \
 	fi
-	git push kind main
+	git push kind main -f
 
 .PHONY: stop-git
 stop-git:
@@ -48,23 +48,23 @@ cluster:
 	docker pull quay.io/cilium/cilium:v$(CILIUM_VERSION)
 	kind create cluster --config cluster/cluster.yaml
 	kind load docker-image quay.io/cilium/cilium:v$(CILIUM_VERSION)
-	kustomize build argocd/apps/crds/ | kubectl apply -f -
-	kustomize build argocd/apps/namespaces/ | kubectl apply -f -
 
-	kustomize build --enable-helm argocd/apps/cilium/ | kubectl apply -f -
+	kustomize build argocd/apps/crds | kubectl apply --server-side -f -
+	kustomize build argocd/apps/namespaces | kubectl apply -f -
+	kustomize build --enable-helm argocd/apps/cilium | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
-	kustomize build --enable-helm argocd/apps/istio-base/ | kubectl apply -f -
+	kustomize build --enable-helm argocd/apps/istio-base | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
-	kustomize build --enable-helm argocd/apps/istio/ | kubectl apply -f -
+	kustomize build --enable-helm argocd/apps/istio | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
 #	kubectl label ns argocd istio-injection=enabled
-	kustomize build --enable-helm argocd/apps/argocd/ | kubectl apply -f -
+	kustomize build --enable-helm argocd/apps/argocd | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
-	@$(MAKE) --no-print-directory deploy-cert-manager
+	kustomize build --enable-helm argocd/apps/cert-manager | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
 	kubectl apply -f argocd/apps/config/config.yaml
@@ -157,52 +157,10 @@ waves:
 	done | sort -Vk2 | column -t
 
 # Rules for deploying
-.PHONY: deploy-accurate
-deploy-accurate:
-	@$(MAKE) --no-print-directory ensure-cert-manager
-	helm install accurate accurate/accurate --namespace accurate --create-namespace --values helm/accurate-values.yaml
-	@$(MAKE) --no-print-directory wait-all
-
-.PHONY: delete-accurate
-delete-accurate:
-	helm uninstall --namespace accurate accurate
-	kubectl delete ns accurate
-
-.PHONY: debug-accurate
-debug-accurate:
-	@$(MAKE) --no-print-directory ensure-cert-manager
-	docker build -t accurate:debug debug/
-	kind load docker-image accurate:debug
-	kustomize build debug --enable-helm | kubectl apply -f -
-	while [ "$$(kubectl get -n accurate $$(kubectl get pod -n accurate -l app.kubernetes.io/name=accurate -o name) -o yaml 2>/dev/null | yq e .status.phase -)" != "Running" ]; do sleep 1; done
-	kubectl port-forward -n accurate $$(kubectl get pod -n accurate -l app.kubernetes.io/name=accurate -o name) 12345
-
-.PHONY: halt-accurate
-halt-accurate:
-	kubectl delete validatingwebhookconfiguration accurate-validating-webhook-configuration || true
-	kubectl delete ns accurate || true
-
 .PHONY: login-argocd
 login-argocd:
 	kubectl config set-context --current --namespace argocd
 	argocd login --core
-
-.PHONY: deploy-config
-deploy-config:
-	argocd app create config \
-		--upsert \
-		--repo https://github.com/yokaze/kind-manifests.git \
-		--path argocd/generated/config \
-		--dest-namespace argocd \
-		--dest-server https://kubernetes.default.svc \
-		--sync-policy none \
-		--revision dummy \
-		--validate=false
-	argocd app sync argocd/config --local argocd/generated/config --local-repo-root . --async
-	argocd app sync argocd/cilium --local argocd/generated/cilium --local-repo-root . --async
-	argocd app sync argocd/istio-base --local argocd/generated/istio-base --local-repo-root . --async
-	argocd app sync argocd/istio --local argocd/generated/istio --local-repo-root . --async
-	argocd app sync argocd/argocd --local argocd/generated/argocd --local-repo-root . --async
 
 .PHONY: deploy-cattage
 deploy-cattage:
@@ -225,11 +183,6 @@ ensure-cert-manager:
 	if ! kubectl get ns cert-manager > /dev/null 2>&1; then \
 		$(MAKE) --no-print-directory deploy-cert-manager; \
 	fi
-
-.PHONY: delete-cert-manager
-delete-cert-manager:
-	helm uninstall cert-manager --namespace cert-manager
-	kubectl delete ns cert-manager
 
 .PHONY: deploy-cert-manager-csi-driver-spiffe
 deploy-cert-manager-csi-driver-spiffe: ensure-cert-manager
