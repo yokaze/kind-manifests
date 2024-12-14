@@ -67,8 +67,7 @@ cluster:
 	@$(MAKE) --no-print-directory deploy-cert-manager
 	@$(MAKE) --no-print-directory wait-all
 
-	kubectl create ns accurate
-	kubectl apply -f argocd/generated/config/accurate.yaml
+	kubectl apply -f argocd/apps/config/config.yaml
 
 .PHONY: cluster-audit
 cluster-audit: mount
@@ -120,10 +119,11 @@ manifests:
 
 .PHONY: render-apps
 render-apps:
-	mkdir -p argocd/generated/config
+	rm -rf argocd/apps/config
+	mkdir -p argocd/apps/config
 	@for i in $$(find argocd/template -name '*.jsonnet' | sort); do \
 		echo $$i; \
-		jsonnet $$i | yq -P > argocd/generated/config/$$(basename $$i .jsonnet).yaml; \
+		jsonnet $$i | yq -P > argocd/apps/config/$$(basename $$i .jsonnet).yaml; \
 	done
 
 .PHONY: render-helm-template
