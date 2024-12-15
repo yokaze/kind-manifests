@@ -1,1 +1,7 @@
+admissionWebhooks:
+  certManager:
+    enabled: true
+    issuer:
+      kind: ClusterIssuer
+      name: cluster-ca
 fullnameOverride: "vm-operator"
