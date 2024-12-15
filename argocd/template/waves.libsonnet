@@ -16,6 +16,7 @@ local dependency = {
     checkpoints.cni,
     'crds',  // Gateway CRD
   ],
+  'vm-operator': [checkpoints.argocd],
   [checkpoints.argocd]: ['argocd'],
   [checkpoints.basic]: ['crds', 'namespaces'],
   [checkpoints.cni]: ['cilium'],

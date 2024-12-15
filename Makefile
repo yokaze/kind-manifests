@@ -136,25 +136,21 @@ render-apps:
 
 .PHONY: render-helm-template
 render-helm-template:
-	@mkdir -p argocd/generated/$(HELM_NAME)
-	@jsonnet helm/$(HELM_NAME).jsonnet | yq -P | helm template $(HELM_NAME) $(HELM_REPO) -n $(HELM_NS) --version $(HELM_VERSION) --values - | yq -o json | jq -c | jq -cn '[inputs]' > /tmp/$(HELM_NAME).json
-	@KINDS=$$(cat /tmp/$(HELM_NAME).json | jq -r '.[] | .kind' | sort | uniq | grep -v null); \
-	echo $${KINDS} | jq -nR '.resources = [inputs | split(" ") | .[] + ".yaml"]' | yq -P '.apiVersion="kustomize.config.k8s.io/v1beta1" | .kind="Kustomization" | sort_keys(.)' > argocd/generated/$(HELM_NAME)/kustomization.yaml; \
-	for i in $${KINDS}; do \
-		echo argocd/generated/$(HELM_NAME)/$$i.yaml; \
-		cat /tmp/$(HELM_NAME).json | jq "[.[] | select(.kind==\"$$i\")]" | yq -P '.[] | splitDoc' > argocd/generated/$(HELM_NAME)/$$i.yaml; \
-	done
+	@kustomize build --enable-helm argocd/apps/$(HELM_NAME) | yq '"argocd/reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"' | sed 's/\/\//\//' | sort
+	@kustomize build --enable-helm argocd/apps/$(HELM_NAME) | yq '"argocd/reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)"' | sort -u | xargs -n1 mkdir -p
+	@kustomize build --enable-helm argocd/apps/$(HELM_NAME) | yq --no-doc -s '"argocd/reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"'
 
 .PHONY: render-helm
 render-helm:
-	@$(MAKE) --no-print-directory HELM_NAME=argocd HELM_REPO=argo/argo-cd HELM_NS=argocd render-helm-template
-	@$(MAKE) --no-print-directory HELM_NAME=cilium HELM_REPO=cilium/cilium HELM_NS=kube-system HELM_VERSION=$(CILIUM_VERSION) render-helm-template
-	@$(MAKE) --no-print-directory HELM_NAME=istio-base HELM_REPO=istio/base HELM_NS=istio-system render-helm-template
-	@$(MAKE) --no-print-directory HELM_NAME=istio HELM_REPO=istio/istiod HELM_NS=istio-system render-helm-template
+	rm -rf argocd/reference
+	@$(MAKE) --no-print-directory HELM_NAME=argocd render-helm-template
+	@$(MAKE) --no-print-directory HELM_NAME=cilium render-helm-template
+	@$(MAKE) --no-print-directory HELM_NAME=istio-base render-helm-template
+	@$(MAKE) --no-print-directory HELM_NAME=istio render-helm-template
+	@$(MAKE) --no-print-directory HELM_NAME=vm-operator render-helm-template
 
 .PHONY: render
 render:
-	rm -rf argocd/generated
 	@$(MAKE) --no-print-directory render-apps
 	@$(MAKE) --no-print-directory render-helm
 

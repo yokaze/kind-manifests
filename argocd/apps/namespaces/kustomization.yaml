@@ -7,3 +7,4 @@ resources:
 - grafana-operator.yaml
 - grafana.yaml
 - istio-system.yaml
+- vm-operator.yaml
