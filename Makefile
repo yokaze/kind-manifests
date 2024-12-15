@@ -6,18 +6,22 @@ HELM_VERSION ?= $(shell if [ -z "$(HELM_REPO)" ]; then echo latest; else helm sh
 .PHONY: registry
 registry:
 	docker run -d --expose 5000 -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io --name=mirror-docker --restart=always registry:2
+	docker run -d --expose 5000 -e REGISTRY_PROXY_REMOTEURL=https://public.ecr.aws --name=mirror-ecr --restart=always registry:2
 	docker run -d --expose 5000 -e REGISTRY_PROXY_REMOTEURL=https://ghcr.io --name=mirror-ghcr --restart=always registry:2
 	docker run -d --expose 5000 -e REGISTRY_PROXY_REMOTEURL=https://quay.io --name=mirror-quay --restart=always registry:2
 	docker network connect kind mirror-docker
+	docker network connect kind mirror-ecr
 	docker network connect kind mirror-ghcr
 	docker network connect kind mirror-quay
 
 .PHONY: stop-registry
 stop-registry:
 	docker stop mirror-docker || true
+	docker stop mirror-ecr || true
 	docker stop mirror-ghcr || true
 	docker stop mirror-quay || true
 	docker rm mirror-docker || true
+	docker rm mirror-ecr || true
 	docker rm mirror-ghcr || true
 	docker rm mirror-quay || true
 
@@ -68,6 +72,10 @@ cluster:
 	@$(MAKE) --no-print-directory wait-all
 
 	kubectl apply -f argocd/apps/config/config.yaml
+
+	@$(MAKE) login-argocd
+	argocd app wait config --health
+	argocd app sync config --async $(shell jsonnet argocd/features.jsonnet | jq -r '.[]' | sed 's/^/--resource *:*:/')
 
 .PHONY: cluster-audit
 cluster-audit: mount

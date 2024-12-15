@@ -1,3 +1,4 @@
+local configAppName = 'config';
 local waves = import 'waves.libsonnet';
 local generate = function(spec) {
   apiVersion: 'argoproj.io/v1alpha1',
@@ -6,7 +7,7 @@ local generate = function(spec) {
     namespace: 'argocd',
     name: spec.name,
     annotations: {
-      'argocd.argoproj.io/sync-wave': std.toString(waves(spec.name)),
+      'argocd.argoproj.io/sync-wave': std.toString(waves.order(spec.name)),
     },
   } + if spec.finalizer then {
     finalizers: [
@@ -24,13 +25,14 @@ local generate = function(spec) {
       targetRevision: 'main',
       path: 'argocd/apps/%s' % spec.name,
     },
+  } + if spec.name != configAppName then {
     syncPolicy: {
       automated: {
         prune: true,
         selfHeal: true,
       },
     },
-  },
+  } else {},
 };
 function(spec)
   local required = [

@@ -14,7 +14,3 @@ spec:
     path: argocd/apps/config
     repoURL: git://mirror-git:9418/kind-manifests.git
     targetRevision: main
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true

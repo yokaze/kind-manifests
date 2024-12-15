@@ -1,0 +1,4 @@
+server = "https://public.ecr.aws"
+
+[host."http://mirror-ecr:5000"]
+  capabilities = ["pull", "resolve"]
