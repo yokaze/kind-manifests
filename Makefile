@@ -219,35 +219,6 @@ delete-external-dns:
 	helm uninstall external-dns --namespace external-dns
 	kubectl delete ns external-dns
 
-.PHONY: deploy-grafana-operator
-deploy-grafana-operator:
-	kubectl apply -f upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml
-	kubectl apply -f upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_view.yaml
-	kubectl apply -f upstream/grafana-operator/cluster_roles/cluster_role_binding_grafana_operator.yaml
-	kubectl apply -f upstream/grafana-operator/cluster_roles/cluster_role_grafana_operator.yaml
-	kubectl apply -f upstream/grafana-operator/crds/Grafana.yaml
-	kubectl apply -f upstream/grafana-operator/crds/GrafanaDashboard.yaml
-	kubectl apply -f upstream/grafana-operator/crds/GrafanaDataSource.yaml
-	kubectl apply -f upstream/grafana-operator/roles/role.yaml
-	kubectl apply -f upstream/grafana-operator/roles/role_binding.yaml
-	kubectl apply -f upstream/grafana-operator/roles/service_account.yaml
-	kubectl apply -f upstream/grafana-operator/operator.yaml
-	@$(MAKE) --no-print-directory wait-all
-
-.PHONY: delete-grafana-operator
-delete-grafana-operator:
-	kubectl delete -f upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml
-	kubectl delete -f upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_view.yaml
-	kubectl delete -f upstream/grafana-operator/cluster_roles/cluster_role_binding_grafana_operator.yaml
-	kubectl delete -f upstream/grafana-operator/cluster_roles/cluster_role_grafana_operator.yaml
-	kubectl delete -f upstream/grafana-operator/crds/Grafana.yaml
-	kubectl delete -f upstream/grafana-operator/crds/GrafanaDashboard.yaml
-	kubectl delete -f upstream/grafana-operator/crds/GrafanaDataSource.yaml
-	kubectl delete -f upstream/grafana-operator/roles/role.yaml
-	kubectl delete -f upstream/grafana-operator/roles/role_binding.yaml
-	kubectl delete -f upstream/grafana-operator/roles/service_account.yaml
-	kubectl delete -f upstream/grafana-operator/operator.yaml
-
 .PHONY: deploy-hydra
 deploy-hydra:
 	jsonnet helm/hydra.jsonnet | yq -P | helm install hydra ory/hydra --namespace hydra-system --create-namespace --values -
@@ -338,7 +309,6 @@ delete-vault:
 ARGOCD_VERSION := 2.1.2
 CERT_MANAGER_VERSION := 1.5.3
 CSI_DRIVER_SPIFFE_VERSION := 0.8.1
-GRAFANA_OPERATOR_VERSION := 3.9.0
 MOCO_VERSION := 0.10.5
 PROMETHEUS_OPERATOR_VERSION = 0.47.0
 
@@ -356,12 +326,10 @@ clean:
 
 .PHONY: upstream
 upstream: \
-	upstream-grafana-operator \
 	upstream-jetstack \
 	upstream-moco \
 	upstream-neco-admission \
 	upstream-prometheus-operator
-	helm repo add accurate https://cybozu-go.github.io/accurate/
 	helm repo add argo https://argoproj.github.io/argo-helm
 	helm repo add bitnami https://charts.bitnami.com/bitnami
 	helm repo add cattage https://cybozu-go.github.io/cattage/
@@ -374,24 +342,6 @@ upstream: \
 	helm repo add spire https://spiffe.github.io/helm-charts-hardened
 	helm repo add hashicorp https://helm.releases.hashicorp.com
 	helm repo update
-
-.PHONY: upstream-grafana-operator
-upstream-grafana-operator: URL := https://raw.githubusercontent.com/integr8ly/grafana-operator/v$(GRAFANA_OPERATOR_VERSION)/deploy
-upstream-grafana-operator:
-	mkdir -p upstream/grafana-operator/cluster_roles
-	mkdir -p upstream/grafana-operator/crds
-	mkdir -p upstream/grafana-operator/roles
-	wget -O upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml $(URL)/cluster_roles/cluster_role_aggregate_grafana_admin_edit.yaml
-	wget -O upstream/grafana-operator/cluster_roles/cluster_role_aggregate_grafana_view.yaml $(URL)/cluster_roles/cluster_role_aggregate_grafana_view.yaml
-	wget -O upstream/grafana-operator/cluster_roles/cluster_role_binding_grafana_operator.yaml $(URL)/cluster_roles/cluster_role_binding_grafana_operator.yaml
-	wget -O upstream/grafana-operator/cluster_roles/cluster_role_grafana_operator.yaml $(URL)/cluster_roles/cluster_role_grafana_operator.yaml
-	wget -O upstream/grafana-operator/crds/Grafana.yaml $(URL)/crds/Grafana.yaml
-	wget -O upstream/grafana-operator/crds/GrafanaDashboard.yaml $(URL)/crds/GrafanaDashboard.yaml
-	wget -O upstream/grafana-operator/crds/GrafanaDataSource.yaml $(URL)/crds/GrafanaDataSource.yaml
-	wget -O upstream/grafana-operator/roles/role.yaml $(URL)/roles/role.yaml
-	wget -O upstream/grafana-operator/roles/role_binding.yaml $(URL)/roles/role_binding.yaml
-	wget -O upstream/grafana-operator/roles/service_account.yaml $(URL)/roles/service_account.yaml
-	wget -O upstream/grafana-operator/operator.yaml $(URL)/operator.yaml
 
 .PHONY: upstream-jetstack
 upstream-jetstack:
