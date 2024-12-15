@@ -1,0 +1,14 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMCluster
+metadata:
+  namespace: vm-cluster
+  name: vm-cluster
+spec:
+  replicationFactor: 1
+  retentionPeriod: "1d"
+  vmstorage:
+    replicaCount: 2
+  vmselect:
+    replicaCount: 2
+  vminsert:
+    replicaCount: 2

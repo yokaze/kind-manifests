@@ -134,25 +134,33 @@ render-apps:
 		jsonnet $$i | yq -P > argocd/apps/config/$$(basename $$i .jsonnet).yaml; \
 	done
 
-.PHONY: render-helm-template
-render-helm-template:
+.PHONY: reference-template
+reference-template:
 	@kustomize build --enable-helm argocd/apps/$(HELM_NAME) | yq '"argocd/reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"' | sed 's/\/\//\//' | sort
 	@kustomize build --enable-helm argocd/apps/$(HELM_NAME) | yq '"argocd/reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)"' | sort -u | xargs -n1 mkdir -p
 	@kustomize build --enable-helm argocd/apps/$(HELM_NAME) | yq --no-doc -s '"argocd/reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"'
 
-.PHONY: render-helm
-render-helm:
+.PHONY: reference
+reference:
 	rm -rf argocd/reference
-	@$(MAKE) --no-print-directory HELM_NAME=argocd render-helm-template
-	@$(MAKE) --no-print-directory HELM_NAME=cilium render-helm-template
-	@$(MAKE) --no-print-directory HELM_NAME=istio-base render-helm-template
-	@$(MAKE) --no-print-directory HELM_NAME=istio render-helm-template
-	@$(MAKE) --no-print-directory HELM_NAME=vm-operator render-helm-template
+	@$(MAKE) --no-print-directory HELM_NAME=accurate reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=argocd reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=cert-manager reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=cilium reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=config reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=crds reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=grafana reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=grafana-operator reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=istio reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=istio-base reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=namespaces reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=vm-cluster reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=vm-operator reference-template
+	@rm argocd/reference/.yaml
 
 .PHONY: render
 render:
 	@$(MAKE) --no-print-directory render-apps
-	@$(MAKE) --no-print-directory render-helm
 
 .PHONY: waves
 waves:
