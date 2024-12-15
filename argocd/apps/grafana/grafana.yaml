@@ -3,10 +3,14 @@ kind: Grafana
 metadata:
   namespace: grafana
   name: grafana
+  labels:
+    app.kubernetes.io/component: grafana
 spec:
   config:
     auth:
       disable_login_form: "false"
+    plugins:
+      allow_loading_unsigned_plugins: "victoriametrics-datasource"
     security:
       admin_user: admin
       admin_password: password

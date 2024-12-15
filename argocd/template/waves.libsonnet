@@ -8,14 +8,16 @@ local checkpoints = {
 local dependency = {
   accurate: [
     checkpoints.argocd,
-    checkpoints.ca,
+    checkpoints.ca,  // webhook
   ],
   argocd: [checkpoints.istio],
   'cert-manager': [checkpoints.cni],
   'cluster-ca': ['cert-manager'],
   cilium: [checkpoints.init],
+  deck: [checkpoints.argocd],
   grafana: ['grafana-operator'],
   'grafana-operator': [checkpoints.argocd],
+  'grafana-vm': ['grafana', 'vm-cluster'],
   istio: ['istio-base'],
   'istio-base': [
     'crds',  // Gateway CRD
@@ -23,7 +25,7 @@ local dependency = {
   'vm-cluster': ['vm-operator'],
   'vm-operator': [
     checkpoints.argocd,
-    checkpoints.ca,
+    checkpoints.ca,  // webhook
   ],
   [checkpoints.argocd]: ['argocd'],
   [checkpoints.ca]: ['cluster-ca'],
@@ -39,14 +41,14 @@ local resolve = function(wave, steps, nodes)
   if std.length(checkpoint_nodes) > 0 then
     resolve(wave, steps, std.set(app_nodes + resolve_once(checkpoint_nodes)))
   else if std.length(app_nodes) > 0 then
-    resolve(wave + 1, steps, resolve_once(app_nodes))
+    resolve(wave + 1, std.set(steps + app_nodes), resolve_once(app_nodes))
   else {
     dependencies: steps,
     wave: wave,
   };
 {
   get_all_dependencies(names)::
-    std.setDiff(resolve(0, [], names).dependencies, std.objectValues(checkpoints)),
+    resolve(0, [], names).dependencies,
 
   order(name)::
     if name == 'config' then 10000 else resolve(0, [], [name]).wave,

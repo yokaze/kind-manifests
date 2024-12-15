@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: deck
+  name: pilot
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  namespace: deck
+  name: pilot
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    namespace: deck
+    name: pilot
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kubectl.kubernetes.io/default-container: ubuntu
+  namespace: deck
+  name: pilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pilot
+  template:
+    metadata:
+      labels:
+        app: pilot
+    spec:
+      containers:
+        - command:
+            - pause
+          env:
+            - name: HUBBLE_SERVER
+              value: hubble-relay.kube-system.svc:80
+          image: ghcr.io/cybozu/ubuntu-debug:24.04
+          name: ubuntu
+          volumeMounts:
+            - name: tools
+              mountPath: /opt/deck
+            - name: tmp
+              mountPath: /tmp
+      serviceAccountName: pilot
+      volumes:
+        - name: tools
+          hostPath:
+            path: /opt/deck
+        - name: tmp
+          emptyDir: {}

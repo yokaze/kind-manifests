@@ -1,7 +1,9 @@
 local waves = import 'template/waves.libsonnet';
 local features = {
   accurate: false,
-  grafana: false,
+  deck: true,
+  grafana: true,
+  'grafana-vm': true,
   'vm-cluster': true,
   'vm-operator': true,
 };

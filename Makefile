@@ -48,7 +48,7 @@ stop-git:
 	docker rm mirror-git || true
 
 .PHONY: cluster
-cluster:
+cluster: sync-git
 	docker pull quay.io/cilium/cilium:v$(CILIUM_VERSION)
 	kind create cluster --config cluster/cluster.yaml
 	kind load docker-image quay.io/cilium/cilium:v$(CILIUM_VERSION)
@@ -149,6 +149,7 @@ reference:
 	@$(MAKE) --no-print-directory HELM_NAME=cilium reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=config reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=crds reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=deck reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=grafana reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=grafana-operator reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=istio reference-template
@@ -173,6 +174,10 @@ waves:
 login-argocd:
 	kubectl config set-context --current --namespace argocd
 	argocd login --core
+
+.PHONY: pilot
+pilot:
+	kubectl exec -it -n deck deploy/pilot -- bash
 
 .PHONY: deploy-cattage
 deploy-cattage:
@@ -319,7 +324,7 @@ PROMETHEUS_OPERATOR_VERSION = 0.47.0
 .PHONY: setup
 setup:
 	mkdir -p bin
-	wget -qO- https://github.com/cilium/hubble/releases/download/v1.16.3/hubble-linux-amd64.tar.gz | tar xzv -O hubble > bin/hubble
+	wget -qO- https://github.com/cilium/hubble/releases/download/v$(CILIUM_VERSION)/hubble-linux-amd64.tar.gz | tar xzv -O hubble > bin/hubble
 	chmod +x bin/hubble
 
 .PHONY: clean

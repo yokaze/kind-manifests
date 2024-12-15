@@ -3,20 +3,28 @@ apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
     extraMounts:
-      - hostPath: conf.d
+      - hostPath: cluster/conf.d
         containerPath: /etc/containerd/conf.d
+      - hostPath: bin
+        containerPath: /opt/deck
   - role: worker
     extraMounts:
-      - hostPath: conf.d
+      - hostPath: cluster/conf.d
         containerPath: /etc/containerd/conf.d
+      - hostPath: bin
+        containerPath: /opt/deck
   - role: worker
     extraMounts:
-      - hostPath: conf.d
+      - hostPath: cluster/conf.d
         containerPath: /etc/containerd/conf.d
+      - hostPath: bin
+        containerPath: /opt/deck
   - role: worker
     extraMounts:
-      - hostPath: conf.d
+      - hostPath: cluster/conf.d
         containerPath: /etc/containerd/conf.d
+      - hostPath: bin
+        containerPath: /opt/deck
 networking:
   disableDefaultCNI: true
 containerdConfigPatches:
