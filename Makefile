@@ -255,15 +255,6 @@ deploy-neco-admission: ensure-cert-manager
 delete-neco-admission:
 	kustomize build neco-admission | kubectl delete -f -
 
-.PHONY: deploy-prometheus-operator
-deploy-prometheus-operator:
-	kubectl apply -f upstream/prometheus-operator/bundle.yaml
-	@$(MAKE) --no-print-directory wait-all
-
-.PHONY: delete-prometheus-operator
-delete-prometheus-operator:
-	kubectl delete -f upstream/prometheus-operator/bundle.yaml
-
 .PHONY: deploy-remote-coredns
 deploy-remote-coredns:
 	kubectl create ns remote-coredns
@@ -319,7 +310,6 @@ ARGOCD_VERSION := 2.1.2
 CERT_MANAGER_VERSION := 1.5.3
 CSI_DRIVER_SPIFFE_VERSION := 0.8.1
 MOCO_VERSION := 0.10.5
-PROMETHEUS_OPERATOR_VERSION = 0.47.0
 
 .PHONY: setup
 setup:
@@ -337,8 +327,7 @@ clean:
 upstream: \
 	upstream-jetstack \
 	upstream-moco \
-	upstream-neco-admission \
-	upstream-prometheus-operator
+	upstream-neco-admission
 	helm repo add argo https://argoproj.github.io/argo-helm
 	helm repo add bitnami https://charts.bitnami.com/bitnami
 	helm repo add cattage https://cybozu-go.github.io/cattage/
@@ -366,8 +355,3 @@ upstream-moco:
 upstream-neco-admission:
 	mkdir -p neco-admission/upstream
 	wget -O neco-admission/upstream/manifests.yaml https://raw.githubusercontent.com/cybozu/neco-containers/main/admission/config/webhook/manifests.yaml
-
-.PHONY: upstream-prometheus-operator
-upstream-prometheus-operator:
-	mkdir -p upstream/prometheus-operator
-	wget -O upstream/prometheus-operator/bundle.yaml https://github.com/prometheus-operator/prometheus-operator/raw/v$(PROMETHEUS_OPERATOR_VERSION)/bundle.yaml
