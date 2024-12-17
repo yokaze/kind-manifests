@@ -314,6 +314,10 @@ MOCO_VERSION := 0.10.5
 .PHONY: setup
 setup:
 	mkdir -p bin
+	cp $$(aqua which argocd) bin/argocd
+	cp $$(aqua which cilium) bin/cilium
+	cp $$(aqua which kubectl) bin/kubectl
+	cp $$(aqua which yq) bin/yq
 	wget -qO- https://github.com/cilium/hubble/releases/download/v$(CILIUM_VERSION)/hubble-linux-amd64.tar.gz | tar xzv -O hubble > bin/hubble
 	chmod +x bin/hubble
 
