@@ -155,6 +155,7 @@ reference:
 	@$(MAKE) --no-print-directory HELM_NAME=istio reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=istio-base reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=namespaces reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=vm-agent reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=vm-cluster reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=vm-operator reference-template
 	@rm argocd/reference/.yaml

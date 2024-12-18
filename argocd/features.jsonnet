@@ -4,6 +4,7 @@ local features = {
   deck: true,
   grafana: true,
   'grafana-vm': true,
+  'vm-agent': true,
   'vm-cluster': true,
   'vm-operator': true,
 };

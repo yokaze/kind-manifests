@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: deck
+  name: alias
+data:
+  .bash_aliases:
+    HUBBLE_SERVER=hubble-relay.kube-system.svc:80
+    PATH=/opt/deck:${PATH}

@@ -22,6 +22,7 @@ local dependency = {
   'istio-base': [
     'crds',  // Gateway CRD
   ],
+  'vm-agent': ['vm-cluster'],
   'vm-cluster': ['vm-operator'],
   'vm-operator': [
     checkpoints.argocd,

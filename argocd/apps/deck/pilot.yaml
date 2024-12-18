@@ -44,12 +44,18 @@ spec:
           image: ghcr.io/cybozu/ubuntu-debug:24.04
           name: ubuntu
           volumeMounts:
+            - name: alias
+              mountPath: /root/.bash_aliases
+              subPath: .bash_aliases
             - name: tools
               mountPath: /opt/deck
             - name: tmp
               mountPath: /tmp
       serviceAccountName: pilot
       volumes:
+        - name: alias
+          configMap:
+            name: alias
         - name: tools
           hostPath:
             path: /opt/deck
