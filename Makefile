@@ -144,6 +144,7 @@ reference-template:
 reference:
 	rm -rf argocd/reference
 	@$(MAKE) --no-print-directory HELM_NAME=accurate reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=approver-policy reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=argocd reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=cert-manager reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=cilium reference-template

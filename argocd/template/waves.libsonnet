@@ -10,9 +10,12 @@ local dependency = {
     checkpoints.argocd,
     checkpoints.ca,  // webhook
   ],
+  'approver-policy': [
+    'cert-manager',
+  ],
   argocd: [checkpoints.istio],
   'cert-manager': [checkpoints.cni],
-  'cluster-ca': ['cert-manager'],
+  'cluster-ca': ['approver-policy', 'cert-manager'],
   cilium: [checkpoints.init],
   deck: [checkpoints.argocd],
   grafana: ['grafana-operator'],

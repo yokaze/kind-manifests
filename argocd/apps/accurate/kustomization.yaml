@@ -5,3 +5,4 @@ helmCharts:
   repo: https://cybozu-go.github.io/accurate
   name: accurate
   namespace: accurate
+  valuesFile: values.yaml
