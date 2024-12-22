@@ -4,6 +4,7 @@ local checkpoints = {
   cni: 'checkpoints-cni',
   init: 'checkpoints-init',
   istio: 'checkpoints-istio',
+  metrics: 'checkpoints-metrics',
 };
 local dependency = {
   accurate: [
@@ -25,6 +26,8 @@ local dependency = {
   'istio-base': [
     'crds',  // Gateway CRD
   ],
+  'node-exporter': [checkpoints.argocd],
+  'scrape-node-exporter': [checkpoints.metrics, 'node-exporter'],
   'vm-agent': ['vm-cluster'],
   'vm-cluster': ['vm-operator'],
   'vm-operator': [
@@ -36,6 +39,7 @@ local dependency = {
   [checkpoints.cni]: ['cilium'],
   [checkpoints.init]: ['crds', 'namespaces'],
   [checkpoints.istio]: ['istio'],
+  [checkpoints.metrics]: ['grafana-vm', 'vm-agent'],
 };
 local resolve_once = function(nodes)
   std.set(std.flattenArrays(std.prune(std.map(function(x) std.get(dependency, x), nodes))));

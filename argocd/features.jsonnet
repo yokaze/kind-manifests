@@ -1,13 +1,15 @@
 local waves = import 'template/waves.libsonnet';
 local features = {
-  accurate: true,
+  accurate: false,
   'approver-policy': true,
   deck: true,
-  grafana: false,
-  'grafana-vm': false,
-  'vm-agent': false,
-  'vm-cluster': false,
-  'vm-operator': false,
+  grafana: true,
+  'grafana-vm': true,
+  'node-exporter': true,
+  'scrape-node-exporter': true,
+  'vm-agent': true,
+  'vm-cluster': true,
+  'vm-operator': true,
 };
 waves.get_all_dependencies(
   [x for x in std.objectFields(features) if features[x]]
