@@ -32,6 +32,7 @@ nodes:
         containerPath: /opt/deck
 networking:
   disableDefaultCNI: true
+  kubeProxyMode: none
 containerdConfigPatches:
   - |
     [plugins."io.containerd.grpc.v1.cri".registry]

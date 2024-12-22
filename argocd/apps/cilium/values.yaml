@@ -1,7 +1,16 @@
+autoDirectNodeRoutes: true
+enableIPv4Masquerade: true
 envoy:
   enabled: false
 hubble:
   enabled: true
   relay:
     enabled: true
+ipam:
+  mode: kubernetes
+ipv4NativeRoutingCIDR: 10.244.0.0/16
+k8sServiceHost: kind-control-plane
+k8sServicePort: 6443
+kubeProxyReplacement: true
 l7Proxy: false
+routingMode: native
