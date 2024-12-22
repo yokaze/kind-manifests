@@ -33,6 +33,7 @@ git: sync-git
 
 .PHONY: sync-git
 sync-git:
+	sudo rm -rf mirror-git/kind-manifests.git
 	mkdir -p mirror-git
 	if [ ! -d "mirror-git/kind-manifests.git" ]; then \
 		git init --bare -b main mirror-git/kind-manifests.git; \
@@ -41,6 +42,7 @@ sync-git:
 		git remote add kind $(ROOT_DIR)/mirror-git/kind-manifests.git; \
 	fi
 	git push kind main -f
+	sudo chown -R root:root mirror-git/kind-manifests.git
 
 .PHONY: stop-git
 stop-git:
@@ -69,6 +71,9 @@ cluster: sync-git
 
 #	kubectl label ns argocd istio-injection=enabled
 	kustomize build --enable-helm argocd/apps/argocd | kubectl apply -f -
+	@$(MAKE) --no-print-directory wait-all
+
+	kustomize build --enable-helm argocd/apps/deck | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
 	kubectl apply -f argocd/apps/config/config.yaml
@@ -174,8 +179,7 @@ waves:
 # Rules for deploying
 .PHONY: login-argocd
 login-argocd:
-	kubectl config set-context --current --namespace argocd
-	argocd login --core
+	argocd login localhost:30080 --plaintext --username admin --password $$(kubectl get secret -n argocd argocd-initial-admin-secret -oyaml | yq .data.password | base64 -d)
 
 .PHONY: pilot
 pilot:

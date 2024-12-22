@@ -7,6 +7,11 @@ nodes:
         containerPath: /etc/containerd/conf.d
       - hostPath: bin
         containerPath: /opt/deck
+    extraPortMappings:
+      - containerPort: 30080 # Argo CD
+        hostPort: 30080
+      - containerPort: 30443 # Argo CD
+        hostPort: 30443
   - role: worker
     extraMounts:
       - hostPath: cluster/conf.d
