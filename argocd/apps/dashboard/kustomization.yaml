@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: dashboard
+helmCharts:
+- releaseName: dashboard
+  repo: https://kubernetes.github.io/dashboard/
+  name: kubernetes-dashboard
+  namespace: dashboard

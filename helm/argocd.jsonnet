@@ -7,6 +7,6 @@
     params: {
       'redis.compression': 'none',
       'server.insecure': 'true',
-    }
+    },
   },
 }

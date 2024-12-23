@@ -155,6 +155,7 @@ reference:
 	@$(MAKE) --no-print-directory HELM_NAME=cilium reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=config reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=crds reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=dashboard reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=deck reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=grafana reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=grafana-operator reference-template

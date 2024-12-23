@@ -4,6 +4,7 @@ resources:
 - accurate.yaml
 - argocd.yaml
 - cert-manager.yaml
+- dashboard.yaml
 - deck.yaml
 - grafana-operator.yaml
 - grafana.yaml

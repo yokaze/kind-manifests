@@ -18,6 +18,7 @@ local dependency = {
   'cert-manager': [checkpoints.cni],
   'cluster-ca': ['approver-policy', 'cert-manager'],
   cilium: [checkpoints.init],
+  dashboard: [checkpoints.argocd],
   deck: [checkpoints.argocd],
   grafana: ['grafana-operator'],
   'grafana-operator': [checkpoints.argocd],

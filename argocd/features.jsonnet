@@ -2,6 +2,7 @@ local waves = import 'template/waves.libsonnet';
 local features = {
   accurate: false,
   'approver-policy': true,
+  dashboard: true,
   deck: true,
   grafana: true,
   'grafana-vm': true,
