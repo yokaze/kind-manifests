@@ -151,6 +151,7 @@ reference:
 	@$(MAKE) --no-print-directory HELM_NAME=accurate reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=approver-policy reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=argocd reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=cadvisor reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=cert-manager reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=cilium reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=config reference-template
@@ -164,6 +165,7 @@ reference:
 	@$(MAKE) --no-print-directory HELM_NAME=kube-state-metrics reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=namespaces reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=node-exporter reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=scrape-cadvisor reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=scrape-ksm reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=scrape-node-exporter reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=vm-agent reference-template

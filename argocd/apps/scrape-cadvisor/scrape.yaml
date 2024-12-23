@@ -1,0 +1,12 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  namespace: cadvisor
+  name: cadvisor
+spec:
+  selector:
+    matchLabels:
+      app: cadvisor
+  podMetricsEndpoints:
+    - port: http
+      path: /metrics
