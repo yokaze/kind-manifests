@@ -26,7 +26,9 @@ local dependency = {
   'istio-base': [
     'crds',  // Gateway CRD
   ],
+  'kube-state-metrics': [checkpoints.argocd],
   'node-exporter': [checkpoints.argocd],
+  'scrape-ksm': [checkpoints.metrics, 'kube-state-metrics'],
   'scrape-node-exporter': [checkpoints.metrics, 'node-exporter'],
   'vm-agent': ['vm-cluster'],
   'vm-cluster': ['vm-operator'],

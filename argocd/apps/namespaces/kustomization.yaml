@@ -8,6 +8,7 @@ resources:
 - grafana-operator.yaml
 - grafana.yaml
 - istio-system.yaml
+- kube-state-metrics.yaml
 - node-exporter.yaml
 - vm-agent.yaml
 - vm-cluster.yaml
