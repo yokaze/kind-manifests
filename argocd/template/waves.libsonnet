@@ -21,9 +21,8 @@ local dependency = {
   cilium: [checkpoints.init],
   dashboard: [checkpoints.argocd],
   deck: [checkpoints.argocd],
-  grafana: ['grafana-operator'],
-  'grafana-operator': [checkpoints.argocd],
-  'grafana-vm': ['grafana', 'vm-cluster'],
+  grafana: [checkpoints.argocd],
+  'grafana-vm': ['grafana', 'victoria-metrics'],
   istio: ['istio-base'],
   'istio-base': [
     'crds',  // Gateway CRD
@@ -33,9 +32,7 @@ local dependency = {
   'scrape-cadvisor': [checkpoints.metrics, 'cadvisor'],
   'scrape-ksm': [checkpoints.metrics, 'kube-state-metrics'],
   'scrape-node-exporter': [checkpoints.metrics, 'node-exporter'],
-  'vm-agent': ['vm-cluster'],
-  'vm-cluster': ['vm-operator'],
-  'vm-operator': [
+  'victoria-metrics': [
     checkpoints.argocd,
     checkpoints.ca,  // webhook
   ],
@@ -44,7 +41,7 @@ local dependency = {
   [checkpoints.cni]: ['cilium'],
   [checkpoints.init]: ['crds', 'namespaces'],
   [checkpoints.istio]: ['istio'],
-  [checkpoints.metrics]: ['grafana-vm', 'vm-agent'],
+  [checkpoints.metrics]: ['grafana-vm', 'victoria-metrics'],
 };
 local resolve_once = function(nodes)
   std.set(std.flattenArrays(std.prune(std.map(function(x) std.get(dependency, x), nodes))));

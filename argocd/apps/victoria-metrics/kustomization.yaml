@@ -6,3 +6,6 @@ helmCharts:
   name: victoria-metrics-operator
   namespace: vm-operator
   valuesFile: values.yaml
+resources:
+- vm-agent.yaml
+- vm-cluster.yaml

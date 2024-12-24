@@ -1,8 +1,10 @@
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMCluster
 metadata:
-  namespace: vm-cluster
+  namespace: victoria-metrics
   name: vm-cluster
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   replicationFactor: 1
   retentionPeriod: "1d"

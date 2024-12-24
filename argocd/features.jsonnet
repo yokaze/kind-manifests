@@ -12,9 +12,7 @@ local features = {
   'scrape-cadvisor': true,
   'scrape-ksm': true,
   'scrape-node-exporter': true,
-  'vm-agent': true,
-  'vm-cluster': true,
-  'vm-operator': true,
+  'victoria-metrics': true,
 };
 waves.get_all_dependencies(
   [x for x in std.objectFields(features) if features[x]]

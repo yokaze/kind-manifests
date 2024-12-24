@@ -130,14 +130,11 @@ manifests:
 		jsonnet $$i | yq -P '.[] | splitDoc' > $${OUTPUT_FILE}; \
 	done
 
-.PHONY: render-apps
-render-apps:
+.PHONY: render
+render:
 	rm -rf argocd/apps/config
 	mkdir -p argocd/apps/config
-	@for i in $$(find argocd/template -name '*.jsonnet' | sort); do \
-		echo $$i; \
-		jsonnet $$i | yq -P > argocd/apps/config/$$(basename $$i .jsonnet).yaml; \
-	done
+	jsonnet argocd/template/apps.jsonnet | yq '.[] | splitDoc' -P | yq --no-doc -s '"argocd/apps/config/" + "\(.metadata.name).yaml"'
 
 .PHONY: reference-template
 reference-template:
@@ -159,7 +156,6 @@ reference:
 	@$(MAKE) --no-print-directory HELM_NAME=dashboard reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=deck reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=grafana reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=grafana-operator reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=istio reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=istio-base reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=kube-state-metrics reference-template
@@ -168,14 +164,8 @@ reference:
 	@$(MAKE) --no-print-directory HELM_NAME=scrape-cadvisor reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=scrape-ksm reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=scrape-node-exporter reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=vm-agent reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=vm-cluster reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=vm-operator reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=victoria-metrics reference-template
 	@rm argocd/reference/.yaml
-
-.PHONY: render
-render:
-	@$(MAKE) --no-print-directory render-apps
 
 .PHONY: waves
 waves:

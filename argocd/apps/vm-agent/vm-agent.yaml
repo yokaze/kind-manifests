@@ -1,9 +1,0 @@
-apiVersion: operator.victoriametrics.com/v1beta1
-kind: VMAgent
-metadata:
-  namespace: vm-agent
-  name: vmagent
-spec:
-  selectAllByDefault: true
-  remoteWrite:
-    - url: http://vminsert-vm-cluster.vm-cluster.svc:8480/insert/0/prometheus/api/v1/write

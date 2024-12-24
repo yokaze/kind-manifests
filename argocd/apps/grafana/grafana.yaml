@@ -5,6 +5,8 @@ metadata:
   name: grafana
   labels:
     app.kubernetes.io/component: grafana
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   config:
     auth:

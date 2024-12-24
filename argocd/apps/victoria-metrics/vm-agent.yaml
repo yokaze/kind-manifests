@@ -1,0 +1,11 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAgent
+metadata:
+  namespace: victoria-metrics
+  name: vm-agent
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  selectAllByDefault: true
+  remoteWrite:
+    - url: http://vminsert-vm-cluster.victoria-metrics.svc:8480/insert/0/prometheus/api/v1/write

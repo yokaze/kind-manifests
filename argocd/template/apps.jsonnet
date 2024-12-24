@@ -1,0 +1,26 @@
+local template = import 'template.libsonnet';
+local apps = [
+  { name: 'accurate' },
+  { name: 'approver-policy' },
+  { name: 'argocd' },
+  { name: 'cadvisor' },
+  { name: 'cert-manager' },
+  { name: 'cilium' },
+  { name: 'cluster-ca' },
+  { name: 'config', finalizer: false },
+  { name: 'crds' },
+  { name: 'dashboard' },
+  { name: 'deck' },
+  { name: 'grafana-vm' },
+  { name: 'grafana' },
+  { name: 'istio-base' },
+  { name: 'istio' },
+  { name: 'kube-state-metrics' },
+  { name: 'namespaces' },
+  { name: 'node-exporter' },
+  { name: 'scrape-cadvisor' },
+  { name: 'scrape-ksm' },
+  { name: 'scrape-node-exporter' },
+  { name: 'victoria-metrics' },
+];
+[template(x) for x in apps]
