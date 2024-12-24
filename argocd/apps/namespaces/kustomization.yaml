@@ -11,5 +11,6 @@ resources:
 - istio-system.yaml
 - kube-state-metrics.yaml
 - node-exporter.yaml
+- pyroscope.yaml
 - victoria-metrics.yaml
 - vm-operator.yaml

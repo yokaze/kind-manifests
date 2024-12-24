@@ -161,6 +161,7 @@ reference:
 	@$(MAKE) --no-print-directory HELM_NAME=kube-state-metrics reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=namespaces reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=node-exporter reference-template
+	@$(MAKE) --no-print-directory HELM_NAME=pyroscope reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=scrape-cadvisor reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=scrape-ksm reference-template
 	@$(MAKE) --no-print-directory HELM_NAME=scrape-node-exporter reference-template

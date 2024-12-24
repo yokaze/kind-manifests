@@ -1,0 +1,15 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  namespace: grafana
+  name: victoria-metrics
+spec:
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/component: grafana
+  datasource:
+    name: VictoriaMetrics
+    type: prometheus
+    url: http://vmselect-vm-cluster.victoria-metrics.svc.cluster.local:8481/select/0/prometheus/
+    access: proxy
+    isDefault: true

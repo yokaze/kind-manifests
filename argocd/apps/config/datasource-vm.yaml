@@ -5,7 +5,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "7"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  name: grafana-vm
+  name: datasource-vm
   namespace: argocd
 spec:
   destination:
@@ -13,7 +13,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: argocd/apps/grafana-vm
+    path: argocd/apps/datasource-vm
     repoURL: git://mirror-git:9418/kind-manifests.git
     targetRevision: main
   syncPolicy:

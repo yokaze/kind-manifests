@@ -20,15 +20,17 @@ local dependency = {
   cadvisor: [checkpoints.argocd],
   cilium: [checkpoints.init],
   dashboard: [checkpoints.argocd],
+  'datasource-pyroscope': ['grafana', 'pyroscope'],
+  'datasource-vm': ['grafana', 'victoria-metrics'],
   deck: [checkpoints.argocd],
   grafana: [checkpoints.argocd],
-  'grafana-vm': ['grafana', 'victoria-metrics'],
   istio: ['istio-base'],
   'istio-base': [
     'crds',  // Gateway CRD
   ],
   'kube-state-metrics': [checkpoints.argocd],
   'node-exporter': [checkpoints.argocd],
+  'pyroscope': [checkpoints.argocd],
   'scrape-cadvisor': [checkpoints.metrics, 'cadvisor'],
   'scrape-ksm': [checkpoints.metrics, 'kube-state-metrics'],
   'scrape-node-exporter': [checkpoints.metrics, 'node-exporter'],
@@ -41,7 +43,7 @@ local dependency = {
   [checkpoints.cni]: ['cilium'],
   [checkpoints.init]: ['crds', 'namespaces'],
   [checkpoints.istio]: ['istio'],
-  [checkpoints.metrics]: ['grafana-vm', 'victoria-metrics'],
+  [checkpoints.metrics]: ['datasource-vm', 'victoria-metrics'],
 };
 local resolve_once = function(nodes)
   std.set(std.flattenArrays(std.prune(std.map(function(x) std.get(dependency, x), nodes))));

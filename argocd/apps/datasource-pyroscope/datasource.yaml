@@ -2,14 +2,16 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
   namespace: grafana
-  name: datasource-vm
+  name: pyroscope
 spec:
   instanceSelector:
     matchLabels:
       app.kubernetes.io/component: grafana
   datasource:
-    name: VictoriaMetrics
-    type: prometheus
-    url: http://vmselect-vm-cluster.victoria-metrics.svc.cluster.local:8481/select/0/prometheus/
+    name: Pyroscope
+    type: grafana-pyroscope-datasource
+    url: http://pyroscope.pyroscope.svc:4040
     access: proxy
-    isDefault: true
+    isDefault: false
+    jsonData:
+      minStep: '15s'
