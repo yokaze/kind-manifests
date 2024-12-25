@@ -1,4 +1,4 @@
-local waves = import 'template/waves.libsonnet';
+local waves = import 'waves.libsonnet';
 local features = {
   accurate: false,
   'approver-policy': true,
@@ -9,6 +9,7 @@ local features = {
   deck: true,
   grafana: true,
   'kube-state-metrics': false,
+  kubescape: true,
   'node-exporter': false,
   pyroscope: true,
   'scrape-cadvisor': false,

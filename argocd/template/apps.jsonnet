@@ -17,6 +17,7 @@ local apps = [
   { name: 'istio-base' },
   { name: 'istio' },
   { name: 'kube-state-metrics' },
+  { name: 'kubescape' },
   { name: 'namespaces' },
   { name: 'node-exporter' },
   { name: 'pyroscope' },

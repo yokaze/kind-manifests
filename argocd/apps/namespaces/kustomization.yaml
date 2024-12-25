@@ -10,6 +10,7 @@ resources:
 - grafana.yaml
 - istio-system.yaml
 - kube-state-metrics.yaml
+- kubescape.yaml
 - node-exporter.yaml
 - pyroscope.yaml
 - victoria-metrics.yaml

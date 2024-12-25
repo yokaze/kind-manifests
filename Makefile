@@ -80,7 +80,7 @@ cluster: sync-git
 
 	@$(MAKE) login-argocd
 	argocd app wait config --health
-	argocd app sync config --async $(shell jsonnet argocd/features.jsonnet | jq -r '.[]' | sed 's/^/--resource *:*:/')
+	argocd app sync config --async $(shell jsonnet argocd/template/features.jsonnet | jq -r '.[]' | sed 's/^/--resource *:*:/')
 
 .PHONY: cluster-audit
 cluster-audit: mount
@@ -144,29 +144,15 @@ reference-template:
 
 .PHONY: reference
 reference:
-	rm -rf argocd/reference
-	@$(MAKE) --no-print-directory HELM_NAME=accurate reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=approver-policy reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=argocd reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=cadvisor reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=cert-manager reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=cilium reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=config reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=crds reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=dashboard reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=deck reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=grafana reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=istio reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=istio-base reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=kube-state-metrics reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=namespaces reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=node-exporter reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=pyroscope reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=scrape-cadvisor reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=scrape-ksm reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=scrape-node-exporter reference-template
-	@$(MAKE) --no-print-directory HELM_NAME=victoria-metrics reference-template
+	@rm -rf argocd/reference
+	@for i in $$(jsonnet argocd/template/apps.jsonnet | jq -r '.[].metadata.name'); do \
+		$(MAKE) --no-print-directory HELM_NAME=$$i reference-template; \
+	done
 	@rm argocd/reference/.yaml
+
+.PHONY: features
+features:
+	@jsonnet argocd/template/features.jsonnet | yq -P
 
 .PHONY: waves
 waves:

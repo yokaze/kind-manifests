@@ -29,6 +29,7 @@ local dependency = {
     'crds',  // Gateway CRD
   ],
   'kube-state-metrics': [checkpoints.argocd],
+  kubescape: [checkpoints.argocd],
   'node-exporter': [checkpoints.argocd],
   'pyroscope': [checkpoints.argocd],
   'scrape-cadvisor': [checkpoints.metrics, 'cadvisor'],
