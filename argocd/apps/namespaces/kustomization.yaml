@@ -8,6 +8,7 @@ resources:
 - deck.yaml
 - grafana-operator.yaml
 - grafana.yaml
+- headlamp.yaml
 - istio-system.yaml
 - kube-state-metrics.yaml
 - kubescape.yaml

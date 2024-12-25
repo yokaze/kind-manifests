@@ -8,6 +8,7 @@ local features = {
   'datasource-vm': false,
   deck: true,
   grafana: true,
+  headlamp: true,
   'kube-state-metrics': false,
   kubescape: true,
   'node-exporter': false,

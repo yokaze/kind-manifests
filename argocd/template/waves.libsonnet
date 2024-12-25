@@ -24,6 +24,7 @@ local dependency = {
   'datasource-vm': ['grafana', 'victoria-metrics'],
   deck: [checkpoints.argocd],
   grafana: [checkpoints.argocd],
+  headlamp: [checkpoints.argocd],
   istio: ['istio-base'],
   'istio-base': [
     'crds',  // Gateway CRD

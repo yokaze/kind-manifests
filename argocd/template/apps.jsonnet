@@ -16,6 +16,7 @@ local apps = [
   { name: 'grafana' },
   { name: 'istio-base' },
   { name: 'istio' },
+  { name: 'headlamp' },
   { name: 'kube-state-metrics' },
   { name: 'kubescape' },
   { name: 'namespaces' },
