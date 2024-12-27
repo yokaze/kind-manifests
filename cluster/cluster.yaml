@@ -10,6 +10,18 @@ nodes:
         hostPort: 30080
       - containerPort: 30443 # Argo CD
         hostPort: 30443
+    kubeadmConfigPatches:
+      - |
+        kind: ClusterConfiguration
+        apiServer:
+          extraArgs:
+            admission-control-config-file: /node/admission/config.yaml
+          extraVolumes:
+            - name: admission
+              hostPath: /node/admission
+              mountPath: /node/admission
+              readOnly: true
+              pathType: DirectoryOrCreate
   - role: worker
     extraMounts:
       - hostPath: node
