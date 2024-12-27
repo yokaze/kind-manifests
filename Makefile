@@ -303,13 +303,13 @@ MOCO_VERSION := 0.10.5
 
 .PHONY: setup
 setup:
-	mkdir -p bin
-	cp $$(aqua which argocd) bin/argocd
-	cp $$(aqua which cilium) bin/cilium
-	cp $$(aqua which kubectl) bin/kubectl
-	cp $$(aqua which yq) bin/yq
-	wget -qO- https://github.com/cilium/hubble/releases/download/v$(CILIUM_VERSION)/hubble-linux-amd64.tar.gz | tar xzv -O hubble > bin/hubble
-	chmod +x bin/hubble
+	mkdir -p node/deck
+	cp $$(aqua which argocd) node/deck/argocd
+	cp $$(aqua which cilium) node/deck/cilium
+	cp $$(aqua which kubectl) node/deck/kubectl
+	cp $$(aqua which yq) node/deck/yq
+	wget -qO- https://github.com/cilium/hubble/releases/download/v$(CILIUM_VERSION)/hubble-linux-amd64.tar.gz | tar xzv -O hubble > node/deck/hubble
+	chmod +x node/deck/hubble
 
 .PHONY: clean
 clean:

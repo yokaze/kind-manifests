@@ -58,6 +58,6 @@ spec:
             name: alias
         - name: tools
           hostPath:
-            path: /opt/deck
+            path: /node/deck
         - name: tmp
           emptyDir: {}

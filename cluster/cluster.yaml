@@ -3,10 +3,8 @@ apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
     extraMounts:
-      - hostPath: cluster/conf.d
-        containerPath: /etc/containerd/conf.d
-      - hostPath: bin
-        containerPath: /opt/deck
+      - hostPath: node
+        containerPath: /node
     extraPortMappings:
       - containerPort: 30080 # Argo CD
         hostPort: 30080
@@ -14,26 +12,20 @@ nodes:
         hostPort: 30443
   - role: worker
     extraMounts:
-      - hostPath: cluster/conf.d
-        containerPath: /etc/containerd/conf.d
-      - hostPath: bin
-        containerPath: /opt/deck
+      - hostPath: node
+        containerPath: /node
   - role: worker
     extraMounts:
-      - hostPath: cluster/conf.d
-        containerPath: /etc/containerd/conf.d
-      - hostPath: bin
-        containerPath: /opt/deck
+      - hostPath: node
+        containerPath: /node
   - role: worker
     extraMounts:
-      - hostPath: cluster/conf.d
-        containerPath: /etc/containerd/conf.d
-      - hostPath: bin
-        containerPath: /opt/deck
+      - hostPath: node
+        containerPath: /node
 networking:
   disableDefaultCNI: true
   kubeProxyMode: none
 containerdConfigPatches:
   - |
     [plugins."io.containerd.grpc.v1.cri".registry]
-      config_path = "/etc/containerd/conf.d"
+      config_path = "/node/containerd/conf.d"
