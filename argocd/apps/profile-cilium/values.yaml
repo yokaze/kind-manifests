@@ -1,0 +1,40 @@
+alloy:
+  configMap:
+    content: |
+      discovery.kubernetes "cilium_pods" {
+        role = "pod"
+        namespaces {
+          names = ["kube-system"]
+        }
+        selectors {
+          role = "pod"
+          label = "app.kubernetes.io/name=cilium-agent"
+        }
+      }
+      discovery.relabel "cilium_pods" {
+        targets = discovery.kubernetes.cilium_pods.targets
+        rule {
+          source_labels = ["__address__"]
+          target_label = "__address__"
+          regex = "(.+)"
+          replacement = "${1}:6060"
+          action = "replace"
+        }
+      }
+      pyroscope.scrape "scrape_cilium_profile" {
+        targets = discovery.relabel.cilium_pods.output
+        forward_to = [pyroscope.write.write_cilium_profile.receiver]
+
+        profiling_config {
+          profile.process_cpu {
+            enabled = true
+          }
+        }
+      }
+      pyroscope.write "write_cilium_profile" {
+        endpoint {
+          url = "http://pyroscope.pyroscope.svc:4040"
+        }
+      }
+controller:
+  type: deployment

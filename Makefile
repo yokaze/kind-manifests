@@ -115,10 +115,27 @@ wait-all:
 
 .PHONY: rollout
 rollout:
-	@for i in $$(kubectl get node -oname | cut -d/ -f2); do \
-		kubectl drain --ignore-daemonsets --delete-emptydir-data $$i; \
-		kubectl uncordon $$i; \
+	@for n in $$(kubectl get node -oname | cut -d/ -f2); do \
+		kubectl drain --ignore-daemonsets --delete-emptydir-data $$n; \
+		kubectl uncordon $$n; \
 	done
+
+.PHONY: rollout-all
+rollout-all:
+	@for n in $$(kubectl get node -oname | cut -d/ -f2); do \
+		kubectl drain --ignore-daemonsets --delete-emptydir-data $$n; \
+		for p in $$(kubectl get po --field-selector spec.nodeName=$$n -Aojson | jq -r '.items[].metadata | select(.ownerReferences[0].kind == "DaemonSet") | "\(.namespace)/\(.name)"'); do \
+			kubectl delete pod --wait=false -n $$(echo $$p | cut -d/ -f1) $$(echo $$p | cut -d/ -f2); \
+		done; \
+		kubectl uncordon $$n; \
+	done
+
+.PHONY: images
+images:
+	@{ \
+		kubectl get po -Aojson | jq -r '.items[].spec.initContainers[]?.image'; \
+		kubectl get po -Aojson | jq -r '.items[].spec.containers[].image'; \
+	} | sort -u
 
 # Manifest Targets
 .PHONY: format

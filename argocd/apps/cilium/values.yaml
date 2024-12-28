@@ -15,4 +15,7 @@ kubeProxyReplacement: true
 l7Proxy: false
 operator:
   replicas: 1
+pprof:
+  address: ""
+  enabled: true
 routingMode: native
