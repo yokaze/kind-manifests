@@ -14,6 +14,8 @@ local apps = [
   { name: 'datasource-vm' },
   { name: 'deck' },
   { name: 'gatekeeper' },
+  { name: 'gatekeeper-policy' },
+  { name: 'gatekeeper-template' },
   { name: 'grafana' },
   { name: 'istio-base' },
   { name: 'istio' },

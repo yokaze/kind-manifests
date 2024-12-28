@@ -49,6 +49,7 @@ spec:
               subPath: .bash_aliases
             - name: tools
               mountPath: /opt/deck
+              readOnly: true
             - name: tmp
               mountPath: /tmp
       serviceAccountName: pilot

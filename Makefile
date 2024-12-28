@@ -69,6 +69,9 @@ cluster: sync-git
 	kustomize build --enable-helm argocd/apps/istio | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
+	kustomize build --enable-helm argocd/apps/gatekeeper | kubectl apply -f -
+	@$(MAKE) --no-print-directory wait-all
+
 #	kubectl label ns argocd istio-injection=enabled
 	kustomize build --enable-helm argocd/apps/argocd | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
@@ -80,7 +83,8 @@ cluster: sync-git
 
 	@$(MAKE) login-argocd
 	argocd app wait config --health
-	argocd app sync config --async $(shell jsonnet argocd/template/features.jsonnet | jq -r '.[]' | sed 's/^/--resource *:*:/')
+	argocd app sync config $(shell jsonnet argocd/template/features.jsonnet | jq -r '.[]' | sed 's/^/--resource *:*:/')
+	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: cluster-audit
 cluster-audit: mount
@@ -99,13 +103,22 @@ mount:
 umount:
 	./umount.sh
 
+.PHONY: wait-nodes
 wait-nodes:
 	while ! kubectl get nodes > /dev/null 2>&1; do sleep 1; done
 	kubectl wait node --all --for condition=Ready
 	@$(MAKE) --no-print-directory wait-all
 
+.PHONY: wait-all
 wait-all:
 	kubectl wait deployments -A --all --for condition=Available --timeout=-1s
+
+.PHONY: rollout
+rollout:
+	@for i in $$(kubectl get node -oname | cut -d/ -f2); do \
+		kubectl drain --ignore-daemonsets --delete-emptydir-data $$i; \
+		kubectl uncordon $$i; \
+	done
 
 # Manifest Targets
 .PHONY: format

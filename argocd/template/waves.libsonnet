@@ -24,6 +24,8 @@ local dependency = {
   'datasource-vm': ['grafana', 'victoria-metrics'],
   deck: [checkpoints.argocd],
   gatekeeper: [checkpoints.cni],
+  'gatekeeper-policy': ['gatekeeper-template'],
+  'gatekeeper-template': ['gatekeeper'],
   grafana: [checkpoints.argocd],
   headlamp: [checkpoints.argocd],
   istio: ['istio-base'],

@@ -8,6 +8,7 @@ local features = {
   'datasource-vm': false,
   deck: true,
   gatekeeper: true,
+  'gatekeeper-policy': true,
   grafana: true,
   headlamp: true,
   'kube-state-metrics': false,
