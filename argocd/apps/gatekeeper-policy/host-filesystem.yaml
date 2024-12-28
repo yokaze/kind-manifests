@@ -7,8 +7,10 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
+    excludedNamespaces:
+      - kubescape
+      - local-path-storage
   parameters:
     allowedHostPaths:
       - readOnly: true
         pathPrefix: /node/deck/
-      - pathPrefix: /var/local-path-provisioner/

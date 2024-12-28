@@ -1,3 +1,5 @@
+autoscaleEnabled: false
 pilot:
   env:
     ENABLE_NATIVE_SIDECARS: true
+replicaCount: 2

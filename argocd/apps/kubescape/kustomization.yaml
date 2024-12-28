@@ -5,3 +5,5 @@ helmCharts:
   repo: https://kubescape.github.io/helm-charts
   name: kubescape-operator
   valuesFile: values.yaml
+patches:
+- path: daemonset.yaml
