@@ -7,6 +7,7 @@ local features = {
   'datasource-pyroscope': true,
   'datasource-vm': false,
   deck: true,
+  gatekeeper: true,
   grafana: true,
   headlamp: true,
   'kube-state-metrics': false,

@@ -6,6 +6,7 @@ resources:
 - cert-manager.yaml
 - dashboard.yaml
 - deck.yaml
+- gatekeeper-system.yaml
 - grafana-operator.yaml
 - grafana.yaml
 - headlamp.yaml

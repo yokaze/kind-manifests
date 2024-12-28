@@ -13,6 +13,7 @@ local apps = [
   { name: 'datasource-pyroscope' },
   { name: 'datasource-vm' },
   { name: 'deck' },
+  { name: 'gatekeeper' },
   { name: 'grafana' },
   { name: 'istio-base' },
   { name: 'istio' },

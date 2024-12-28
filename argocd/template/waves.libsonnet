@@ -23,6 +23,7 @@ local dependency = {
   'datasource-pyroscope': ['grafana', 'pyroscope'],
   'datasource-vm': ['grafana', 'victoria-metrics'],
   deck: [checkpoints.argocd],
+  gatekeeper: [checkpoints.cni],
   grafana: [checkpoints.argocd],
   headlamp: [checkpoints.argocd],
   istio: ['istio-base'],
