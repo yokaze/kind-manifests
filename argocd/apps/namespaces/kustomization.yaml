@@ -14,7 +14,7 @@ resources:
 - kube-state-metrics.yaml
 - kubescape.yaml
 - node-exporter.yaml
-- profile-cilium.yaml
+- profiler.yaml
 - pyroscope.yaml
 - victoria-metrics.yaml
 - vm-operator.yaml
