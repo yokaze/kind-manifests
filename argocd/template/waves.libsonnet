@@ -35,6 +35,7 @@ local dependency = {
   'kube-state-metrics': [checkpoints.argocd],
   kubescape: [checkpoints.argocd],
   'node-exporter': [checkpoints.argocd],
+  pomerium: [checkpoints.argocd],
   'profile-cilium': ['pyroscope'],
   'pyroscope': [checkpoints.argocd],
   'scrape-cadvisor': [checkpoints.metrics, 'cadvisor'],

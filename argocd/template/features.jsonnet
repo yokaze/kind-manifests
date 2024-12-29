@@ -14,6 +14,7 @@ local features = {
   'kube-state-metrics': false,
   kubescape: true,
   'node-exporter': false,
+  pomerium: true,
   'profile-cilium': true,
   pyroscope: true,
   'scrape-cadvisor': false,

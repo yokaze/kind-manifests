@@ -24,6 +24,7 @@ local apps = [
   { name: 'kubescape' },
   { name: 'namespaces' },
   { name: 'node-exporter' },
+  { name: 'pomerium' },
   { name: 'profile-cilium' },
   { name: 'pyroscope' },
   { name: 'scrape-cadvisor' },

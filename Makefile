@@ -189,6 +189,13 @@ reference:
 	done
 	@rm argocd/reference/.yaml
 
+.PHONY: resources
+resources:
+	@for i in $$(jsonnet argocd/template/apps.jsonnet | jq -r '.[].metadata.name'); do \
+		kustomize build --enable-helm argocd/apps/$$i | yq '[.metadata.annotations."argocd.argoproj.io/sync-wave" // 0, .kind, .metadata.namespace, .metadata.name] | @tsv' | sed "s/^/$$i /" | sort -nk2 | column -t; \
+		echo; \
+	done
+
 .PHONY: features
 features:
 	@jsonnet argocd/template/features.jsonnet | yq -P
