@@ -267,14 +267,6 @@ deploy-moco:
 delete-moco:
 	kubectl delete -f upstream/moco/moco.yaml
 
-.PHONY: deploy-neco-admission
-deploy-neco-admission: ensure-cert-manager
-	kustomize build neco-admission | kubectl apply -f -
-
-.PHONY: delete-neco-admission
-delete-neco-admission:
-	kustomize build neco-admission | kubectl delete -f -
-
 .PHONY: deploy-remote-coredns
 deploy-remote-coredns:
 	kubectl create ns remote-coredns
@@ -350,8 +342,7 @@ clean:
 .PHONY: upstream
 upstream: \
 	upstream-jetstack \
-	upstream-moco \
-	upstream-neco-admission
+	upstream-moco
 	helm repo add argo https://argoproj.github.io/argo-helm
 	helm repo add bitnami https://charts.bitnami.com/bitnami
 	helm repo add cattage https://cybozu-go.github.io/cattage/
@@ -374,8 +365,3 @@ upstream-jetstack:
 upstream-moco:
 	mkdir -p upstream/moco
 	wget -O upstream/moco/moco.yaml https://github.com/cybozu-go/moco/releases/download/v$(MOCO_VERSION)/moco.yaml
-
-.PHONY: upstream-neco-admission
-upstream-neco-admission:
-	mkdir -p neco-admission/upstream
-	wget -O neco-admission/upstream/manifests.yaml https://raw.githubusercontent.com/cybozu/neco-containers/main/admission/config/webhook/manifests.yaml
