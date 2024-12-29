@@ -137,6 +137,15 @@ images:
 		kubectl get po -Aojson | jq -r '.items[].spec.containers[].image'; \
 	} | sort -u
 
+.PHONY: logs
+logs:
+	@stern . -A --max-log-requests 100 \
+		-e '(^|\s)I\d+\s' \
+		-e 'level=(info|INFO|debug)' \
+		-e '\"info\"' \
+		-e '\s(info|INFO)\s' \
+		-e '\[(info|INFO)\]'
+
 # Manifest Targets
 .PHONY: format
 format:
@@ -329,6 +338,7 @@ setup:
 	cp $$(aqua which argocd) node/deck/argocd
 	cp $$(aqua which cilium) node/deck/cilium
 	cp $$(aqua which kubectl) node/deck/kubectl
+	cp $$(aqua which stern) node/deck/stern
 	cp $$(aqua which yq) node/deck/yq
 	wget -qO- https://github.com/cilium/hubble/releases/download/v$(CILIUM_VERSION)/hubble-linux-amd64.tar.gz | tar xzv -O hubble > node/deck/hubble
 	chmod +x node/deck/hubble

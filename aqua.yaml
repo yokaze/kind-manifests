@@ -19,3 +19,4 @@ packages:
 - name: kubernetes-sigs/kind@v0.25.0
 - name: kubernetes-sigs/kustomize@kustomize/v5.5.0
 - name: kubernetes/kubectl@v1.31.3
+- name: stern/stern@v1.31.0

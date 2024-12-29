@@ -5,3 +5,4 @@ helmCharts:
   repo: https://open-policy-agent.github.io/gatekeeper/charts
   name: gatekeeper
   namespace: gatekeeper-system
+  valuesFile: values.yaml
