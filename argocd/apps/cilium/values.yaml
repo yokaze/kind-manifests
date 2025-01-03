@@ -21,3 +21,5 @@ pprof:
   address: ""
   enabled: true
 routingMode: native
+socketLB:
+  hostNamespaceOnly: true

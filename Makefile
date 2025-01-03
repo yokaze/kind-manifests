@@ -58,6 +58,7 @@ cluster: sync-git
 	kustomize build argocd/apps/crds | kubectl apply --server-side -f -
 	kustomize build argocd/apps/namespaces | kubectl apply -f -
 	kustomize build --enable-helm argocd/apps/cilium | kubectl apply -f -
+	kustomize build --enable-helm argocd/apps/istio-cni | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
 	kustomize build --enable-helm argocd/apps/cert-manager | kubectl apply -f -
@@ -66,16 +67,12 @@ cluster: sync-git
 	kustomize build --enable-helm argocd/apps/istio-base | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
-	kustomize build --enable-helm argocd/apps/istio-cni | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-all
-
 	kustomize build --enable-helm argocd/apps/istio | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
 	kustomize build --enable-helm argocd/apps/gatekeeper | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
-#	kubectl label ns argocd istio-injection=enabled
 	kustomize build --enable-helm argocd/apps/argocd | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
