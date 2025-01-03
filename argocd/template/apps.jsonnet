@@ -18,6 +18,7 @@ local apps = [
   { name: 'gatekeeper-template' },
   { name: 'grafana' },
   { name: 'istio-base' },
+  { name: 'istio-cni' },
   { name: 'istio' },
   { name: 'headlamp' },
   { name: 'kube-state-metrics' },

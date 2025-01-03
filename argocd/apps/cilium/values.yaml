@@ -1,4 +1,6 @@
 autoDirectNodeRoutes: true
+cni:
+  exclusive: false
 enableIPv4Masquerade: true
 envoy:
   enabled: false

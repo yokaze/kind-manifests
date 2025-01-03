@@ -28,10 +28,11 @@ local dependency = {
   'gatekeeper-template': ['gatekeeper'],
   grafana: [checkpoints.argocd],
   headlamp: [checkpoints.argocd],
-  istio: ['istio-base'],
+  istio: ['istio-base', 'istio-cni'],
   'istio-base': [
     'crds',  // Gateway CRD
   ],
+  'istio-cni': ['cilium'],
   'kube-state-metrics': [checkpoints.argocd],
   kubescape: [checkpoints.argocd],
   'node-exporter': [checkpoints.argocd],

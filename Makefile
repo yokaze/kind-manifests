@@ -66,6 +66,9 @@ cluster: sync-git
 	kustomize build --enable-helm argocd/apps/istio-base | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
+	kustomize build --enable-helm argocd/apps/istio-cni | kubectl apply -f -
+	@$(MAKE) --no-print-directory wait-all
+
 	kustomize build --enable-helm argocd/apps/istio | kubectl apply -f -
 	@$(MAKE) --no-print-directory wait-all
 
