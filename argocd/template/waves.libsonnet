@@ -4,6 +4,7 @@ local checkpoints = {
   cni: 'checkpoints-cni',
   init: 'checkpoints-init',
   metrics: 'checkpoints-metrics',
+  profile: 'checkpoints-profile',
 };
 local dependency = {
   accurate: [
@@ -38,9 +39,11 @@ local dependency = {
   loki: [checkpoints.argocd],
   'node-exporter': [checkpoints.argocd],
   pomerium: [checkpoints.argocd],
-  'profile-cilium': ['pyroscope'],
+  'profile-cilium': [checkpoints.profile],
   pyroscope: [checkpoints.argocd],
+  'scrape-argocd': [checkpoints.metrics, 'argocd'],
   'scrape-cadvisor': [checkpoints.metrics, 'cadvisor'],
+  'scrape-istio': [checkpoints.metrics, 'istio'],
   'scrape-ksm': [checkpoints.metrics, 'kube-state-metrics'],
   'scrape-node-exporter': [checkpoints.metrics, 'node-exporter'],
   tempo: [checkpoints.argocd],
@@ -52,7 +55,8 @@ local dependency = {
   [checkpoints.ca]: ['cluster-ca'],
   [checkpoints.cni]: ['cilium', 'istio'],
   [checkpoints.init]: ['crds', 'namespaces'],
-  [checkpoints.metrics]: ['datasource-vm', 'victoria-metrics'],
+  [checkpoints.metrics]: ['datasource-vm'],
+  [checkpoints.profile]: ['datasource-pyroscope'],
 };
 local resolve_once = function(nodes)
   std.set(std.flattenArrays(std.prune(std.map(function(x) std.get(dependency, x), nodes))));

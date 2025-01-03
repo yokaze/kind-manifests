@@ -1,0 +1,12 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  namespace: istio-system
+  name: istiod
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: istiod
+  podMetricsEndpoints:
+    - port: http-monitoring
+      path: /metrics

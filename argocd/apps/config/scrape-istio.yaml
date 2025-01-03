@@ -2,10 +2,10 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
-    argocd.argoproj.io/sync-wave: "8"
+    argocd.argoproj.io/sync-wave: "10"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  name: profile-cilium
+  name: scrape-istio
   namespace: argocd
 spec:
   destination:
@@ -13,7 +13,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: argocd/apps/profile-cilium
+    path: argocd/apps/scrape-istio
     repoURL: git://mirror-git:9418/kind-manifests.git
     targetRevision: main
   syncPolicy:

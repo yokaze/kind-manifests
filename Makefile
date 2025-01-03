@@ -137,6 +137,18 @@ images:
 		kubectl get po -Aojson | jq -r '.items[].spec.containers[].image'; \
 	} | sort -u
 
+.PHONY: scrape
+scrape:
+	kubectl exec -n deck deploy/pilot -- curl -s http://vmagent-vm-agent.victoria-metrics.svc:8429/targets
+
+.PHONY: metrics
+metrics:
+	@JOBS=$$(kubectl exec -n deck deploy/pilot -- curl -s http://vmselect-vm-cluster.victoria-metrics:8481/select/0/prometheus/api/v1/label/job/values | jq -r '.data[]'); \
+	for i in $${JOBS}; do \
+		echo $$i:; \
+		kubectl exec -n deck deploy/pilot -- curl -s http://vmselect-vm-cluster.victoria-metrics:8481/select/0/prometheus/api/v1/label/__name__/values -d "match[]={job=\"$$i\"}" | jq -r '.data[]' | sed 's/^/- /'; \
+	done | yq
+
 .PHONY: logs
 logs:
 	@stern . -A --max-log-requests 100 \
