@@ -23,6 +23,7 @@ local apps = [
   { name: 'headlamp' },
   { name: 'kube-state-metrics' },
   { name: 'kubescape' },
+  { name: 'loki' },
   { name: 'namespaces' },
   { name: 'node-exporter' },
   { name: 'pomerium' },

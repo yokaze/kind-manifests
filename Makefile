@@ -186,6 +186,7 @@ reference:
 	@rm -rf argocd/reference
 	@for i in $$(jsonnet argocd/template/apps.jsonnet | jq -r '.[].metadata.name'); do \
 		$(MAKE) --no-print-directory HELM_NAME=$$i reference-template; \
+		echo; \
 	done
 	@rm argocd/reference/.yaml
 

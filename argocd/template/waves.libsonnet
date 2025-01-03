@@ -3,7 +3,6 @@ local checkpoints = {
   ca: 'checkpoints-ca',
   cni: 'checkpoints-cni',
   init: 'checkpoints-init',
-  istio: 'checkpoints-istio',
   metrics: 'checkpoints-metrics',
 };
 local dependency = {
@@ -14,7 +13,7 @@ local dependency = {
   'approver-policy': [
     'cert-manager',
   ],
-  argocd: [checkpoints.istio],
+  argocd: [checkpoints.cni],
   'cert-manager': [checkpoints.cni],
   'cluster-ca': ['approver-policy', 'cert-manager'],
   cadvisor: [checkpoints.argocd],
@@ -35,6 +34,7 @@ local dependency = {
   'istio-cni': ['cilium'],
   'kube-state-metrics': [checkpoints.argocd],
   kubescape: [checkpoints.argocd],
+  loki: [checkpoints.argocd],
   'node-exporter': [checkpoints.argocd],
   pomerium: [checkpoints.argocd],
   'profile-cilium': ['pyroscope'],
@@ -42,15 +42,15 @@ local dependency = {
   'scrape-cadvisor': [checkpoints.metrics, 'cadvisor'],
   'scrape-ksm': [checkpoints.metrics, 'kube-state-metrics'],
   'scrape-node-exporter': [checkpoints.metrics, 'node-exporter'],
+  tempo: [checkpoints.argocd],
   'victoria-metrics': [
     checkpoints.argocd,
     checkpoints.ca,  // webhook
   ],
   [checkpoints.argocd]: ['argocd'],
   [checkpoints.ca]: ['cluster-ca'],
-  [checkpoints.cni]: ['cilium'],
+  [checkpoints.cni]: ['cilium', 'istio'],
   [checkpoints.init]: ['crds', 'namespaces'],
-  [checkpoints.istio]: ['istio'],
   [checkpoints.metrics]: ['datasource-vm', 'victoria-metrics'],
 };
 local resolve_once = function(nodes)

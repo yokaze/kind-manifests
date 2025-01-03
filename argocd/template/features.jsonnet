@@ -13,6 +13,7 @@ local features = {
   headlamp: true,
   'kube-state-metrics': false,
   kubescape: true,
+  loki: true,
   'node-exporter': false,
   pomerium: true,
   'profile-cilium': true,

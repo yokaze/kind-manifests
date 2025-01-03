@@ -13,8 +13,10 @@ resources:
 - istio-system.yaml
 - kube-state-metrics.yaml
 - kubescape.yaml
+- loki.yaml
 - node-exporter.yaml
 - profiler.yaml
 - pyroscope.yaml
+- tempo.yaml
 - victoria-metrics.yaml
 - vm-operator.yaml
