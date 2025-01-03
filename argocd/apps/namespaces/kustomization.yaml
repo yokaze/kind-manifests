@@ -11,6 +11,7 @@ resources:
 - grafana.yaml
 - headlamp.yaml
 - istio-system.yaml
+- kiali-operator.yaml
 - kube-state-metrics.yaml
 - kubescape.yaml
 - loki.yaml

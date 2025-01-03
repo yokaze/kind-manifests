@@ -21,6 +21,7 @@ local apps = [
   { name: 'istio-cni' },
   { name: 'istio' },
   { name: 'headlamp' },
+  { name: 'kiali' },
   { name: 'kube-state-metrics' },
   { name: 'kubescape' },
   { name: 'loki' },

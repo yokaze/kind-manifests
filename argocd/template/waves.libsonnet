@@ -32,6 +32,7 @@ local dependency = {
     'crds',  // Gateway CRD
   ],
   'istio-cni': ['cilium'],
+  kiali: [checkpoints.argocd, 'victoria-metrics'],
   'kube-state-metrics': [checkpoints.argocd],
   kubescape: [checkpoints.argocd],
   loki: [checkpoints.argocd],

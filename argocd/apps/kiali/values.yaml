@@ -1,0 +1,9 @@
+cr:
+  create: true
+  namespace: istio-system
+  spec:
+    auth:
+      strategy: anonymous
+    external_services:
+      prometheus:
+        url: http://vmselect-vm-cluster.victoria-metrics.svc.cluster.local:8481/select/0/prometheus/
