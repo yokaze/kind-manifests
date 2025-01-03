@@ -32,6 +32,7 @@ local apps = [
   { name: 'scrape-cadvisor' },
   { name: 'scrape-ksm' },
   { name: 'scrape-node-exporter' },
+  { name: 'tempo' },
   { name: 'victoria-metrics' },
 ];
 [template(x) for x in apps]

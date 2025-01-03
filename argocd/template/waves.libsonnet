@@ -38,7 +38,7 @@ local dependency = {
   'node-exporter': [checkpoints.argocd],
   pomerium: [checkpoints.argocd],
   'profile-cilium': ['pyroscope'],
-  'pyroscope': [checkpoints.argocd],
+  pyroscope: [checkpoints.argocd],
   'scrape-cadvisor': [checkpoints.metrics, 'cadvisor'],
   'scrape-ksm': [checkpoints.metrics, 'kube-state-metrics'],
   'scrape-node-exporter': [checkpoints.metrics, 'node-exporter'],

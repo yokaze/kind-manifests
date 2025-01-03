@@ -149,7 +149,7 @@ logs:
 # Manifest Targets
 .PHONY: format
 format:
-	@for i in $$(find -name '*.json' | grep -v '/charts/' | sort); do \
+	@for i in $$(find -name '*.json' | grep -v '/charts/' | grep -v '/upstream/' | sort); do \
 		echo $$i; \
 		jq . $$i | sponge $$i; \
 	done

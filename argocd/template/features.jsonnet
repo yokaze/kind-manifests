@@ -13,7 +13,7 @@ local features = {
   headlamp: true,
   'kube-state-metrics': false,
   kubescape: true,
-  loki: true,
+  loki: false,
   'node-exporter': false,
   pomerium: true,
   'profile-cilium': true,
@@ -21,6 +21,7 @@ local features = {
   'scrape-cadvisor': false,
   'scrape-ksm': false,
   'scrape-node-exporter': false,
+  tempo: true,
   'victoria-metrics': false,
 };
 waves.get_all_dependencies(
