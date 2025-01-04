@@ -1,23 +1,23 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- accurate.yaml
-- argocd.yaml
-- cert-manager.yaml
-- dashboard.yaml
-- deck.yaml
-- gatekeeper-system.yaml
-- grafana-operator.yaml
-- grafana.yaml
-- headlamp.yaml
-- istio-system.yaml
-- kiali-operator.yaml
-- kube-state-metrics.yaml
-- kubescape.yaml
-- loki.yaml
-- node-exporter.yaml
-- profiler.yaml
-- pyroscope.yaml
-- tempo.yaml
-- victoria-metrics.yaml
-- vm-operator.yaml
+  - accurate.yaml
+  - argocd.yaml
+  - cert-manager.yaml
+  - dashboard.yaml
+  - deck.yaml
+  - gatekeeper-system.yaml
+  - grafana-operator.yaml
+  - grafana.yaml
+  - headlamp.yaml
+  - istio-system.yaml
+  - kiali-operator.yaml
+  - kube-state-metrics.yaml
+  - kubescape.yaml
+  - loki.yaml
+  - node-exporter.yaml
+  - profiler.yaml
+  - pyroscope.yaml
+  - tempo.yaml
+  - victoria-metrics.yaml
+  - vm-operator.yaml

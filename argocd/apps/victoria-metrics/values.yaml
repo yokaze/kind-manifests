@@ -4,4 +4,4 @@ admissionWebhooks:
     issuer:
       kind: ClusterIssuer
       name: cluster-ca
-fullnameOverride: "vm-operator"
+fullnameOverride: vm-operator

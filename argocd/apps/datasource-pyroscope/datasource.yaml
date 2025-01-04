@@ -14,4 +14,4 @@ spec:
     access: proxy
     isDefault: false
     jsonData:
-      minStep: '15s'
+      minStep: 15s

@@ -1,8 +1,11 @@
 apiVersion: audit.k8s.io/v1
 kind: Policy
 omitStages:
-- RequestReceived
+  - RequestReceived
 rules:
-- level: None
-  verbs: ["get", "watch", "list"]
-- level: Metadata
+  - level: None
+    verbs:
+      - get
+      - watch
+      - list
+  - level: Metadata

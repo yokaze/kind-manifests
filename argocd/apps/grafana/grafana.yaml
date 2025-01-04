@@ -12,7 +12,7 @@ spec:
     auth:
       disable_login_form: "false"
     plugins:
-      allow_loading_unsigned_plugins: "victoriametrics-datasource"
+      allow_loading_unsigned_plugins: victoriametrics-datasource
     security:
       admin_user: admin
       admin_password: password

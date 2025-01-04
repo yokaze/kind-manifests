@@ -169,6 +169,10 @@ format:
 		echo $$i; \
 		jsonnetfmt --no-use-implicit-plus -i $$i; \
 	done
+	@for i in $$(find -name '*.yaml' | grep -v 'aqua.yaml' | grep -v '/argocd/reference/' | grep -v '/charts/' | grep -v '/manifests/' | grep -v '/upstream/' | sort); do \
+		echo $$i; \
+		yq -iP $$i; \
+	done
 
 .PHONY: manifests
 manifests:

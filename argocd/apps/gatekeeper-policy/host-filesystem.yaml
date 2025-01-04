@@ -5,8 +5,10 @@ metadata:
 spec:
   match:
     kinds:
-      - apiGroups: [""]
-        kinds: ["Pod"]
+      - apiGroups:
+          - ""
+        kinds:
+          - Pod
     excludedNamespaces:
       - kubescape
       - local-path-storage
