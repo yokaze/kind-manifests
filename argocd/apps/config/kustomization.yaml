@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - accurate.yaml
+  - approver-policy.yaml
+  - argocd.yaml
+  - cadvisor.yaml
+  - cert-manager.yaml
+  - cilium.yaml
+  - cluster-ca.yaml
+  - config.yaml
+  - crds.yaml
+  - dashboard.yaml
+  - datasource-pyroscope.yaml
+  - datasource-vm.yaml
+  - deck.yaml
+  - gatekeeper.yaml
+  - gatekeeper-policy.yaml
+  - gatekeeper-template.yaml
+  - grafana.yaml
+  - istio-base.yaml
+  - istio-cni.yaml
+  - istio.yaml
+  - headlamp.yaml
+  - kiali.yaml
+  - kube-state-metrics.yaml
+  - kubescape.yaml
+  - loki.yaml
+  - namespaces.yaml
+  - node-exporter.yaml
+  - pomerium.yaml
+  - profile-cilium.yaml
+  - pyroscope.yaml
+  - scrape-argocd.yaml
+  - scrape-cadvisor.yaml
+  - scrape-istio.yaml
+  - scrape-ksm.yaml
+  - scrape-node-exporter.yaml
+  - tempo.yaml
+  - victoria-metrics.yaml

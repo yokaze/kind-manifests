@@ -179,6 +179,7 @@ config:
 	rm -rf argocd/apps/config
 	mkdir -p argocd/apps/config
 	jsonnet argocd/template/apps.jsonnet | yq '.[] | splitDoc' -P | yq --no-doc -s '"argocd/apps/config/" + "\(.metadata.name).yaml"'
+	jsonnet argocd/template/config.jsonnet | yq -P > argocd/apps/config/kustomization.yaml
 
 .PHONY: reference-template
 reference-template:
@@ -193,7 +194,6 @@ reference:
 		$(MAKE) --no-print-directory HELM_NAME=$$i reference-template; \
 		echo; \
 	done
-	@rm argocd/reference/.yaml
 
 .PHONY: resources
 resources:
