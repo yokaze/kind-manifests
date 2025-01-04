@@ -11,13 +11,16 @@ resources:
   - config.yaml
   - crds.yaml
   - dashboard.yaml
+  - datasource-loki.yaml
   - datasource-pyroscope.yaml
+  - datasource-tempo.yaml
   - datasource-vm.yaml
   - deck.yaml
   - gatekeeper.yaml
   - gatekeeper-policy.yaml
   - gatekeeper-template.yaml
   - grafana.yaml
+  - grafana-operator.yaml
   - istio-base.yaml
   - istio-cni.yaml
   - istio.yaml

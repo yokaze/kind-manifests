@@ -60,7 +60,7 @@ cluster: sync-git
 		echo; \
 		echo "WAVE $$i"; \
 		for j in $$($(MAKE) --no-print-directory waves | grep -Fw $$i | awk '{print $$1}'); do \
-			kustomize build --enable-helm argocd/apps/$$j | kubectl apply -f -; \
+			kustomize build --enable-helm argocd/apps/$$j | kubectl apply $$(if [ "$$j" = "crds" ]; then echo --server-side; fi) -f -; \
 		done; \
 		if [ $$i -ge 2 ]; then \
 			$(MAKE) --no-print-directory wait-all; \
@@ -73,6 +73,7 @@ cluster: sync-git
 	@$(MAKE) login-argocd
 	argocd app wait config --health
 	argocd app sync config $(shell jsonnet argocd/template/features.jsonnet | jq -r '.[]' | sed 's/^/--resource *:*:/')
+	@echo
 	@$(MAKE) --no-print-directory wait-all
 
 .PHONY: cluster-audit
@@ -208,7 +209,7 @@ features:
 
 .PHONY: waves
 waves:
-	@for i in $$(find argocd/apps/config -name '*.yaml'); do \
+	@for i in $$(find argocd/apps/config -name '*.yaml' | grep -v 'kustomization.yaml'); do \
 		yq '[.metadata.name, .metadata.annotations."argocd.argoproj.io/sync-wave"] | @tsv' $$i; \
 	done | sort -Vk2 | column -t
 

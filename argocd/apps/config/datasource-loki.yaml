@@ -5,7 +5,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "8"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
-  name: datasource-pyroscope
+  name: datasource-loki
   namespace: argocd
 spec:
   destination:
@@ -13,7 +13,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: argocd/apps/datasource-pyroscope
+    path: argocd/apps/datasource-loki
     repoURL: git://mirror-git:9418/kind-manifests.git
     targetRevision: main
   syncPolicy:
