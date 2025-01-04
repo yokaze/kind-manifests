@@ -55,29 +55,18 @@ cluster: sync-git
 	kind create cluster --config cluster/cluster.yaml
 	kind load docker-image quay.io/cilium/cilium:v$(CILIUM_VERSION)
 
-	kustomize build argocd/apps/crds | kubectl apply --server-side -f -
-	kustomize build argocd/apps/namespaces | kubectl apply -f -
-	kustomize build --enable-helm argocd/apps/cilium | kubectl apply -f -
-	kustomize build --enable-helm argocd/apps/istio-cni | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-all
-
-	kustomize build --enable-helm argocd/apps/cert-manager | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-all
-
-	kustomize build --enable-helm argocd/apps/istio-base | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-all
-
-	kustomize build --enable-helm argocd/apps/istio | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-all
-
-	kustomize build --enable-helm argocd/apps/gatekeeper | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-all
-
-	kustomize build --enable-helm argocd/apps/argocd | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-all
-
-	kustomize build --enable-helm argocd/apps/deck | kubectl apply -f -
-	@$(MAKE) --no-print-directory wait-all
+	ARGOCD_WAVE=$$($(MAKE) --no-print-directory waves | grep -e '^argocd\s' | awk '{print $$2}'); \
+	for i in $$(seq $${ARGOCD_WAVE}); do \
+		echo; \
+		echo "WAVE $$i"; \
+		for j in $$($(MAKE) --no-print-directory waves | grep -Fw $$i | awk '{print $$1}'); do \
+			kustomize build --enable-helm argocd/apps/$$j | kubectl apply -f -; \
+		done; \
+		if [ $$i -ge 2 ]; then \
+			$(MAKE) --no-print-directory wait-all; \
+		fi; \
+	done; \
+	echo
 
 	kubectl apply -f argocd/apps/config/config.yaml
 
@@ -161,15 +150,15 @@ logs:
 # Manifest Targets
 .PHONY: format
 format:
-	@for i in $$(find -name '*.json' | grep -v '/charts/' | grep -v '/upstream/' | sort); do \
+	@for i in $$(git ls-files | grep -e '[.]json$$' | sort); do \
 		echo $$i; \
 		jq . $$i | sponge $$i; \
 	done
-	@for i in $$(find -name '*.*sonnet' | sort); do \
+	@for i in $$(git ls-files | grep -e '[.].*sonnet$$' | sort); do \
 		echo $$i; \
 		jsonnetfmt --no-use-implicit-plus -i $$i; \
 	done
-	@for i in $$(find -name '*.yaml' | grep -v 'aqua.yaml' | grep -v '/argocd/reference/' | grep -v '/charts/' | grep -v '/manifests/' | grep -v '/upstream/' | sort); do \
+	@for i in $$(git ls-files | grep -e '[.]yaml$$' | grep -v 'aqua.yaml' | sort); do \
 		echo $$i; \
 		yq -iP $$i; \
 	done
@@ -185,8 +174,8 @@ manifests:
 		jsonnet $$i | yq -P '.[] | splitDoc' > $${OUTPUT_FILE}; \
 	done
 
-.PHONY: render
-render:
+.PHONY: config
+config:
 	rm -rf argocd/apps/config
 	mkdir -p argocd/apps/config
 	jsonnet argocd/template/apps.jsonnet | yq '.[] | splitDoc' -P | yq --no-doc -s '"argocd/apps/config/" + "\(.metadata.name).yaml"'
