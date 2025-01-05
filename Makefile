@@ -73,10 +73,15 @@ cluster: sync-git
 	@$(MAKE) login-argocd
 	argocd app wait config --health
 	argocd app sync config $(shell jsonnet argocd/template/features.jsonnet | jq -r '.apps[]' | sed 's/^/--resource *:*:/')
-	@echo
 	@$(MAKE) --no-print-directory wait-all
-
-	argocd app sync scrape $(shell jsonnet argocd/template/features.jsonnet | jq -r '.scrapes[]' | awk '{ printf("--resource *:*:%s/*", $$1) }')
+	@echo
+	if [ $$(jsonnet argocd/template/features.jsonnet | jq '.datasources | length') -gt 0 ]; then \
+		argocd app sync datasource $(shell jsonnet argocd/template/features.jsonnet | jq -r '.datasources[]' | sed 's/^/--resource *:*:/'); \
+	fi
+	@echo
+	if [ $$(jsonnet argocd/template/features.jsonnet | jq '.scrapes | length') -gt 0 ]; then \
+		argocd app sync scrape $(shell jsonnet argocd/template/features.jsonnet | jq -r '.scrapes[]' | awk '{ printf("--resource *:*:%s/*", $$1) }'); \
+	fi
 
 .PHONY: cluster-audit
 cluster-audit: mount
@@ -86,14 +91,6 @@ cluster-audit: mount
 .PHONY: stop
 stop:
 	kind delete cluster
-
-.PHONY: mount
-mount:
-	./mount.sh
-
-.PHONY: umount
-umount:
-	./umount.sh
 
 .PHONY: wait-nodes
 wait-nodes:
@@ -183,6 +180,7 @@ config:
 	mkdir -p argocd/apps/config
 	jsonnet argocd/template/apps.jsonnet | yq '.[] | splitDoc' -P | yq --no-doc -s '"argocd/apps/config/" + "\(.metadata.name).yaml"'
 	jsonnet argocd/template/config.jsonnet | yq -P > argocd/apps/config/kustomization.yaml
+	jsonnet argocd/template/datasource.jsonnet | yq -P > argocd/apps/datasource/kustomization.yaml
 	jsonnet argocd/template/scrape.jsonnet | yq -P > argocd/apps/scrape/kustomization.yaml
 
 .PHONY: reference-template

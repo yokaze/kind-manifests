@@ -13,10 +13,7 @@ resources:
   - config.yaml
   - crds.yaml
   - dashboard.yaml
-  - datasource-loki.yaml
-  - datasource-pyroscope.yaml
-  - datasource-tempo.yaml
-  - datasource-vm.yaml
+  - datasource.yaml
   - deck.yaml
   - gatekeeper.yaml
   - gatekeeper-policy.yaml

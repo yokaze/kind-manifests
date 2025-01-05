@@ -3,6 +3,6 @@ kustomization([
   'argocd',
   'cadvisor',
   'istio',
-  'ksm',
+  'kube-state-metrics',
   'node-exporter',
 ])

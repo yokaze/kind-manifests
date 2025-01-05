@@ -15,10 +15,6 @@ local dependency = {
   'collect-audit': [checkpoints.logging],
   'collect-pods': [checkpoints.logging],
   dashboard: [checkpoints.argocd],
-  'datasource-loki': ['grafana', 'loki'],
-  'datasource-pyroscope': ['grafana', 'pyroscope'],
-  'datasource-tempo': ['grafana', 'tempo'],
-  'datasource-vm': ['grafana', 'victoria-metrics'],
   deck: [checkpoints.argocd],
   gatekeeper: [checkpoints.cni],
   'gatekeeper-policy': ['gatekeeper-template'],
@@ -48,9 +44,9 @@ local dependency = {
   [checkpoints.ca]: ['cluster-ca'],
   [checkpoints.cni]: ['cilium', 'istio'],
   [checkpoints.init]: ['crds', 'namespaces'],
-  [checkpoints.logging]: ['datasource-loki'],
-  [checkpoints.metrics]: ['datasource-vm'],
-  [checkpoints.profile]: ['datasource-pyroscope'],
+  [checkpoints.logging]: ['grafana', 'loki'],
+  [checkpoints.metrics]: ['grafana', 'victoria-metrics'],
+  [checkpoints.profile]: ['grafana', 'pyroscope'],
 };
 local resolve_once = function(nodes)
   std.set(std.flattenArrays(std.prune(std.map(function(x) std.get(dependency, x), nodes))));
