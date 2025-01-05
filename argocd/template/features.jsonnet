@@ -5,7 +5,7 @@ local features = {
   'approver-policy': true,
   cadvisor: false,
   'collect-audit': true,
-  'collect-pods': false,
+  'collect-pods': true,
   dashboard: false,
   deck: true,
   'gatekeeper-policy': false,
