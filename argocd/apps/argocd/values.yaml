@@ -4,6 +4,8 @@ configs:
     url: https://argocd-server.argocd
   params:
     server.insecure: "true"
+notifications:
+  enabled: false
 server:
   service:
     type: NodePort
