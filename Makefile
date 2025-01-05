@@ -72,9 +72,11 @@ cluster: sync-git
 
 	@$(MAKE) login-argocd
 	argocd app wait config --health
-	argocd app sync config $(shell jsonnet argocd/template/features.jsonnet | jq -r '.[]' | sed 's/^/--resource *:*:/')
+	argocd app sync config $(shell jsonnet argocd/template/features.jsonnet | jq -r '.apps[]' | sed 's/^/--resource *:*:/')
 	@echo
 	@$(MAKE) --no-print-directory wait-all
+
+	argocd app sync scrape $(shell jsonnet argocd/template/features.jsonnet | jq -r '.scrapes[]' | awk '{ printf("--resource *:*:%s/*", $$1) }')
 
 .PHONY: cluster-audit
 cluster-audit: mount
@@ -181,6 +183,7 @@ config:
 	mkdir -p argocd/apps/config
 	jsonnet argocd/template/apps.jsonnet | yq '.[] | splitDoc' -P | yq --no-doc -s '"argocd/apps/config/" + "\(.metadata.name).yaml"'
 	jsonnet argocd/template/config.jsonnet | yq -P > argocd/apps/config/kustomization.yaml
+	jsonnet argocd/template/scrape.jsonnet | yq -P > argocd/apps/scrape/kustomization.yaml
 
 .PHONY: reference-template
 reference-template:

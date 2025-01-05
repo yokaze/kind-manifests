@@ -1,12 +1,4 @@
-local checkpoints = {
-  argocd: 'checkpoints-argocd',
-  ca: 'checkpoints-ca',
-  cni: 'checkpoints-cni',
-  init: 'checkpoints-init',
-  logging: 'checkpoints-logging',
-  metrics: 'checkpoints-metrics',
-  profile: 'checkpoints-profile',
-};
+local checkpoints = import 'checkpoints.libsonnet';
 local dependency = {
   accurate: [
     checkpoints.argocd,
@@ -47,11 +39,6 @@ local dependency = {
   pomerium: [checkpoints.argocd],
   'profile-cilium': [checkpoints.profile],
   pyroscope: [checkpoints.argocd],
-  'scrape-argocd': [checkpoints.metrics, 'argocd'],
-  'scrape-cadvisor': [checkpoints.metrics, 'cadvisor'],
-  'scrape-istio': [checkpoints.metrics, 'istio'],
-  'scrape-ksm': [checkpoints.metrics, 'kube-state-metrics'],
-  'scrape-node-exporter': [checkpoints.metrics, 'node-exporter'],
   tempo: [checkpoints.argocd],
   'victoria-metrics': [
     checkpoints.argocd,
@@ -82,6 +69,6 @@ local resolve = function(wave, steps, nodes)
   get_all_dependencies(names)::
     resolve(0, [], names).dependencies,
 
-  order(name)::
-    if name == 'config' then 10000 else resolve(0, [], [name]).wave,
+  order(spec)::
+    if spec.sync then resolve(0, [], [spec.name]).wave else 10000,
 }

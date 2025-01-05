@@ -7,7 +7,7 @@ local generate = function(spec) {
     namespace: 'argocd',
     name: spec.name,
     annotations: {
-      'argocd.argoproj.io/sync-wave': std.toString(waves.order(spec.name)),
+      'argocd.argoproj.io/sync-wave': std.toString(waves.order(spec)),
     },
   } + if spec.finalizer then {
     finalizers: [
@@ -25,7 +25,7 @@ local generate = function(spec) {
       targetRevision: 'main',
       path: 'argocd/apps/%s' % spec.name,
     },
-  } + if spec.name != configAppName then {
+  } + if spec.sync then {
     syncPolicy: {
       automated: {
         prune: true,
@@ -39,6 +39,7 @@ function(spec)
     'name',
   ];
   local optional = {
+    sync: true,
     finalizer: true,
   };
   assert std.length(std.setDiff(required, std.objectFields(spec))) == 0 : 'required params are missing';

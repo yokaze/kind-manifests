@@ -36,10 +36,6 @@ resources:
   - pomerium.yaml
   - profile-cilium.yaml
   - pyroscope.yaml
-  - scrape-argocd.yaml
-  - scrape-cadvisor.yaml
-  - scrape-istio.yaml
-  - scrape-ksm.yaml
-  - scrape-node-exporter.yaml
+  - scrape.yaml
   - tempo.yaml
   - victoria-metrics.yaml

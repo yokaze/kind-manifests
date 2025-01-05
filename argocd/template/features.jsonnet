@@ -1,3 +1,4 @@
+local checkpoints = import 'checkpoints.libsonnet';
 local waves = import 'waves.libsonnet';
 local features = {
   accurate: false,
@@ -22,14 +23,22 @@ local features = {
   pomerium: false,
   'profile-cilium': false,
   pyroscope: false,
-  'scrape-argocd': false,
-  'scrape-cadvisor': false,
-  'scrape-istio': false,
-  'scrape-ksm': false,
-  'scrape-node-exporter': false,
+  scrape: true,
   tempo: false,
   'victoria-metrics': false,
 };
-waves.get_all_dependencies(
-  [x for x in std.objectFields(features) if features[x]]
-)
+local scrapes = {
+  argocd: false,
+  cadvisor: false,
+  istio: false,
+  'kube-state-metrics': true,
+  'node-exporter': false,
+};
+local scrape_targets = [x for x in std.objectFields(scrapes) if scrapes[x]];
+{
+  apps: waves.get_all_dependencies(
+    [x for x in std.objectFields(features) if features[x]] +
+    if std.any(std.objectValues(scrapes)) then [checkpoints.metrics] + scrape_targets else []
+  ),
+  scrapes: scrape_targets,
+}
