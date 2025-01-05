@@ -8,6 +8,8 @@ resources:
   - cert-manager.yaml
   - cilium.yaml
   - cluster-ca.yaml
+  - collect-audit.yaml
+  - collect-pods.yaml
   - config.yaml
   - crds.yaml
   - dashboard.yaml

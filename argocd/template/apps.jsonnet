@@ -7,6 +7,8 @@ local apps = [
   { name: 'cert-manager' },
   { name: 'cilium' },
   { name: 'cluster-ca' },
+  { name: 'collect-audit' },
+  { name: 'collect-pods' },
   { name: 'config', finalizer: false },
   { name: 'crds' },
   { name: 'dashboard' },

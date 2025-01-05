@@ -14,6 +14,7 @@ resources:
   - kiali-operator.yaml
   - kube-state-metrics.yaml
   - kubescape.yaml
+  - logging.yaml
   - loki.yaml
   - node-exporter.yaml
   - profiler.yaml

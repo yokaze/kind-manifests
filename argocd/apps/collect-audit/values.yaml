@@ -1,0 +1,33 @@
+# https://grafana.com/docs/alloy/latest/collect/logs-in-kubernetes/
+alloy:
+  configMap:
+    content: |
+      loki.source.file "audit" {
+        targets = [
+          {__path__ = "/var/log/kubernetes/audit/audit.log"},
+        ]
+        forward_to = [loki.write.default.receiver]
+      }
+      loki.write "default" {
+        endpoint {
+          url = "http://loki.loki.svc:3100/loki/api/v1/push"
+        }
+      }
+  mounts:
+    extra:
+      - name: audit
+        mountPath: /var/log/kubernetes/audit
+        readOnly: true
+controller:
+  nodeSelector:
+    kubernetes.io/hostname: kind-control-plane
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+  type: deployment
+  volumes:
+    extra:
+      - name: audit
+        hostPath:
+          path: /var/log/kubernetes/audit/

@@ -3,6 +3,7 @@ local checkpoints = {
   ca: 'checkpoints-ca',
   cni: 'checkpoints-cni',
   init: 'checkpoints-init',
+  logging: 'checkpoints-logging',
   metrics: 'checkpoints-metrics',
   profile: 'checkpoints-profile',
 };
@@ -19,6 +20,8 @@ local dependency = {
   'cluster-ca': ['approver-policy', 'cert-manager'],
   cadvisor: [checkpoints.argocd],
   cilium: [checkpoints.init],
+  'collect-audit': [checkpoints.logging],
+  'collect-pods': [checkpoints.logging],
   dashboard: [checkpoints.argocd],
   'datasource-loki': ['grafana', 'loki'],
   'datasource-pyroscope': ['grafana', 'pyroscope'],
@@ -58,6 +61,7 @@ local dependency = {
   [checkpoints.ca]: ['cluster-ca'],
   [checkpoints.cni]: ['cilium', 'istio'],
   [checkpoints.init]: ['crds', 'namespaces'],
+  [checkpoints.logging]: ['datasource-loki'],
   [checkpoints.metrics]: ['datasource-vm'],
   [checkpoints.profile]: ['datasource-pyroscope'],
 };

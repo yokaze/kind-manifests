@@ -1,0 +1,10 @@
+alloy:
+  configMap:
+    content: |
+      loki.write "default" {
+        endpoint {
+          url = "http://loki.loki.svc:3100/loki/api/v1/push"
+        }
+      }
+controller:
+  type: deployment

@@ -3,6 +3,8 @@ local features = {
   accurate: false,
   'approver-policy': true,
   cadvisor: false,
+  'collect-audit': true,
+  'collect-pods': false,
   dashboard: false,
   'datasource-loki': true,
   'datasource-pyroscope': false,

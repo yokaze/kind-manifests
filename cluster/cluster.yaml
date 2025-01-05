@@ -16,12 +16,22 @@ nodes:
         apiServer:
           extraArgs:
             admission-control-config-file: /node/admission/config.yaml
+            audit-policy-file: /etc/kubernetes/audit-policy.yaml
+            audit-log-path: /var/log/kubernetes/audit/audit.log
           extraVolumes:
             - name: admission
               hostPath: /node/admission
               mountPath: /node/admission
               readOnly: true
               pathType: DirectoryOrCreate
+            - name: audit
+              hostPath: /node/kubernetes/audit-policy.yaml
+              mountPath: /etc/kubernetes/audit-policy.yaml
+              readOnly: true
+            - name: audit-log
+              hostPath: /var/log/kubernetes/audit/
+              mountPath: /var/log/kubernetes/audit/
+              readOnly: false
   - role: worker
     extraMounts:
       - hostPath: node
