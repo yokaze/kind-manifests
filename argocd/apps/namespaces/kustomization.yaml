@@ -20,5 +20,6 @@ resources:
   - profiler.yaml
   - pyroscope.yaml
   - tempo.yaml
+  - traefik.yaml
   - victoria-metrics.yaml
   - vm-operator.yaml

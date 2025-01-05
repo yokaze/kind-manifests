@@ -34,6 +34,7 @@ local apps = [
   { name: 'pyroscope' },
   { name: 'scrape', sync: false },
   { name: 'tempo' },
+  { name: 'traefik' },
   { name: 'victoria-metrics' },
 ];
 [template(x) for x in apps]
