@@ -36,4 +36,5 @@ resources:
   - scrape.yaml
   - tempo.yaml
   - traefik.yaml
+  - traefik-route.yaml
   - victoria-metrics.yaml

@@ -5,3 +5,5 @@ helmCharts:
     repo: https://traefik.github.io/charts
     name: traefik
     namespace: traefik
+    includeCRDs: true
+    valuesFile: values.yaml

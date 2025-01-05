@@ -82,11 +82,7 @@ cluster: sync-git
 	if [ $$(jsonnet argocd/template/features.jsonnet | jq '.scrapes | length') -gt 0 ]; then \
 		argocd app sync scrape $(shell jsonnet argocd/template/features.jsonnet | jq -r '.scrapes[]' | awk '{ printf("--resource *:*:%s/*\n", $$1) }'); \
 	fi
-
-.PHONY: cluster-audit
-cluster-audit: mount
-	kind create cluster --config cluster/cluster-audit.yaml
-	@$(MAKE) --no-print-directory wait-nodes
+	@echo
 
 .PHONY: stop
 stop:

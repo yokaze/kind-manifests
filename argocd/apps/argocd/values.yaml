@@ -8,4 +8,6 @@ notifications:
   enabled: false
 server:
   service:
+    nodePortHttp: 30080
+    nodePortHttps: 30443
     type: NodePort

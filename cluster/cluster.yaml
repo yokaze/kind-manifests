@@ -10,6 +10,10 @@ nodes:
         hostPort: 30080
       - containerPort: 30443 # Argo CD
         hostPort: 30443
+      - containerPort: 32000 # Traefik
+        hostPort: 32000
+      - containerPort: 32443 # Traefik
+        hostPort: 32443
     kubeadmConfigPatches:
       - |
         kind: ClusterConfiguration

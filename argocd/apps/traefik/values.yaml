@@ -1,0 +1,15 @@
+gatewayClass:
+  enabled: true
+ingressRoute:
+  dashboard:
+    enabled: true
+ports:
+  web:
+    nodePort: 32000
+  websecure:
+    nodePort: 32443
+providers:
+  kubernetesGateway:
+    enabled: true
+service:
+  type: NodePort

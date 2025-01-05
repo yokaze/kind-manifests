@@ -7,5 +7,6 @@ helmCharts:
     namespace: vm-operator
     valuesFile: values.yaml
 resources:
+  - reference-grant.yaml
   - vm-agent.yaml
   - vm-cluster.yaml

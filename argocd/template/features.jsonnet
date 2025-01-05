@@ -21,7 +21,8 @@ local features = {
   pyroscope: false,
   tempo: false,
   traefik: true,
-  'victoria-metrics': false,
+  'traefik-route': true,
+  'victoria-metrics': true,
 };
 local datasources = {
   loki: false,

@@ -37,6 +37,7 @@ local dependency = {
   pyroscope: [checkpoints.argocd],
   tempo: [checkpoints.argocd],
   traefik: [checkpoints.argocd],
+  'traefik-route': ['traefik'],
   'victoria-metrics': [
     checkpoints.argocd,
     checkpoints.ca,  // webhook
