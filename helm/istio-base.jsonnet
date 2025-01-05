@@ -1,3 +1,0 @@
-{
-  defaultRevision: 'default',
-}
