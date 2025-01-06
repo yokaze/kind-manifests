@@ -80,7 +80,7 @@ cluster: sync-git
 	fi
 	@echo
 	if [ $$(jsonnet argocd/template/features.jsonnet | jq '.scrapes | length') -gt 0 ]; then \
-		argocd app sync scrape $(shell jsonnet argocd/template/features.jsonnet | jq -r '.scrapes[]' | awk '{ printf("--resource *:*:%s/*", $$1) }'); \
+		argocd app sync scrape $(shell jsonnet argocd/template/features.jsonnet | jq -r '.scrapes[]' | awk '{ printf("--resource *:*:%s/*\n", $$1) }'); \
 	fi
 
 .PHONY: cluster-audit
