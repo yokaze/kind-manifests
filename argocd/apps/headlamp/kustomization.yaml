@@ -6,3 +6,5 @@ helmCharts:
     repo: https://headlamp-k8s.github.io/headlamp
     name: headlamp
     valuesFile: values.yaml
+resources:
+  - reference-grant.yaml

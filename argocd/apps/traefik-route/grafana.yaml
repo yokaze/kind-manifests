@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: grafana
+spec:
+  hostnames:
+    - grafana.localhost
+  parentRefs:
+    - kind: Gateway
+      name: traefik-gateway
+  rules:
+    - backendRefs:
+        - namespace: grafana
+          name: grafana-service
+          port: 3000

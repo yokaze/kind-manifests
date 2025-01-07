@@ -7,3 +7,5 @@ helmCharts:
     namespace: kiali-operator
     includeCRDs: true
     valuesFile: values.yaml
+resources:
+  - reference-grant.yaml

@@ -3,4 +3,7 @@ kind: Kustomization
 namespace: traefik
 resources:
   - argocd.yaml
+  - grafana.yaml
+  - headlamp.yaml
+  - kiali.yaml
   - vmagent.yaml
