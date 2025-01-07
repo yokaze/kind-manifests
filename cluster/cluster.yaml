@@ -5,6 +5,9 @@ nodes:
     extraMounts:
       - hostPath: node
         containerPath: /node
+      # https://tetragon.io/docs/getting-started/install-k8s/
+      - hostPath: /proc
+        containerPath: /procHost
     extraPortMappings:
       - containerPort: 30080 # Argo CD
         hostPort: 30080

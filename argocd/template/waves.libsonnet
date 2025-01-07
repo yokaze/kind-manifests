@@ -36,6 +36,7 @@ local dependency = {
   'profile-cilium': [checkpoints.profile],
   pyroscope: [checkpoints.argocd],
   tempo: [checkpoints.argocd],
+  tetragon: [checkpoints.cni],
   traefik: [checkpoints.argocd],
   'traefik-route': ['traefik'],
   'victoria-metrics': [

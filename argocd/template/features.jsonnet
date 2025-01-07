@@ -20,6 +20,7 @@ local features = {
   'profile-cilium': false,
   pyroscope: false,
   tempo: false,
+  tetragon: true,
   traefik: true,
   'traefik-route': true,
   'victoria-metrics': true,

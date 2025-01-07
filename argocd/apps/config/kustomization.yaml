@@ -35,6 +35,7 @@ resources:
   - pyroscope.yaml
   - scrape.yaml
   - tempo.yaml
+  - tetragon.yaml
   - traefik.yaml
   - traefik-route.yaml
   - victoria-metrics.yaml

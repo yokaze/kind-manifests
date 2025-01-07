@@ -1,0 +1,4 @@
+nodeSelector:
+  kubernetes.io/hostname: kind-control-plane
+tetragon:
+  hostProcPath: /procHost
