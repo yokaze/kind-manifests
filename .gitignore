@@ -1,7 +1,7 @@
 *.swp
-/argocd/apps/*/charts
-/argocd/reference
+/apps/*/charts
 /bin
 /mirror-git
 /node/deck
+/reference
 /upstream

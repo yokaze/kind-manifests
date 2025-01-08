@@ -60,7 +60,7 @@ cluster: sync-git
 		echo; \
 		echo "WAVE $$i"; \
 		for j in $$($(MAKE) --no-print-directory waves | grep -Fw $$i | awk '{print $$1}'); do \
-			kustomize build --enable-helm argocd/apps/$$j | kubectl apply $$(if [ "$$j" = "crds" ]; then echo --server-side; fi) -f -; \
+			kustomize build --enable-helm apps/$$j | kubectl apply $$(if [ "$$j" = "crds" ]; then echo --server-side; fi) -f -; \
 		done; \
 		if [ $$i -ge 2 ]; then \
 			$(MAKE) --no-print-directory wait-all; \
@@ -68,19 +68,19 @@ cluster: sync-git
 	done; \
 	echo
 
-	kubectl apply -f argocd/apps/config/config.yaml
+	kubectl apply -f apps/config/config.yaml
 
 	@$(MAKE) login-argocd
 	argocd app wait config --health
-	argocd app sync config $(shell jsonnet argocd/template/features.jsonnet | jq -r '.apps[]' | sed 's/^/--resource *:*:/')
+	argocd app sync config $(shell jsonnet template/features.jsonnet | jq -r '.apps[]' | sed 's/^/--resource *:*:/')
 	@$(MAKE) --no-print-directory wait-all
 	@echo
-	if [ $$(jsonnet argocd/template/features.jsonnet | jq '.datasources | length') -gt 0 ]; then \
-		argocd app sync datasource $(shell jsonnet argocd/template/features.jsonnet | jq -r '.datasources[]' | sed 's/^/--resource *:*:/'); \
+	if [ $$(jsonnet template/features.jsonnet | jq '.datasources | length') -gt 0 ]; then \
+		argocd app sync datasource $(shell jsonnet template/features.jsonnet | jq -r '.datasources[]' | sed 's/^/--resource *:*:/'); \
 	fi
 	@echo
-	if [ $$(jsonnet argocd/template/features.jsonnet | jq '.scrapes | length') -gt 0 ]; then \
-		argocd app sync scrape $(shell jsonnet argocd/template/features.jsonnet | jq -r '.scrapes[]' | awk '{ printf("--resource *:*:%s/*\n", $$1) }'); \
+	if [ $$(jsonnet template/features.jsonnet | jq '.scrapes | length') -gt 0 ]; then \
+		argocd app sync scrape $(shell jsonnet template/features.jsonnet | jq -r '.scrapes[]' | awk '{ printf("--resource *:*:%s/*\n", $$1) }'); \
 	fi
 	@echo
 
@@ -172,41 +172,41 @@ manifests:
 
 .PHONY: config
 config:
-	rm -rf argocd/apps/config
-	mkdir -p argocd/apps/config
-	jsonnet argocd/template/apps.jsonnet | yq '.[] | splitDoc' -P | yq --no-doc -s '"argocd/apps/config/" + "\(.metadata.name).yaml"'
-	jsonnet argocd/template/config.jsonnet | yq -P > argocd/apps/config/kustomization.yaml
-	jsonnet argocd/template/datasource.jsonnet | yq -P > argocd/apps/datasource/kustomization.yaml
-	jsonnet argocd/template/scrape.jsonnet | yq -P > argocd/apps/scrape/kustomization.yaml
+	rm -rf apps/config
+	mkdir -p apps/config
+	jsonnet template/apps.jsonnet | yq '.[] | splitDoc' -P | yq --no-doc -s '"apps/config/" + "\(.metadata.name).yaml"'
+	jsonnet template/config.jsonnet | yq -P > apps/config/kustomization.yaml
+	jsonnet template/datasource.jsonnet | yq -P > apps/datasource/kustomization.yaml
+	jsonnet template/scrape.jsonnet | yq -P > apps/scrape/kustomization.yaml
 
 .PHONY: reference-template
 reference-template:
-	@kustomize build --enable-helm argocd/apps/$(HELM_NAME) | yq '"argocd/reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"' | sed 's/\/\//\//' | sort
-	@kustomize build --enable-helm argocd/apps/$(HELM_NAME) | yq '"argocd/reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)"' | sort -u | xargs -n1 mkdir -p
-	@kustomize build --enable-helm argocd/apps/$(HELM_NAME) | yq --no-doc -s '"argocd/reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"'
+	@kustomize build --enable-helm apps/$(HELM_NAME) | yq '"reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"' | sed 's/\/\//\//' | sort
+	@kustomize build --enable-helm apps/$(HELM_NAME) | yq '"reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)"' | sort -u | xargs -n1 mkdir -p
+	@kustomize build --enable-helm apps/$(HELM_NAME) | yq --no-doc -s '"reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"'
 
 .PHONY: reference
 reference:
-	@rm -rf argocd/reference
-	@for i in $$(jsonnet argocd/template/apps.jsonnet | jq -r '.[].metadata.name'); do \
+	@rm -rf reference
+	@for i in $$(jsonnet template/apps.jsonnet | jq -r '.[].metadata.name'); do \
 		$(MAKE) --no-print-directory HELM_NAME=$$i reference-template; \
 		echo; \
 	done
 
 .PHONY: resources
 resources:
-	@for i in $$(jsonnet argocd/template/apps.jsonnet | jq -r '.[].metadata.name'); do \
-		kustomize build --enable-helm argocd/apps/$$i | yq '[.metadata.annotations."argocd.argoproj.io/sync-wave" // 0, .kind, .metadata.namespace, .metadata.name] | @tsv' | sed "s/^/$$i /" | sort -nk2 | column -t; \
+	@for i in $$(jsonnet template/apps.jsonnet | jq -r '.[].metadata.name'); do \
+		kustomize build --enable-helm apps/$$i | yq '[.metadata.annotations."argocd.argoproj.io/sync-wave" // 0, .kind, .metadata.namespace, .metadata.name] | @tsv' | sed "s/^/$$i /" | sort -nk2 | column -t; \
 		echo; \
 	done
 
 .PHONY: features
 features:
-	@jsonnet argocd/template/features.jsonnet | yq -P
+	@jsonnet template/features.jsonnet | yq -P
 
 .PHONY: waves
 waves:
-	@for i in $$(find argocd/apps/config -name '*.yaml' | grep -v 'kustomization.yaml'); do \
+	@for i in $$(find apps/config -name '*.yaml' | grep -v 'kustomization.yaml'); do \
 		yq '[.metadata.name, .metadata.annotations."argocd.argoproj.io/sync-wave"] | @tsv' $$i; \
 	done | sort -Vk2 | column -t
 
