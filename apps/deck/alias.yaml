@@ -7,3 +7,9 @@ data:
   .bash_aliases: |
     HUBBLE_SERVER=hubble-relay.kube-system.svc:80
     PATH=/opt/deck:${PATH}
+    . /usr/share/bash-completion/bash_completion
+    . <(argocd completion bash)
+    . <(cilium completion bash)
+    . <(hubble completion bash)
+    . <(kubectl completion bash)
+    . <(yq completion bash)
