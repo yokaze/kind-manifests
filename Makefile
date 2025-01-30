@@ -219,6 +219,22 @@ login-argocd:
 pilot:
 	kubectl exec -it -n deck deploy/pilot -- bash
 
+.PHONY: pid
+pid:
+	@{ echo NAMESPACE NAME CONTAINER NODE HOST-PID PID; \
+	{ for n in $$(kubectl get node -oname | cut -d/ -f2); do \
+		INFO=$$(for c in $$(docker exec $$n crictl ps -o json | jq -r '.containers[].id'); do \
+			docker exec $$n crictl inspect $$c | jq '{ "labels": .status.labels, "pid": .info.pid }'; \
+		done | jq -cs); \
+		PROCS=$$(for p in $$(docker top $$n -eo pid | tail -n +2); do \
+			cat /proc/$$p/status | grep NSpid | awk '{ printf("[%s, %s]\n", $$2, $$3) }'; \
+		done | jq -cs); \
+		for i in $$(echo $${INFO} | jq -c .[]); do \
+			echo $$(echo $$i | jq -r '.labels | [."io.kubernetes.pod.namespace", ."io.kubernetes.pod.name", ."io.kubernetes.container.name"] | @tsv') \
+				$$n $$(echo $${PROCS} | jq -c '.[]' | grep -Fw $$(echo $$i | jq -r '.pid') | jq -r '.[:2] | @tsv'); \
+		done; \
+	done; } | sort; } | column -t
+
 .PHONY: deploy-cattage
 deploy-cattage:
 	@$(MAKE) --no-print-directory ensure-cert-manager
