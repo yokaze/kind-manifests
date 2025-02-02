@@ -34,6 +34,7 @@ local apps = [
   { name: 'pyroscope' },
   { name: 'scrape', sync: false },
   { name: 'tempo' },
+  { name: 'testhttpd' },
   { name: 'tetragon' },
   { name: 'traefik' },
   { name: 'traefik-route' },

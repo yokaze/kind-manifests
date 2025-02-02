@@ -35,6 +35,7 @@ resources:
   - pyroscope.yaml
   - scrape.yaml
   - tempo.yaml
+  - testhttpd.yaml
   - tetragon.yaml
   - traefik.yaml
   - traefik-route.yaml

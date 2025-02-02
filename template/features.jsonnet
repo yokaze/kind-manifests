@@ -20,6 +20,7 @@ local features = {
   'profile-cilium': false,
   pyroscope: false,
   tempo: false,
+  testhttpd: true,
   tetragon: true,
   traefik: true,
   'traefik-route': true,
