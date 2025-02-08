@@ -15,6 +15,18 @@ spec:
       containers:
         - image: ubuntu/squid:latest
           name: squid
+          volumeMounts:
+            - name: config
+              mountPath: /etc/squid
+              readOnly: true
+            - name: cache
+              mountPath: /cache
+      volumes:
+        - name: config
+          configMap:
+            name: squid
+        - name: cache
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

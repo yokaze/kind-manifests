@@ -6,6 +6,14 @@ configs:
     server.insecure: "true"
 notifications:
   enabled: false
+repoServer:
+  env:
+    - name: HTTP_PROXY
+      value: http://squid.egress.svc:3128
+    - name: HTTPS_PROXY
+      value: http://squid.egress.svc:3128
+    - name: NO_PROXY
+      value: mirror-git
 server:
   service:
     nodePortHttp: 30080
