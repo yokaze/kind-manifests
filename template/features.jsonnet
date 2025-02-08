@@ -8,6 +8,7 @@ local features = {
   'collect-pods': false,
   dashboard: false,
   deck: true,
+  egress: true,
   'gatekeeper-policy': false,
   grafana: true,
   headlamp: true,

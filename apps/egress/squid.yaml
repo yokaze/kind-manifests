@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: squid
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: squid
+  template:
+    metadata:
+      labels:
+        app: squid
+    spec:
+      containers:
+        - image: ubuntu/squid:latest
+          name: squid
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: squid
+spec:
+  selector:
+    app: squid
+  ports:
+    - port: 3128

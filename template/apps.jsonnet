@@ -14,6 +14,7 @@ local apps = [
   { name: 'dashboard' },
   { name: 'datasource', sync: false },
   { name: 'deck' },
+  { name: 'egress' },
   { name: 'gatekeeper' },
   { name: 'gatekeeper-policy' },
   { name: 'gatekeeper-template' },

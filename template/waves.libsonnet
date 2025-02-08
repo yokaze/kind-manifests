@@ -4,10 +4,11 @@ local dependency = {
     checkpoints.argocd,
     checkpoints.ca,  // webhook
   ],
-  'approver-policy': [
-    'cert-manager',
+  'approver-policy': ['cert-manager'],
+  argocd: [
+    checkpoints.cni,
+    'egress',
   ],
-  argocd: [checkpoints.cni],
   'cert-manager': [checkpoints.cni],
   'cluster-ca': ['approver-policy', 'cert-manager'],
   cadvisor: [checkpoints.argocd],
@@ -16,6 +17,7 @@ local dependency = {
   'collect-pods': [checkpoints.logging],
   dashboard: [checkpoints.argocd],
   deck: [checkpoints.argocd],
+  egress: [checkpoints.cni],
   gatekeeper: [checkpoints.cni],
   'gatekeeper-policy': ['gatekeeper-template'],
   'gatekeeper-template': ['gatekeeper'],
