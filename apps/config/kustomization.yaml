@@ -33,6 +33,7 @@ resources:
   - node-exporter.yaml
   - pomerium.yaml
   - profile-cilium.yaml
+  - proxy.yaml
   - pyroscope.yaml
   - scrape.yaml
   - tempo.yaml

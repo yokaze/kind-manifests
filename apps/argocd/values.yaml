@@ -9,9 +9,9 @@ notifications:
 repoServer:
   env:
     - name: HTTP_PROXY
-      value: http://squid.egress.svc:3128
+      value: http://squid.proxy.svc:3128
     - name: HTTPS_PROXY
-      value: http://squid.egress.svc:3128
+      value: http://squid.proxy.svc:3128
     - name: NO_PROXY
       value: mirror-git
 server:

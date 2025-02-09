@@ -11,5 +11,6 @@ data:
     . <(argocd completion bash)
     . <(cilium completion bash)
     . <(hubble completion bash)
+    . <(istioctl completion bash)
     . <(kubectl completion bash)
     . <(yq completion bash)

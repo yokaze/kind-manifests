@@ -7,7 +7,7 @@ local dependency = {
   'approver-policy': ['cert-manager'],
   argocd: [
     checkpoints.cni,
-    'egress',
+    'proxy',
   ],
   'cert-manager': [checkpoints.cni],
   'cluster-ca': ['approver-policy', 'cert-manager'],
@@ -36,6 +36,7 @@ local dependency = {
   'node-exporter': [checkpoints.argocd],
   pomerium: [checkpoints.argocd],
   'profile-cilium': [checkpoints.profile],
+  proxy: ['egress'],
   pyroscope: [checkpoints.argocd],
   tempo: [checkpoints.argocd],
   testhttpd: [checkpoints.argocd],

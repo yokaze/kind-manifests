@@ -19,6 +19,7 @@ resources:
   - loki.yaml
   - node-exporter.yaml
   - profiler.yaml
+  - proxy.yaml
   - pyroscope.yaml
   - tempo.yaml
   - testhttpd.yaml

@@ -32,6 +32,7 @@ local apps = [
   { name: 'node-exporter' },
   { name: 'pomerium' },
   { name: 'profile-cilium' },
+  { name: 'proxy' },
   { name: 'pyroscope' },
   { name: 'scrape', sync: false },
   { name: 'tempo' },

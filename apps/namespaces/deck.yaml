@@ -3,4 +3,5 @@ kind: Namespace
 metadata:
   name: deck
   labels:
+    istio-injection: enabled
     pod-security.kubernetes.io/enforce: privileged
