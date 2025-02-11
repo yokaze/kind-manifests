@@ -1,0 +1,12 @@
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: inbound
+spec:
+  host: gateway-istio.egress.svc.cluster.local
+  trafficPolicy:
+    portLevelSettings:
+      - port:
+          number: 80
+        tls:
+          mode: ISTIO_MUTUAL

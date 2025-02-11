@@ -1,0 +1,12 @@
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: outbound-io
+spec:
+  host: "*.io"
+  trafficPolicy:
+    portLevelSettings:
+      - port:
+          number: 443
+        tls:
+          mode: SIMPLE

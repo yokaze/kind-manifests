@@ -10,6 +10,8 @@ spec:
         kinds:
           - Pod
     excludedNamespaces:
+      - istio-system
+      - kube-system
       - kubescape
       - local-path-storage
   parameters:

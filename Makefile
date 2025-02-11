@@ -235,6 +235,18 @@ pid:
 		done; \
 	done; } | sort; } | column -t
 
+.PHONY: istio-ns
+istio-ns:
+	@kubectl get ns -ojson | jq -r '.items[].metadata | select(.labels."istio-injection" == "enabled") | .name'
+
+.PHONY: outbound-http
+outbound-http:
+	 sudo tshark -i eth0 -Y http
+
+.PHONY: outbound-tls
+outbound-tls:
+	sudo tshark -i eth0 -Y tls.handshake
+
 .PHONY: deploy-cattage
 deploy-cattage:
 	@$(MAKE) --no-print-directory ensure-cert-manager
