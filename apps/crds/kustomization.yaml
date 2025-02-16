@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - https://github.com/grafana/grafana-operator/releases/download/v5.15.1/crds.yaml
   - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.1/standard-install.yaml
+  - sample.yaml

@@ -12,6 +12,7 @@ resources:
   - collect-audit.yaml
   - collect-pods.yaml
   - config.yaml
+  - crd-gallery.yaml
   - crds.yaml
   - dashboard.yaml
   - datasource.yaml

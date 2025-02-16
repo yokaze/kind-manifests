@@ -11,6 +11,7 @@ local apps = [
   { name: 'collect-audit' },
   { name: 'collect-pods' },
   { name: 'config', sync: false, finalizer: false },
+  { name: 'crd-gallery' },
   { name: 'crds' },
   { name: 'dashboard' },
   { name: 'datasource', sync: false },

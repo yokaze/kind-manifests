@@ -16,6 +16,7 @@ local dependency = {
   cilium: [checkpoints.init],
   'collect-audit': [checkpoints.logging],
   'collect-pods': [checkpoints.logging],
+  'crd-gallery': [checkpoints.argocd],
   dashboard: [checkpoints.argocd],
   deck: [checkpoints.argocd],
   egress: [checkpoints.cni],
