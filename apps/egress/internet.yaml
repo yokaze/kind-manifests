@@ -26,8 +26,8 @@ spec:
       name: internet
   rules:
     - backendRefs:
-      - name: gateway-istio
-        port: 80
+        - name: gateway-istio
+          port: 80
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -35,12 +35,12 @@ metadata:
   name: outbound-route
 spec:
   hostnames:
-    - "*.io"
+    - '*.io'
   parentRefs:
     - name: gateway
   rules:
-  - backendRefs:
-    - kind: Hostname
-      group: networking.istio.io
-      name: yokaze.github.io
-      port: 443
+    - backendRefs:
+        - kind: Hostname
+          group: networking.istio.io
+          name: yokaze.github.io
+          port: 443

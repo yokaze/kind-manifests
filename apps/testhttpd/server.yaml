@@ -3,16 +3,16 @@ kind: Deployment
 metadata:
   annotations:
     kubectl.kubernetes.io/default-container: testhttpd
-  name: web
+  name: test
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: web
+      app: test
   template:
     metadata:
       labels:
-        app: web
+        app: test
     spec:
       containers:
         - image: ghcr.io/cybozu/testhttpd:0
@@ -21,10 +21,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: web
+  name: test
 spec:
   selector:
-    app: web
+    app: test
   ports:
     - port: 80
       targetPort: 8000

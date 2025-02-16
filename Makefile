@@ -50,7 +50,7 @@ stop-git:
 	docker rm mirror-git || true
 
 .PHONY: cluster
-cluster: sync-git
+cluster: sync-git stop
 	docker pull quay.io/cilium/cilium:v$(CILIUM_VERSION)
 	kind create cluster --config cluster/cluster.yaml
 	kind load docker-image quay.io/cilium/cilium:v$(CILIUM_VERSION)

@@ -3,7 +3,7 @@ kind: DestinationRule
 metadata:
   name: outbound-io
 spec:
-  host: "*.io"
+  host: '*.io'
   trafficPolicy:
     portLevelSettings:
       - port:

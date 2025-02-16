@@ -11,6 +11,7 @@ resources:
   - grafana-operator.yaml
   - grafana.yaml
   - headlamp.yaml
+  - httpd.yaml
   - istio-system.yaml
   - kiali-operator.yaml
   - kube-state-metrics.yaml
@@ -22,7 +23,6 @@ resources:
   - proxy.yaml
   - pyroscope.yaml
   - tempo.yaml
-  - testhttpd.yaml
   - traefik.yaml
   - victoria-metrics.yaml
   - vm-operator.yaml
