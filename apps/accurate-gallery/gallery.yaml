@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: accurate-template
+  labels:
+    accurate.cybozu.com/type: template
+    yokaze.github.io/template: template
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: accurate-root
+  labels:
+    accurate.cybozu.com/template: accurate-template
+    accurate.cybozu.com/type: root
+    yokaze.github.io/root: root
+---
+apiVersion: accurate.cybozu.com/v1
+kind: SubNamespace
+metadata:
+  namespace: accurate-root
+  name: accurate-sub
+spec:
+  labels:
+    yokaze.github.io/sub-sample: sample
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: accurate-template
+  name: accurate-template
+  annotations:
+    accurate.cybozu.com/propagate: update
+data:
+  key: template
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: accurate-root
+  name: accurate-root
+  annotations:
+    accurate.cybozu.com/propagate: update
+data:
+  key: root

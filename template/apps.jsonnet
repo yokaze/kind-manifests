@@ -1,6 +1,7 @@
 local template = import 'template.libsonnet';
 local apps = [
   { name: 'accurate' },
+  { name: 'accurate-gallery' },
   { name: 'approver-policy' },
   { name: 'argocd' },
   { name: 'cadvisor' },

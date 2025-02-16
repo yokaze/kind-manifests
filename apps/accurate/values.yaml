@@ -1,2 +1,11 @@
 controller:
+  config:
+    labelKeys:
+      - yokaze.github.io/root
+      - yokaze.github.io/template
+    subNamespaceLabelKeys:
+      - yokaze.github.io/sub-sample
+    watches:
+      - version: v1
+        kind: ConfigMap
   replicas: 1

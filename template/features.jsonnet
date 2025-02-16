@@ -2,6 +2,7 @@ local checkpoints = import 'checkpoints.libsonnet';
 local waves = import 'waves.libsonnet';
 local features = {
   accurate: false,
+  'accurate-gallery': true,
   'approver-policy': true,
   cadvisor: false,
   'collect-audit': false,

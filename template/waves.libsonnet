@@ -4,6 +4,7 @@ local dependency = {
     checkpoints.argocd,
     checkpoints.ca,  // webhook
   ],
+  'accurate-gallery': ['accurate'],
   'approver-policy': ['cert-manager'],
   argocd: [
     checkpoints.cni,

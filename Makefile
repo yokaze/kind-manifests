@@ -366,6 +366,7 @@ delete-vault:
 	kubectl delete ns vault
 
 # Rules for upstream manifests
+ACCURATE_VERSION := 1.6.0
 ARGOCD_VERSION := 2.1.2
 CERT_MANAGER_VERSION := 1.5.3
 CSI_DRIVER_SPIFFE_VERSION := 0.8.1
@@ -381,6 +382,8 @@ setup:
 	cp $$(aqua which yq) node/deck/yq
 	wget -qO- https://github.com/cilium/hubble/releases/download/v$(CILIUM_VERSION)/hubble-linux-amd64.tar.gz | tar xzv -O hubble > node/deck/hubble
 	chmod +x node/deck/hubble
+	wget -qO- https://github.com/cybozu-go/accurate/releases/download/v$(ACCURATE_VERSION)/kubectl-accurate_v$(ACCURATE_VERSION)_linux_amd64.tar.gz | tar xzv -O kubectl-accurate > node/deck/kubectl-accurate
+	chmod +x node/deck/kubectl-accurate
 
 .PHONY: clean
 clean:
