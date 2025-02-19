@@ -11,6 +11,12 @@ spec:
   destination:
     namespace: argocd
     server: https://kubernetes.default.svc
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      jqPathExpressions:
+        - .webhooks[]?.failurePolicy
+      kind: ValidatingWebhookConfiguration
+      name: istio-validator-istio-system
   project: default
   source:
     path: apps/istio

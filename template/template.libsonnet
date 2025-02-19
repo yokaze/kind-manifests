@@ -25,14 +25,20 @@ local generate = function(spec) {
       targetRevision: 'main',
       path: 'apps/%s' % spec.name,
     },
-  } + if spec.sync then {
-    syncPolicy: {
-      automated: {
-        prune: true,
-        selfHeal: true,
+  } + (
+    if spec.sync then {
+      syncPolicy: {
+        automated: {
+          prune: true,
+          selfHeal: true,
+        },
       },
-    },
-  } else {},
+    } else {}
+  ) + (
+    if std.objectHas(spec, 'ignoreDifferences') then {
+      ignoreDifferences: spec.ignoreDifferences,
+    } else {}
+  ),
 };
 function(spec)
   local required = [

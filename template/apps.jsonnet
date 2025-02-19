@@ -22,9 +22,30 @@ local apps = [
   { name: 'gatekeeper-template' },
   { name: 'grafana' },
   { name: 'grafana-operator' },
-  { name: 'istio-base' },
+  {
+    // https://github.com/istio/istio/issues/44285
+    name: 'istio-base',
+    ignoreDifferences: [{
+      group: 'admissionregistration.k8s.io',
+      kind: 'ValidatingWebhookConfiguration',
+      name: 'istiod-default-validator',
+      jqPathExpressions: [
+        '.webhooks[]?.failurePolicy',
+      ],
+    }],
+  },
   { name: 'istio-cni' },
-  { name: 'istio' },
+  {
+    name: 'istio',
+    ignoreDifferences: [{
+      group: 'admissionregistration.k8s.io',
+      kind: 'ValidatingWebhookConfiguration',
+      name: 'istio-validator-istio-system',
+      jqPathExpressions: [
+        '.webhooks[]?.failurePolicy',
+      ],
+    }],
+  },
   { name: 'headlamp' },
   { name: 'kiali' },
   { name: 'kube-state-metrics' },
