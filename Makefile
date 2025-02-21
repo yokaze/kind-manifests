@@ -370,6 +370,7 @@ ACCURATE_VERSION := 1.6.0
 ARGOCD_VERSION := 2.1.2
 CERT_MANAGER_VERSION := 1.5.3
 CSI_DRIVER_SPIFFE_VERSION := 0.8.1
+GWCTL_VERSION := 0.1.0
 MOCO_VERSION := 0.10.5
 
 .PHONY: setup
@@ -377,12 +378,15 @@ setup:
 	mkdir -p node/deck
 	cp $$(aqua which argocd) node/deck/argocd
 	cp $$(aqua which cilium) node/deck/cilium
+	cp $$(aqua which cmctl) node/deck/cmctl
 	cp $$(aqua which kubectl) node/deck/kubectl
 	cp $$(aqua which stern) node/deck/stern
 	cp $$(aqua which yq) node/deck/yq
+	wget -qO- https://github.com/kubernetes-sigs/gwctl/releases/download/v$(GWCTL_VERSION)/gwctl_Linux_x86_64.tar.gz | tar xzv -O gwctl > node/deck/gwctl
 	wget -qO- https://github.com/cilium/hubble/releases/download/v$(CILIUM_VERSION)/hubble-linux-amd64.tar.gz | tar xzv -O hubble > node/deck/hubble
-	chmod +x node/deck/hubble
 	wget -qO- https://github.com/cybozu-go/accurate/releases/download/v$(ACCURATE_VERSION)/kubectl-accurate_v$(ACCURATE_VERSION)_linux_amd64.tar.gz | tar xzv -O kubectl-accurate > node/deck/kubectl-accurate
+	chmod +x node/deck/gwctl
+	chmod +x node/deck/hubble
 	chmod +x node/deck/kubectl-accurate
 
 .PHONY: clean

@@ -10,6 +10,8 @@ data:
     . /usr/share/bash-completion/bash_completion
     . <(argocd completion bash)
     . <(cilium completion bash)
+    . <(cmctl completion bash)
+    . <(gwctl completion bash)
     . <(hubble completion bash)
     . <(istioctl completion bash)
     . <(kubectl completion bash)

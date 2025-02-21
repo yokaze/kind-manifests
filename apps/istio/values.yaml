@@ -2,6 +2,8 @@ autoscaleEnabled: false
 pilot:
   cni:
     enabled: true
+  # https://istio.io/latest/docs/reference/commands/pilot-agent/#envvars
   env:
     ENABLE_NATIVE_SIDECARS: true
-replicaCount: 2
+    PILOT_ENABLE_ALPHA_GATEWAY_API: true
+replicaCount: 1
