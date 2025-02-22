@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: egress
 resources:
   - gateway.yaml
+  - google.yaml
   - inbound-policy.yaml
   - internet.yaml
   - outbound-policy.yaml
