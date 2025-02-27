@@ -1,4 +1,9 @@
 autoscaleEnabled: false
+global:
+  logging:
+    level: default:debug
+meshConfig:
+  accessLogFile: /dev/stdout
 pilot:
   cni:
     enabled: true
