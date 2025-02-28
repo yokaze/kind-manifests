@@ -2,6 +2,9 @@ ROOT_DIR := $(shell pwd)
 CILIUM_VERSION := 1.16.4
 HELM_VERSION ?= $(shell if [ -z "$(HELM_REPO)" ]; then echo latest; else helm show chart $(HELM_REPO) | yq .version; fi)
 
+ARCH_AMD64_ARM64 := $(shell if [ "$$(uname -m)" = "aarch64" ]; then echo arm64; else echo amd64; fi)
+ARCH_X86_64_ARM64 := $(shell if [ "$$(uname -m)" = "aarch64" ]; then echo arm64; else echo x86_64; fi)
+
 # Cluster Targets
 .PHONY: registry
 registry:
@@ -382,9 +385,9 @@ setup:
 	cp $$(aqua which kubectl) node/deck/kubectl
 	cp $$(aqua which stern) node/deck/stern
 	cp $$(aqua which yq) node/deck/yq
-	wget -qO- https://github.com/kubernetes-sigs/gwctl/releases/download/v$(GWCTL_VERSION)/gwctl_Linux_x86_64.tar.gz | tar xzv -O gwctl > node/deck/gwctl
-	wget -qO- https://github.com/cilium/hubble/releases/download/v$(CILIUM_VERSION)/hubble-linux-amd64.tar.gz | tar xzv -O hubble > node/deck/hubble
-	wget -qO- https://github.com/cybozu-go/accurate/releases/download/v$(ACCURATE_VERSION)/kubectl-accurate_v$(ACCURATE_VERSION)_linux_amd64.tar.gz | tar xzv -O kubectl-accurate > node/deck/kubectl-accurate
+	wget -qO- https://github.com/kubernetes-sigs/gwctl/releases/download/v$(GWCTL_VERSION)/gwctl_Linux_$(ARCH_X86_64_ARM64).tar.gz | tar xzv -O gwctl > node/deck/gwctl
+	wget -qO- https://github.com/cilium/hubble/releases/download/v$(CILIUM_VERSION)/hubble-linux-$(ARCH_AMD64_ARM64).tar.gz | tar xzv -O hubble > node/deck/hubble
+	wget -qO- https://github.com/cybozu-go/accurate/releases/download/v$(ACCURATE_VERSION)/kubectl-accurate_v$(ACCURATE_VERSION)_linux_$(ARCH_AMD64_ARM64).tar.gz | tar xzv -O kubectl-accurate > node/deck/kubectl-accurate
 	chmod +x node/deck/gwctl
 	chmod +x node/deck/hubble
 	chmod +x node/deck/kubectl-accurate
