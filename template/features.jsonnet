@@ -29,28 +29,26 @@ local features = {
   'traefik-route': true,
   'victoria-metrics': true,
 };
-local datasources = {
-  loki: false,
-  pyroscope: false,
-  tempo: false,
-  'victoria-metrics': false,
-};
 local scrapes = {
   argocd: false,
   cadvisor: false,
-  istio: false,
+  'istio-system': true,
   'kube-state-metrics': false,
   'node-exporter': false,
 };
-local datasource_targets = [x for x in std.objectFields(datasources) if datasources[x]];
 local scrape_targets = [x for x in std.objectFields(scrapes) if scrapes[x]];
+local targets = waves.get_all_dependencies(
+  [x for x in std.objectFields(features) if features[x]] +
+  [('scrape/' + x) for x in scrape_targets] +
+  ['datasource', 'scrape']
+);
 {
-  apps: waves.get_all_dependencies(
-    [x for x in std.objectFields(features) if features[x]] +
-    (if std.any(std.objectValues(datasources)) then ['grafana'] + datasource_targets else []) +
-    (if std.any(std.objectValues(scrapes)) then [checkpoints.metrics] + scrape_targets else []) +
-    ['datasource', 'scrape']
+  apps: std.filter(
+    function(x)
+      !std.startsWith(x, 'datasource/') &&
+      !std.startsWith(x, 'scrape/'),
+    targets
   ),
-  datasources: datasource_targets,
-  scrapes: scrape_targets,
+  datasources: [std.strReplace(x, 'datasource/', '') for x in targets if std.startsWith(x, 'datasource/')],
+  scrapes: [std.strReplace(x, 'scrape/', '') for x in targets if std.startsWith(x, 'scrape/')],
 }
