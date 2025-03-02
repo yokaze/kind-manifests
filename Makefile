@@ -176,10 +176,14 @@ manifests:
 .PHONY: config
 config:
 	rm -rf apps/config
+	rm -rf apps/namespaces
 	mkdir -p apps/config
+	mkdir -p apps/namespaces
 	jsonnet template/apps.jsonnet | yq '.[] | splitDoc' -P | yq --no-doc -s '"apps/config/" + "\(.metadata.name).yaml"'
+	jsonnet template/namespace-files.jsonnet | yq '.[] | splitDoc' -P | yq --no-doc -s '"apps/namespaces/" + "\(.metadata.name).yaml"'
 	jsonnet template/config.jsonnet | yq -P > apps/config/kustomization.yaml
 	jsonnet template/datasource.jsonnet | yq -P > apps/datasource/kustomization.yaml
+	jsonnet template/namespaces.jsonnet | yq -P > apps/namespaces/kustomization.yaml
 	jsonnet template/scrape.jsonnet | yq -P > apps/scrape/kustomization.yaml
 
 .PHONY: reference-template

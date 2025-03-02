@@ -1,4 +1,4 @@
-local template = import 'template.libsonnet';
+local template = import 'template-app.libsonnet';
 local apps = [
   { name: 'accurate' },
   { name: 'accurate-gallery' },

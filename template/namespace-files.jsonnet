@@ -1,0 +1,30 @@
+local pss = import 'pss.libsonnet';
+local template = import 'template-ns.libsonnet';
+local namespaces = [
+  { name: 'accurate' },
+  { name: 'argocd' },
+  { name: 'cert-manager' },
+  { name: 'dashboard' },
+  { name: 'deck', istio: true, pss: pss.privileged },
+  { name: 'egress', istio: true },
+  { name: 'gatekeeper-system' },
+  { name: 'grafana-operator' },
+  { name: 'grafana' },
+  { name: 'headlamp' },
+  { name: 'httpd', istio: true },
+  { name: 'istio-system', pss: pss.privileged },
+  { name: 'kiali-operator' },
+  { name: 'kube-state-metrics' },
+  { name: 'kubescape', pss: pss.privileged },
+  { name: 'logging', pss: pss.privileged },
+  { name: 'loki' },
+  { name: 'node-exporter' },
+  { name: 'profiler' },
+  { name: 'proxy', istio: true },
+  { name: 'pyroscope' },
+  { name: 'tempo' },
+  { name: 'traefik' },
+  { name: 'victoria-metrics' },
+  { name: 'vm-operator' },
+];
+[template(x) for x in namespaces]
