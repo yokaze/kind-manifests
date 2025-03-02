@@ -36,11 +36,9 @@ local scrapes = {
   'kube-state-metrics': false,
   'node-exporter': false,
 };
-local scrape_targets = [x for x in std.objectFields(scrapes) if scrapes[x]];
 local targets = waves.get_all_dependencies(
   [x for x in std.objectFields(features) if features[x]] +
-  [('scrape/' + x) for x in scrape_targets] +
-  ['datasource', 'scrape']
+  ['scrape/' + x for x in std.objectFields(scrapes) if scrapes[x]]
 );
 {
   apps: std.filter(

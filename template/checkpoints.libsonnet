@@ -6,4 +6,5 @@
   logging: 'checkpoints-logging',
   metrics: 'checkpoints-metrics',
   profile: 'checkpoints-profile',
+  tracing: 'checkpoints-tracing',
 }
