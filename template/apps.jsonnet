@@ -21,6 +21,7 @@ local apps = [
   { name: 'gatekeeper-policy' },
   { name: 'gatekeeper-template' },
   { name: 'grafana' },
+  { name: 'grafana-dashboard' },
   { name: 'grafana-operator' },
   {
     // https://github.com/istio/istio/issues/44285

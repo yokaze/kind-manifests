@@ -23,6 +23,7 @@ resources:
   - gatekeeper-policy.yaml
   - gatekeeper-template.yaml
   - grafana.yaml
+  - grafana-dashboard.yaml
   - grafana-operator.yaml
   - istio-base.yaml
   - istio-cni.yaml

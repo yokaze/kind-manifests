@@ -25,6 +25,7 @@ local dependency = {
   'gatekeeper-policy': ['gatekeeper-template'],
   'gatekeeper-template': ['gatekeeper'],
   grafana: ['grafana-operator'],
+  'grafana-dashboard': ['grafana'],
   'grafana-operator': [checkpoints.argocd],
   headlamp: [checkpoints.argocd],
   istio: ['istio-base', 'istio-cni'],
@@ -60,7 +61,12 @@ local dependency = {
   [checkpoints.cni]: ['cilium', 'istio'],
   [checkpoints.init]: ['crds', 'namespaces'],
   [checkpoints.logging]: ['datasource', 'loki'],
-  [checkpoints.metrics]: ['datasource', 'scrape', 'victoria-metrics'],
+  [checkpoints.metrics]: [
+    'datasource',
+    'datasource/victoria-metrics',
+    'scrape',
+    'victoria-metrics'
+  ],
   [checkpoints.profile]: ['datasource', 'pyroscope'],
   [checkpoints.tracing]: ['datasource', 'tempo'],
 };

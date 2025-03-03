@@ -13,6 +13,7 @@ local features = {
   egress: true,
   'gatekeeper-policy': false,
   grafana: true,
+  'grafana-dashboard': true,
   headlamp: true,
   kiali: true,
   'kube-state-metrics': false,
