@@ -1,0 +1,10 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMPodScrape
+metadata:
+  namespace: httpd
+  name: sidecar
+spec:
+  selector: {}
+  podMetricsEndpoints:
+    - portNumber: 15020
+      path: /stats/prometheus

@@ -5,4 +5,4 @@ helmCharts:
     repo: oci://ghcr.io/grafana/helm-charts
     name: grafana-operator
     namespace: grafana-operator
-    version: v5.15.1
+    version: v5.16.0

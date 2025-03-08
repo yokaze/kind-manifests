@@ -4,6 +4,8 @@ kind: Kustomization
 resources:
   - argocd.yaml
   - cadvisor.yaml
+  - deck.yaml
+  - httpd.yaml
   - istio.yaml
   - kube-state-metrics.yaml
   - node-exporter.yaml

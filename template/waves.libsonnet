@@ -44,6 +44,8 @@ local dependency = {
   pyroscope: [checkpoints.argocd],
   'scrape/argocd': [checkpoints.metrics, 'argocd'],
   'scrape/cadvisor': [checkpoints.metrics, 'cadvisor'],
+  'scrape/deck': [checkpoints.metrics, 'deck'],
+  'scrape/httpd': [checkpoints.metrics, 'testhttpd'],
   'scrape/istio-system': [checkpoints.metrics, 'istio'],
   'scrape/kube-state-metrics': [checkpoints.metrics, 'kube-state-metrics'],
   'scrape/node-exporter': [checkpoints.metrics, 'node-exporter'],
@@ -65,7 +67,7 @@ local dependency = {
     'datasource',
     'datasource/victoria-metrics',
     'scrape',
-    'victoria-metrics'
+    'victoria-metrics',
   ],
   [checkpoints.profile]: ['datasource', 'pyroscope'],
   [checkpoints.tracing]: ['datasource', 'tempo'],
