@@ -49,6 +49,7 @@ local dependency = {
   'scrape/istio-system': [checkpoints.metrics, 'istio'],
   'scrape/kube-state-metrics': [checkpoints.metrics, 'kube-state-metrics'],
   'scrape/node-exporter': [checkpoints.metrics, 'node-exporter'],
+  'scrape/vm-operator': [checkpoints.metrics, 'victoria-metrics'],
   tempo: [checkpoints.argocd],
   testhttpd: [checkpoints.argocd],
   tetragon: [checkpoints.cni],

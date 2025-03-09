@@ -6,3 +6,6 @@ resources:
   - istio-mesh.yaml
   - istio-service.yaml
   - istio-workload.yaml
+  - vm-agent.yaml
+  - vm-cluster.yaml
+  - vm-operator.yaml

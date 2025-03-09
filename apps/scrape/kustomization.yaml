@@ -9,3 +9,4 @@ resources:
   - istio.yaml
   - kube-state-metrics.yaml
   - node-exporter.yaml
+  - vm-operator.yaml
