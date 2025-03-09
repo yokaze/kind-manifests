@@ -10,3 +10,10 @@ spec:
   podMetricsEndpoints:
     - port: http
       path: /metrics
+    - portNumber: 15020
+      path: /stats/prometheus
+      relabelConfigs:
+        - sourceLabels:
+            - __meta_kubernetes_pod_container_name
+          regex: istio-proxy
+          action: keep

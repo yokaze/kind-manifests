@@ -6,6 +6,12 @@ resources:
   - istio-mesh.yaml
   - istio-service.yaml
   - istio-workload.yaml
+  - k8s-system-apiserver.yaml
+  - k8s-system-coredns.yaml
+  - k8s-views-global.yaml
+  - k8s-views-namespaces.yaml
+  - k8s-views-nodes.yaml
+  - k8s-views-pods.yaml
   - vm-agent.yaml
   - vm-cluster.yaml
   - vm-operator.yaml

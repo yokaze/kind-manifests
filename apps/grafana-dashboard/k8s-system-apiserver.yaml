@@ -1,0 +1,9 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: k8s-system-apiserver
+spec:
+  instanceSelector:
+    matchLabels:
+      app.kubernetes.io/component: grafana
+  url: https://grafana.com/api/dashboards/15761/revisions/19/download

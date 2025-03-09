@@ -5,8 +5,11 @@ resources:
   - argocd.yaml
   - cadvisor.yaml
   - deck.yaml
+  - grafana-operator.yaml
+  - grafana.yaml
   - httpd.yaml
   - istio.yaml
   - kube-state-metrics.yaml
   - node-exporter.yaml
+  - victoria-metrics.yaml
   - vm-operator.yaml

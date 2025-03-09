@@ -1,15 +1,11 @@
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMPodScrape
 metadata:
-  namespace: node-exporter
-  name: node-exporter
+  namespace: grafana
+  name: sidecar
 spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: prometheus-node-exporter
+  selector: {}
   podMetricsEndpoints:
-    - port: metrics
-      path: /metrics
     - portNumber: 15020
       path: /stats/prometheus
       relabelConfigs:

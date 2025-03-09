@@ -14,6 +14,7 @@ spec:
       - kube-system
       - kubescape
       - local-path-storage
+      - node-exporter
   parameters:
     allowedHostPaths:
       - readOnly: true
