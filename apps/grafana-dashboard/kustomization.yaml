@@ -3,3 +3,6 @@ kind: Kustomization
 namespace: grafana
 resources:
   - istio-control-plane.yaml
+  - istio-mesh.yaml
+  - istio-service.yaml
+  - istio-workload.yaml
