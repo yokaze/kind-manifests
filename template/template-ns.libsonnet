@@ -15,8 +15,8 @@ function(spec)
     'name',
   ];
   local optional = {
-    pss: pss.baseline,
     istio: false,
+    pss: pss.baseline,
   };
   assert std.length(std.setDiff(required, std.objectFields(spec))) == 0 : 'required params are missing';
   generate(optional + spec)

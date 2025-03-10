@@ -45,8 +45,8 @@ function(spec)
     'name',
   ];
   local optional = {
-    sync: true,
     finalizer: true,
+    sync: true,
   };
   assert std.length(std.setDiff(required, std.objectFields(spec))) == 0 : 'required params are missing';
   generate(optional + spec)

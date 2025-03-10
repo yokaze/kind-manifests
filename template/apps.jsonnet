@@ -4,6 +4,7 @@ local apps = [
   { name: 'accurate-gallery' },
   { name: 'approver-policy' },
   { name: 'argocd' },
+  { name: 'base-policy' },
   { name: 'cadvisor' },
   { name: 'cert-manager' },
   { name: 'cilium' },

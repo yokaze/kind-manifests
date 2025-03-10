@@ -5,12 +5,13 @@ local dependency = {
     checkpoints.ca,  // webhook
   ],
   'accurate-gallery': ['accurate'],
-  'approver-policy': ['cert-manager'],
+  'approver-policy': ['cilium'],
   argocd: [
     checkpoints.cni,
     'proxy',
   ],
-  'cert-manager': [checkpoints.cni],
+  'base-policy': ['cert-manager'],
+  'cert-manager': ['approver-policy', 'cilium'],
   'cluster-ca': ['approver-policy', 'cert-manager'],
   cadvisor: [checkpoints.argocd],
   cilium: [checkpoints.init],

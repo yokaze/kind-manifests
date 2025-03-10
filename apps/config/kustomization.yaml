@@ -6,6 +6,7 @@ resources:
   - accurate-gallery.yaml
   - approver-policy.yaml
   - argocd.yaml
+  - base-policy.yaml
   - cadvisor.yaml
   - cert-manager.yaml
   - cilium.yaml

@@ -5,5 +5,3 @@ helmCharts:
     repo: https://charts.jetstack.io
     name: cert-manager-approver-policy
     namespace: cert-manager
-resources:
-  - policy.yaml

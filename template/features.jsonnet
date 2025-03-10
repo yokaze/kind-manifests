@@ -33,9 +33,15 @@ local features = {
 local scrapes = {
   argocd: false,
   cadvisor: false,
+  deck: true,
+  'grafana-operator': false,
+  grafana: true,
+  httpd: true,
   'istio-system': true,
-  'kube-state-metrics': false,
-  'node-exporter': false,
+  'kube-state-metrics': true,
+  'node-exporter': true,
+  'victoria-metrics': true,
+  'vm-operator': true,
 };
 local targets = waves.get_all_dependencies(
   [x for x in std.objectFields(features) if features[x]] +
