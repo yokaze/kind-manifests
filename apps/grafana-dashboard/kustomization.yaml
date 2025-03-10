@@ -12,6 +12,7 @@ resources:
   - k8s-views-namespaces.yaml
   - k8s-views-nodes.yaml
   - k8s-views-pods.yaml
+  - node-exporter-full.yaml
   - vm-agent.yaml
   - vm-cluster.yaml
   - vm-operator.yaml
