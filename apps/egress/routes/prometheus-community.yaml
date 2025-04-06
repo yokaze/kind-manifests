@@ -1,0 +1,61 @@
+apiVersion: networking.istio.io/v1
+kind: ServiceEntry
+metadata:
+  name: prometheus-community
+spec:
+  hosts:
+    - prometheus-community.github.io
+  ports:
+    - number: 80
+      name: http
+      protocol: HTTP
+    - number: 443
+      name: https
+      protocol: HTTPS
+  location: MESH_EXTERNAL
+  resolution: DNS
+---
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: inbound-prometheus-community
+spec:
+  hosts:
+    - prometheus-community.github.io
+  http:
+    - route:
+        - destination:
+            host: gateway-istio.egress.svc.cluster.local
+            port:
+              number: 80
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: outbound-prometheus-community
+spec:
+  parentRefs:
+    - name: gateway
+  hostnames:
+    - prometheus-community.github.io
+  rules:
+    - backendRefs:
+        - kind: Hostname
+          group: networking.istio.io
+          name: prometheus-community.github.io
+          port: 443
+---
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: outbound-prometheus-community
+spec:
+  host: prometheus-community.github.io
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN
+    portLevelSettings:
+      - port:
+          number: 443
+        tls:
+          mode: SIMPLE

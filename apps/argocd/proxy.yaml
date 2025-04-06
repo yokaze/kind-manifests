@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  namespace: argocd
+  name: proxy
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  type: git
+  url: git://mirror-git:9418/kind-manifests.git
+  proxy: http://squid.proxy.svc:3128
+  noProxy: argoproj.github.io,github.com,objects.githubusercontent.com,mirror-git,traefik.github.io,ghcr.io,charts.jetstack.io,kiali.org,helm.cilium.io,pkg-containers.githubusercontent.com,istio-release.storage.googleapis.com

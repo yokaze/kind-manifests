@@ -7,3 +7,6 @@ resources:
   - inbound-policy.yaml
   - internet.yaml
   - outbound-policy.yaml
+  - routes/headlamp.yaml
+  - routes/prometheus-community.yaml
+  - routes/victoria-metrics.yaml

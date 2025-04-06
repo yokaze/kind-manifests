@@ -2,7 +2,7 @@ local pss = import 'pss.libsonnet';
 local template = import 'template-ns.libsonnet';
 local namespaces = [
   { name: 'accurate', istio: true },
-  { name: 'argocd' },
+  { name: 'argocd', istio: true },
   { name: 'cert-manager', istio: false },
   { name: 'dashboard', istio: true },
   { name: 'deck', istio: true, pss: pss.privileged },
