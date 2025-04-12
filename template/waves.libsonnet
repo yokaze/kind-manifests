@@ -20,7 +20,7 @@ local dependency = {
   'crd-gallery': [checkpoints.argocd],
   dashboard: [checkpoints.argocd],
   datasource: ['grafana'],
-  deck: [checkpoints.argocd],
+  deck: [checkpoints.cni],
   egress: [checkpoints.cni],
   gatekeeper: [checkpoints.cni],
   'gatekeeper-policy': ['gatekeeper-template'],

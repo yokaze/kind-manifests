@@ -20,7 +20,7 @@ local namespaces = [
   { name: 'loki', istio: true },
   { name: 'node-exporter', istio: true, pss: pss.privileged },
   { name: 'profiler', istio: true },
-  { name: 'proxy', istio: true },
+  { name: 'proxy', istio: true, pss: pss.privileged },
   { name: 'pyroscope', istio: true },
   { name: 'tempo', istio: true },
   { name: 'traefik' },

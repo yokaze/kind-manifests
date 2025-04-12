@@ -384,6 +384,7 @@ MOCO_VERSION := 0.10.5
 .PHONY: setup
 setup:
 	mkdir -p node/deck
+	mkdir -p node/squid
 	cp $$(aqua which argocd) node/deck/argocd
 	cp $$(aqua which cilium) node/deck/cilium
 	cp $$(aqua which cmctl) node/deck/cmctl
@@ -396,6 +397,7 @@ setup:
 	chmod +x node/deck/gwctl
 	chmod +x node/deck/hubble
 	chmod +x node/deck/kubectl-accurate
+	sudo chown 13:13 node/squid
 
 .PHONY: clean
 clean:

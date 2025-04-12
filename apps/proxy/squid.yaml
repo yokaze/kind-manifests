@@ -20,13 +20,15 @@ spec:
               mountPath: /etc/squid
               readOnly: true
             - name: cache
-              mountPath: /cache
+              mountPath: /var/spool/squid
+              readOnly: false
       volumes:
         - name: config
           configMap:
             name: squid
         - name: cache
-          emptyDir: {}
+          hostPath:
+            path: /node/squid/
 ---
 apiVersion: v1
 kind: Service
