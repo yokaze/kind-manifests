@@ -38,4 +38,5 @@ spec:
   selector:
     app: squid
   ports:
-    - port: 3128
+    - appProtocol: TCP
+      port: 3128

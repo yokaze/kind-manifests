@@ -6,4 +6,5 @@ configMapGenerator:
     files:
       - squid.conf
 resources:
+  - service-entry.yaml
   - squid.yaml

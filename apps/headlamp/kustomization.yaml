@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: headlamp
 helmCharts:
   - releaseName: headlamp
-    repo: http://kubernetes-sigs.github.io/headlamp
+    repo: https://kubernetes-sigs.github.io/headlamp
     name: headlamp
     valuesFile: values.yaml
 resources:
