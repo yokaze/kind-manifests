@@ -9,7 +9,11 @@ spec:
     commonName:
       validations:
         - rule: |
-            !self.contains('.')
+            !self.contains('.') ||
+            self.endsWith('.%s'.format([cr.namespace])) ||
+            self.endsWith('.%s.svc'.format([cr.namespace])) ||
+            self.endsWith('.%s.svc.cluster.local'.format([cr.namespace])) ||
+            self.endsWith('.%s.svc.cluster.local.'.format([cr.namespace]))
     dnsNames:
       validations:
         - rule: |

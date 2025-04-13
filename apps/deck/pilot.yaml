@@ -38,15 +38,15 @@ spec:
       containers:
         - command:
             - pause
-          env:
-            - name: HUBBLE_SERVER
-              value: hubble-relay.kube-system.svc:80
           image: ghcr.io/cybozu/ubuntu-debug:24.04
           name: ubuntu
           volumeMounts:
             - name: alias
               mountPath: /root/.bash_aliases
               subPath: .bash_aliases
+            - name: cluster-ca
+              mountPath: /etc/ssl/certs/cluster-ca
+              readOnly: true
             - name: tools
               mountPath: /opt/deck
               readOnly: true
@@ -57,6 +57,9 @@ spec:
         - name: alias
           configMap:
             name: alias
+        - name: cluster-ca
+          configMap:
+            name: cluster-ca
         - name: tools
           hostPath:
             path: /node/deck/

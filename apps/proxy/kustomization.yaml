@@ -5,6 +5,11 @@ configMapGenerator:
   - name: squid
     files:
       - squid.conf
+  - name: squid-opaque
+    files:
+      - squid.conf=squid-opaque.conf
 resources:
+  - certificate.yaml
   - service-entry.yaml
   - squid.yaml
+  - squid-opaque.yaml

@@ -46,4 +46,5 @@ resources:
   - tetragon.yaml
   - traefik.yaml
   - traefik-route.yaml
+  - trust-manager.yaml
   - victoria-metrics.yaml

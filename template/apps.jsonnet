@@ -65,6 +65,7 @@ local apps = [
   { name: 'tetragon' },
   { name: 'traefik' },
   { name: 'traefik-route' },
+  { name: 'trust-manager' },
   { name: 'victoria-metrics' },
 ];
 [template(x) for x in apps]

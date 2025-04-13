@@ -57,6 +57,7 @@ stop-git:
 cluster: sync-git stop
 	docker pull quay.io/cilium/cilium:v$(CILIUM_VERSION)
 	kind create cluster --config cluster/cluster.yaml
+	kind load docker-image --nodes kind-worker yokaze/squid:dev
 	kind load docker-image quay.io/cilium/cilium:v$(CILIUM_VERSION)
 
 	ARGOCD_WAVE=$$($(MAKE) --no-print-directory waves | grep -e '^argocd\s' | awk '{print $$2}'); \
@@ -398,6 +399,7 @@ setup:
 	chmod +x node/deck/hubble
 	chmod +x node/deck/kubectl-accurate
 	sudo chown 13:13 node/squid
+	$(MAKE) -C images all
 
 .PHONY: clean
 clean:

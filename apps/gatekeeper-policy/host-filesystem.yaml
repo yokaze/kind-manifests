@@ -15,6 +15,7 @@ spec:
       - kubescape
       - local-path-storage
       - node-exporter
+      - proxy
   parameters:
     allowedHostPaths:
       - readOnly: true

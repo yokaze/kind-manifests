@@ -6,14 +6,15 @@ configs:
     server.insecure: "true"
 notifications:
   enabled: false
-# repoServer:
-#   env:
-#     - name: HTTP_PROXY
-#       value: http://squid.proxy.svc:3128
-#     - name: HTTPS_PROXY
-#       value: http://squid.proxy.svc:3128
-#     - name: NO_PROXY
-#       value: mirror-git
+repoServer:
+  volumeMounts:
+    - name: cluster-ca
+      mountPath: /etc/ssl/certs
+      readOnly: true
+  volumes:
+    - name: cluster-ca
+      configMap:
+        name: cluster-ca
 server:
   service:
     nodePortHttp: 30080

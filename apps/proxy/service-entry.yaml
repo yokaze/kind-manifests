@@ -11,3 +11,17 @@ spec:
       protocol: TCP
   location: MESH_EXTERNAL
   resolution: STATIC
+---
+apiVersion: networking.istio.io/v1
+kind: ServiceEntry
+metadata:
+  name: squid-opaque
+spec:
+  hosts:
+    - squid-opaque.proxy.svc.cluster.local
+  ports:
+    - number: 3128
+      name: tcp
+      protocol: TCP
+  location: MESH_EXTERNAL
+  resolution: STATIC

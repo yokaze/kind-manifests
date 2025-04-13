@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: squid
+  name: squid-opaque
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: squid
+      app: squid-opaque
   template:
     metadata:
       labels:
-        app: squid
+        app: squid-opaque
     spec:
       containers:
         - image: yokaze/squid:dev
@@ -24,37 +24,20 @@ spec:
             - name: config
               mountPath: /etc/squid
               readOnly: true
-            - name: mitm
-              mountPath: /etc/squid/ssl_cert
-              readOnly: true
-            - name: chain
-              mountPath: /chain
-            - name: cache
-              mountPath: /var/spool/squid
-              readOnly: false
       nodeSelector:
         kubernetes.io/hostname: kind-worker
       volumes:
         - name: config
           configMap:
-            name: squid
-        - name: mitm
-          secret:
-            secretName: squid-mitm
-        - name: chain
-          hostPath:
-            path: /node/deck/
-        - name: cache
-          hostPath:
-            path: /node/squid/
+            name: squid-opaque
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: squid
+  name: squid-opaque
 spec:
   selector:
-    app: squid
+    app: squid-opaque
   ports:
     - appProtocol: TCP
       port: 3128
