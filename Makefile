@@ -243,9 +243,9 @@ pid:
 		done; \
 	done; } | sort; } | column -t
 
-.PHONY: istio-ns
-istio-ns:
-	@kubectl get ns -ojson | jq -r '.items[].metadata | select(.labels."istio-injection" == "enabled") | .name'
+.PHONY: nsinfo
+nsinfo:
+	@{ echo NAME ISTIO PSS; kubectl get ns -ojson | jq -r '.items[].metadata | [.name, .labels."istio-injection" // "-", .labels."pod-security.kubernetes.io/enforce" // "-"] | @tsv'; } | column -t
 
 .PHONY: outbound-http
 outbound-http:
