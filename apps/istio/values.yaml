@@ -5,7 +5,7 @@ global:
 # https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig
 meshConfig:
   accessLogFile: /dev/stdout
-  outboundTrafficPolicy: REGISTRY_ONLY
+  # outboundTrafficPolicy: REGISTRY_ONLY
 pilot:
   cni:
     enabled: true
