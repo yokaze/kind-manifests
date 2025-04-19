@@ -1,0 +1,13 @@
+apiVersion: networking.istio.io/v1
+kind: ServiceEntry
+metadata:
+  name: mirror-git
+spec:
+  hosts:
+    - mirror-git
+  ports:
+    - number: 9418
+      name: tcp
+      protocol: TCP
+  location: MESH_EXTERNAL
+  resolution: DNS

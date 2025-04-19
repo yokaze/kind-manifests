@@ -6,3 +6,4 @@ helmCharts:
     name: grafana-operator
     namespace: grafana-operator
     version: v5.16.0
+    valuesFile: values.yaml

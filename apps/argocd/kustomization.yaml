@@ -10,3 +10,4 @@ helmCharts:
 resources:
   - reference-grant.yaml
   - proxy.yaml
+  - service-entry.yaml

@@ -1,0 +1,3 @@
+env:
+  - name: http_proxy
+    value: http://squid.proxy.svc:3128
