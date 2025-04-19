@@ -56,5 +56,7 @@ spec:
   selector:
     app: squid
   ports:
+    # Sidecar Envoy is going to try interpreting HTTP CONNECT without appProtocol
+    # https://istio.io/latest/docs/ops/configuration/traffic-management/protocol-selection/
     - appProtocol: TCP
       port: 3128
