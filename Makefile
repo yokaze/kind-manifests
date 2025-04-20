@@ -55,16 +55,21 @@ stop-git:
 
 .PHONY: cluster
 cluster: sync-git stop
-	docker pull quay.io/cilium/cilium:v$(CILIUM_VERSION)
+	http_proxy=http://localhost:30128 \
 	kind create cluster --config cluster/cluster.yaml
-	kind load docker-image --nodes kind-worker yokaze/squid:dev
-	kind load docker-image quay.io/cilium/cilium:v$(CILIUM_VERSION)
 
 	ARGOCD_WAVE=$$($(MAKE) --no-print-directory waves | grep -e '^argocd\s' | awk '{print $$2}'); \
 	for i in $$(seq $${ARGOCD_WAVE}); do \
 		echo; \
 		echo "WAVE $$i"; \
 		for j in $$($(MAKE) --no-print-directory waves | grep -Fw $$i | awk '{print $$1}'); do \
+			for k in $$(kustomize build --enable-helm apps/$$j | yq -ojson | jq -r 'select(.kind | test("DaemonSet|Deployment")) | .spec.template.spec.containers[].image' | sort -u); do \
+				echo $$k; \
+				if echo "$$k" | egrep -v '^yokaze/'; then \
+					docker pull $$(echo $$k | cut -d@ -f1); \
+				fi; \
+				kind load docker-image $$(echo $$k | cut -d@ -f1); \
+			done; \
 			kustomize build --enable-helm apps/$$j | kubectl apply $$(if [ "$$j" = "crds" ]; then echo --server-side; fi) -f -; \
 		done; \
 		if [ $$i -ge 2 ]; then \

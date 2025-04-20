@@ -60,3 +60,5 @@ spec:
     # https://istio.io/latest/docs/ops/configuration/traffic-management/protocol-selection/
     - appProtocol: TCP
       port: 3128
+      nodePort: 30128
+  type: NodePort

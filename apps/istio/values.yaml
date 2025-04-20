@@ -14,4 +14,4 @@ pilot:
   env:
     ENABLE_NATIVE_SIDECARS: true
     PILOT_ENABLE_ALPHA_GATEWAY_API: true
-replicaCount: 1
+replicaCount: 2
