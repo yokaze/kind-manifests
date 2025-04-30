@@ -7,3 +7,5 @@ helmCharts:
     name: cilium
     namespace: kube-system
     valuesFile: values.yaml
+resources:
+  - reference-grant.yaml

@@ -411,6 +411,7 @@ clean:
 	rm -rf bin
 	rm -rf manifests
 	rm -rf upstream
+	sudo rm -rf $(ROOT_DIR)/node/squid
 
 .PHONY: upstream
 upstream: \

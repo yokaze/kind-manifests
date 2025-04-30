@@ -12,13 +12,31 @@ spec:
       labels:
         app: squid
     spec:
+      initContainers:
+        - image: yokaze/squid:dev
+          name: squid-init
+          command:
+            - squid
+            - -Nzf
+            - /etc/squid/squid.conf
+          volumeMounts:
+            - name: config
+              mountPath: /etc/squid
+              readOnly: true
+            - name: mitm
+              mountPath: /etc/squid/ssl_cert
+              readOnly: true
+            - name: chain
+              mountPath: /chain
+            - name: cache
+              mountPath: /var/spool/squid
+              readOnly: false
       containers:
         - image: yokaze/squid:dev
           name: squid
           command:
             - squid
-            - -N
-            - -f
+            - -Nf
             - /etc/squid/squid.conf
           volumeMounts:
             - name: config
