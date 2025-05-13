@@ -19,6 +19,7 @@ resources:
   - kubescape.yaml
   - logging.yaml
   - loki.yaml
+  - moco-system.yaml
   - node-exporter.yaml
   - profiler.yaml
   - proxy.yaml

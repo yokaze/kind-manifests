@@ -53,6 +53,7 @@ local apps = [
   { name: 'kube-state-metrics' },
   { name: 'kubescape' },
   { name: 'loki' },
+  { name: 'moco' },
   { name: 'namespaces' },
   { name: 'node-exporter' },
   { name: 'pomerium' },

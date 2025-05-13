@@ -38,6 +38,7 @@ local dependency = {
   'kube-state-metrics': [checkpoints.argocd],
   kubescape: [checkpoints.argocd],
   loki: [checkpoints.argocd],
+  moco: [checkpoints.ca],
   'node-exporter': [checkpoints.argocd],
   pomerium: [checkpoints.argocd],
   'profile-cilium': [checkpoints.profile],

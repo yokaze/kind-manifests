@@ -72,7 +72,7 @@ cluster: sync-git stop
 				fi; \
 				kind load docker-image $$(echo $$k | cut -d@ -f1); \
 			done; \
-			for k in $$(kustomize build --enable-helm apps/$$j | yq -ojson | jq -r 'select(.kind | test("DaemonSet|Deployment")) | .spec.template.spec.containers[].image' | sort -u); do \
+			for k in $$(kustomize build --enable-helm apps/$$j | yq -ojson | jq -r 'select(.kind | test("DaemonSet|Deployment|Job")) | .spec.template.spec.containers[].image' | sort -u); do \
 				echo $$k; \
 				if echo "$$k" | egrep -v '^yokaze/'; then \
 					docker pull $$(echo $$k | cut -d@ -f1); \
@@ -328,16 +328,6 @@ deploy-hydra:
 template-hydra:
 	jsonnet helm/hydra.jsonnet | yq -P | helm template hydra ory/hydra --namespace hydra-system --values -
 
-.PHONY: deploy-moco
-deploy-moco:
-	@$(MAKE) --no-print-directory ensure-cert-manager
-	kubectl apply -f upstream/moco/moco.yaml
-	@$(MAKE) --no-print-directory wait-all
-
-.PHONY: delete-moco
-delete-moco:
-	kubectl delete -f upstream/moco/moco.yaml
-
 .PHONY: deploy-remote-coredns
 deploy-remote-coredns:
 	kubectl create ns remote-coredns
@@ -424,8 +414,7 @@ clean:
 
 .PHONY: upstream
 upstream: \
-	upstream-jetstack \
-	upstream-moco
+	upstream-jetstack
 	helm repo add argo https://argoproj.github.io/argo-helm
 	helm repo add bitnami https://charts.bitnami.com/bitnami
 	helm repo add cattage https://cybozu-go.github.io/cattage/
@@ -443,8 +432,3 @@ upstream: \
 upstream-jetstack:
 	mkdir -p upstream/cert-manager/csi-driver-spiffe/
 	wget -O upstream/cert-manager/csi-driver-spiffe/clusterissuer.yaml https://raw.githubusercontent.com/cert-manager/csi-driver-spiffe/refs/tags/v$(CSI_DRIVER_SPIFFE_VERSION)/deploy/example/clusterissuer.yaml
-
-.PHONY: upstream-moco
-upstream-moco:
-	mkdir -p upstream/moco
-	wget -O upstream/moco/moco.yaml https://github.com/cybozu-go/moco/releases/download/v$(MOCO_VERSION)/moco.yaml

@@ -18,6 +18,7 @@ local namespaces = [
   { name: 'kubescape', pss: pss.privileged },
   { name: 'logging', pss: pss.privileged },
   { name: 'loki', istio: true },
+  { name: 'moco-system' },
   { name: 'node-exporter', istio: true, pss: pss.privileged },
   { name: 'profiler', istio: true },
   { name: 'proxy', pss: pss.privileged },

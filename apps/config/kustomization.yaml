@@ -34,6 +34,7 @@ resources:
   - kube-state-metrics.yaml
   - kubescape.yaml
   - loki.yaml
+  - moco.yaml
   - namespaces.yaml
   - node-exporter.yaml
   - pomerium.yaml

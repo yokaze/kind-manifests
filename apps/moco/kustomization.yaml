@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+helmCharts:
+  - releaseName: moco
+    repo: https://cybozu-go.github.io/moco/
+    name: moco
+    namespace: moco-system
+    valuesFile: values.yaml
