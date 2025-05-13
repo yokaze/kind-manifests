@@ -23,6 +23,8 @@ resources:
   - profiler.yaml
   - proxy.yaml
   - pyroscope.yaml
+  - spire-server.yaml
+  - spire-system.yaml
   - tempo.yaml
   - traefik.yaml
   - victoria-metrics.yaml

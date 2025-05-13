@@ -61,8 +61,17 @@ cluster: sync-git stop
 	ARGOCD_WAVE=$$($(MAKE) --no-print-directory waves | grep -e '^argocd\s' | awk '{print $$2}'); \
 	for i in $$(seq $${ARGOCD_WAVE}); do \
 		echo; \
-		echo "WAVE $$i"; \
+		echo "Wave: $$i"; \
 		for j in $$($(MAKE) --no-print-directory waves | grep -Fw $$i | awk '{print $$1}'); do \
+			echo; \
+			echo "Application: $$j"; \
+			for k in $$(kustomize build --enable-helm apps/$$j | yq -ojson | jq -r 'select(.kind | test("Pod")) | .spec.containers[].image' | sort -u); do \
+				echo $$k; \
+				if echo "$$k" | egrep -v '^yokaze/'; then \
+					docker pull $$(echo $$k | cut -d@ -f1); \
+				fi; \
+				kind load docker-image $$(echo $$k | cut -d@ -f1); \
+			done; \
 			for k in $$(kustomize build --enable-helm apps/$$j | yq -ojson | jq -r 'select(.kind | test("DaemonSet|Deployment")) | .spec.template.spec.containers[].image' | sort -u); do \
 				echo $$k; \
 				if echo "$$k" | egrep -v '^yokaze/'; then \
@@ -195,9 +204,9 @@ config:
 
 .PHONY: reference-template
 reference-template:
-	@kustomize build --enable-helm apps/$(HELM_NAME) | yq '"reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"' | sed 's/\/\//\//' | sort
-	@kustomize build --enable-helm apps/$(HELM_NAME) | yq '"reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)"' | sort -u | xargs -n1 mkdir -p
-	@kustomize build --enable-helm apps/$(HELM_NAME) | yq --no-doc -s '"reference/" + "\(.metadata.namespace)" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"'
+	@kustomize build --enable-helm apps/$(HELM_NAME) | yq '"reference/" + "\(.metadata.namespace // \"cluster\")" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"' | sed 's/\/\//\//' | sort
+	@kustomize build --enable-helm apps/$(HELM_NAME) | yq '"reference/" + "\(.metadata.namespace // \"cluster\")" + "/" + "\(.kind)"' | sort -u | xargs -n1 mkdir -p
+	@kustomize build --enable-helm apps/$(HELM_NAME) | yq --no-doc -s '"reference/" + "\(.metadata.namespace // \"cluster\")" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"'
 
 .PHONY: reference
 reference:

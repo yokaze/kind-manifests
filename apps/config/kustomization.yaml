@@ -26,9 +26,9 @@ resources:
   - grafana.yaml
   - grafana-dashboard.yaml
   - grafana-operator.yaml
+  - istio.yaml
   - istio-base.yaml
   - istio-cni.yaml
-  - istio.yaml
   - headlamp.yaml
   - kiali.yaml
   - kube-state-metrics.yaml
@@ -41,6 +41,8 @@ resources:
   - proxy.yaml
   - pyroscope.yaml
   - scrape.yaml
+  - spire-crds.yaml
+  - spire.yaml
   - tempo.yaml
   - testhttpd.yaml
   - tetragon.yaml

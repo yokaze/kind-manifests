@@ -22,6 +22,8 @@ local namespaces = [
   { name: 'profiler', istio: true },
   { name: 'proxy', pss: pss.privileged },
   { name: 'pyroscope', istio: true },
+  { name: 'spire-server' },
+  { name: 'spire-system', pss: pss.privileged },
   { name: 'tempo', istio: true },
   { name: 'traefik' },
   { name: 'victoria-metrics', istio: true },

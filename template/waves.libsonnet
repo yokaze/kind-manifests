@@ -54,6 +54,8 @@ local dependency = {
   'scrape/node-exporter': [checkpoints.metrics, 'node-exporter'],
   'scrape/victoria-metrics': [checkpoints.metrics, 'victoria-metrics'],
   'scrape/vm-operator': [checkpoints.metrics, 'victoria-metrics'],
+  spire: ['cilium', 'spire-crds'],
+  'spire-crds': [checkpoints.init],
   tempo: [checkpoints.argocd],
   testhttpd: [checkpoints.argocd],
   tetragon: ['proxy'],

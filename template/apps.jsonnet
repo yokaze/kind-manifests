@@ -25,6 +25,17 @@ local apps = [
   { name: 'grafana-dashboard' },
   { name: 'grafana-operator' },
   {
+    name: 'istio',
+    ignoreDifferences: [{
+      group: 'admissionregistration.k8s.io',
+      kind: 'ValidatingWebhookConfiguration',
+      name: 'istio-validator-istio-system',
+      jqPathExpressions: [
+        '.webhooks[]?.failurePolicy',
+      ],
+    }],
+  },
+  {
     // https://github.com/istio/istio/issues/44285
     name: 'istio-base',
     ignoreDifferences: [{
@@ -37,17 +48,6 @@ local apps = [
     }],
   },
   { name: 'istio-cni' },
-  {
-    name: 'istio',
-    ignoreDifferences: [{
-      group: 'admissionregistration.k8s.io',
-      kind: 'ValidatingWebhookConfiguration',
-      name: 'istio-validator-istio-system',
-      jqPathExpressions: [
-        '.webhooks[]?.failurePolicy',
-      ],
-    }],
-  },
   { name: 'headlamp' },
   { name: 'kiali' },
   { name: 'kube-state-metrics' },
@@ -60,6 +60,8 @@ local apps = [
   { name: 'proxy' },
   { name: 'pyroscope' },
   { name: 'scrape', sync: false },
+  { name: 'spire-crds' },
+  { name: 'spire' },
   { name: 'tempo' },
   { name: 'testhttpd' },
   { name: 'tetragon' },
