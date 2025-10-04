@@ -258,6 +258,33 @@ pid:
 		done; \
 	done; } | sort; } | column -t
 
+.PHONY: pods
+pods:
+	@PODS=$$(kubectl get po -A --no-headers \
+	| tr -s ' ' | tr ' ' ',' \
+	| sed -e 's|Init:[0-9]/[0-9]|I|g' \
+	| sed 's/Pending/P/g; s/PodInitializing/i/g; s/ContainerCreating/c/g; s/Error/E/g' \
+	| sed 's/Running/ /g; s/Terminating/T/g; s/Completed/~/g; s/CrashLoopBackOff/B/g' \
+	| jq -nc --raw-input '[inputs | split(",")[:5]]'); \
+	NS_WIDTH=$$(printf '%s' "$${PODS}" | jq '[.[][0] | length] | max'); \
+	POD_WIDTH=$$(printf '%s' "$${PODS}" | jq '[.[][1] | length] | max'); \
+	NCOL=$$(tput cols | jq -r "(. - $${NS_WIDTH}) / ($${POD_WIDTH} + 8) | floor"); \
+	for n in $$(printf '%s' "$${PODS}" | jq -r '[.[][0]] | unique[]'); do \
+		NS_PODS=$$(printf '%s' "$${PODS}" | jq "[.[] | select(.[0] == \"$$n\")]"); \
+		NS_PODS_NUM=$$(printf '%s' "$${NS_PODS}" | jq length); \
+		OFFSET=0; \
+		while [ $${OFFSET} -lt $${NS_PODS_NUM} ]; do \
+			if [ $${OFFSET} -eq 0 ]; then \
+				printf "%$${NS_WIDTH}s " $$n; \
+			else \
+				printf "%$${NS_WIDTH}s " ' '; \
+			fi; \
+			printf '%s' "$${NS_PODS}" | jq "[.[$${OFFSET}:($${OFFSET} + $${NCOL})][] | .[1] = (.[1] + \" \" * ($${POD_WIDTH} - (.[1] | length)))]" \
+			| jq -cr '[.[] | "[\(.[3]) \(.[2])] \(.[1])"] | join(" ")'; \
+			OFFSET=$$(jq -n "$${OFFSET} + $${NCOL}"); \
+		done; \
+	done
+
 .PHONY: nsinfo
 nsinfo:
 	@{ echo NAME ISTIO PSS; kubectl get ns -ojson | jq -r '.items[].metadata | [.name, .labels."istio-injection" // "-", .labels."pod-security.kubernetes.io/enforce" // "-"] | @tsv'; } | column -t
