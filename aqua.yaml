@@ -8,15 +8,15 @@
 #   - all
 registries:
 - type: standard
-  ref: v4.269.0 # renovate: depName=aquaproj/aqua-registry
+  ref: v4.442.1 # renovate: depName=aquaproj/aqua-registry
 packages:
-- name: argoproj/argo-cd@v2.13.1
-- name: cert-manager/cmctl@v2.1.1
-- name: cilium/cilium-cli@v0.16.21
-- name: google/go-jsonnet@v0.20.0
-- name: helm/helm@v3.16.3
-- name: istio/istio/istioctl@1.24.1
-- name: kubernetes-sigs/kind@v0.25.0
-- name: kubernetes-sigs/kustomize@kustomize/v5.5.0
-- name: kubernetes/kubectl@v1.31.3
-- name: stern/stern@v1.31.0
+- name: argoproj/argo-cd@v3.2.1
+- name: cert-manager/cmctl@v2.3.0
+- name: cilium/cilium-cli@v0.18.9
+- name: google/go-jsonnet@v0.21.0
+- name: helm/helm@v4.0.1
+- name: istio/istio/istioctl@1.28.0
+- name: kubernetes-sigs/kind@v0.30.0
+- name: kubernetes-sigs/kustomize@kustomize/v5.8.0
+- name: kubernetes/kubectl@v1.34.2
+- name: stern/stern@v1.33.1
