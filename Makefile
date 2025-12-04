@@ -204,6 +204,7 @@ config:
 
 .PHONY: reference-template
 reference-template:
+	@echo "* $(HELM_NAME)"
 	@kustomize build --enable-helm apps/$(HELM_NAME) | yq '"reference/" + "\(.metadata.namespace // \"cluster\")" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"' | sed 's/\/\//\//' | sort
 	@kustomize build --enable-helm apps/$(HELM_NAME) | yq '"reference/" + "\(.metadata.namespace // \"cluster\")" + "/" + "\(.kind)"' | sort -u | xargs -n1 mkdir -p
 	@kustomize build --enable-helm apps/$(HELM_NAME) | yq --no-doc -s '"reference/" + "\(.metadata.namespace // \"cluster\")" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"'
@@ -238,6 +239,12 @@ waves:
 login-argocd:
 	argocd login localhost:30080 --plaintext --username admin --password $$(kubectl get secret -n argocd argocd-initial-admin-secret -oyaml | yq .data.password | base64 -d)
 
+.PHONY: grafana-password
+grafana-password:
+	@USER=$$(kubectl get secret -n grafana grafana-admin-credentials -ojson | jq -r .data.GF_SECURITY_ADMIN_USER | base64 -d); \
+	PASSWORD=$$(kubectl get secret -n grafana grafana-admin-credentials -ojson | jq -r .data.GF_SECURITY_ADMIN_PASSWORD | base64 -d); \
+	echo $${USER}:$${PASSWORD}
+
 .PHONY: pilot
 pilot:
 	kubectl exec -it -n deck deploy/pilot -- bash
@@ -262,13 +269,17 @@ pid:
 pods:
 	@PODS=$$(kubectl get po -A --no-headers \
 	| tr -s ' ' | tr ' ' ',' \
-	| sed -e 's|Init:[0-9]/[0-9]|I|g' \
-	| sed 's/Pending/P/g; s/PodInitializing/i/g; s/ContainerCreating/c/g; s/Error/E/g' \
-	| sed 's/Running/ /g; s/Terminating/T/g; s/Completed/~/g; s/CrashLoopBackOff/B/g' \
+	| sed -e 's|Init:[0-9]/[0-9]|in|g' \
+	| sed -e 's|Init:ErrImagePull|ie|g' \
+	| sed -e 's|Init:ImagePullBackOff|ib|g' \
+	| sed -e 's|Init:Error|ie|g' \
+	| sed -e 's|Init:CrashLoopBackOff|ic|g' \
+	| sed 's/Pending/pe/g; s/PodInitializing/pi/g; s/ContainerCreating/cc/g; s/Error/Er/g' \
+	| sed 's/Running/  /g; s/Terminating/Te/g; s/Completed/~ /g; s/CrashLoopBackOff/CB/g' \
 	| jq -nc --raw-input '[inputs | split(",")[:5]]'); \
 	NS_WIDTH=$$(printf '%s' "$${PODS}" | jq '[.[][0] | length] | max'); \
 	POD_WIDTH=$$(printf '%s' "$${PODS}" | jq '[.[][1] | length] | max'); \
-	NCOL=$$(tput cols | jq -r "(. - $${NS_WIDTH}) / ($${POD_WIDTH} + 8) | floor"); \
+	NCOL=$$(tput cols | jq -r "(. - $${NS_WIDTH}) / ($${POD_WIDTH} + 10) | floor"); \
 	for n in $$(printf '%s' "$${PODS}" | jq -r '[.[][0]] | unique[]'); do \
 		NS_PODS=$$(printf '%s' "$${PODS}" | jq "[.[] | select(.[0] == \"$$n\")]"); \
 		NS_PODS_NUM=$$(printf '%s' "$${NS_PODS}" | jq length); \
@@ -434,8 +445,9 @@ setup:
 
 .PHONY: clean
 clean:
+	rm -rf apps/*/charts
 	rm -rf bin
-	rm -rf manifests
+	rm -rf reference
 	rm -rf upstream
 	sudo rm -rf $(ROOT_DIR)/node/squid
 
