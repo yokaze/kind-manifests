@@ -19,6 +19,7 @@ resources:
   - dashboard.yaml
   - datasource.yaml
   - deck.yaml
+  - dependency-track.yaml
   - egress.yaml
   - gatekeeper.yaml
   - gatekeeper-policy.yaml

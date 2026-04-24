@@ -10,6 +10,8 @@ registries:
 - type: standard
   ref: v4.442.1 # renovate: depName=aquaproj/aqua-registry
 packages:
+- name: anchore/grype@v0.111.1
+- name: anchore/syft@v1.43.0
 - name: argoproj/argo-cd@v3.2.1
 - name: cert-manager/cmctl@v2.3.0
 - name: cilium/cilium-cli@v0.18.9

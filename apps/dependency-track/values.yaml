@@ -1,0 +1,2 @@
+frontend:
+  apiBaseUrl: http://dependency-track-api-server.localhost:32000

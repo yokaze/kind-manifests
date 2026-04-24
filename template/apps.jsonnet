@@ -17,6 +17,7 @@ local apps = [
   { name: 'dashboard' },
   { name: 'datasource', sync: false },
   { name: 'deck' },
+  { name: 'dependency-track' },
   { name: 'egress' },
   { name: 'gatekeeper' },
   { name: 'gatekeeper-policy' },

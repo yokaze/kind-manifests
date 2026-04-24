@@ -21,6 +21,7 @@ local dependency = {
   dashboard: [checkpoints.argocd],
   datasource: ['grafana'],
   deck: ['proxy'],
+  'dependency-track': [checkpoints.argocd],
   egress: [checkpoints.argocd],
   gatekeeper: ['proxy'],
   'gatekeeper-policy': ['gatekeeper-template'],

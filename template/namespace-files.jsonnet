@@ -6,6 +6,7 @@ local namespaces = [
   { name: 'cert-manager', istio: false },
   { name: 'dashboard', istio: true },
   { name: 'deck', istio: true, pss: pss.privileged },
+  { name: 'dependency-track' },
   { name: 'egress', istio: true },
   { name: 'gatekeeper-system' },
   { name: 'grafana-operator', istio: true },

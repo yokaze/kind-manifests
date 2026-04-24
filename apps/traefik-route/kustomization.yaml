@@ -3,6 +3,8 @@ kind: Kustomization
 namespace: traefik
 resources:
   - argocd.yaml
+  - dependency-track.yaml
+  - dependency-track-api-server.yaml
   - grafana.yaml
   - headlamp.yaml
   - hubble.yaml
