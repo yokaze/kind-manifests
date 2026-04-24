@@ -29,7 +29,7 @@ local dependency = {
   grafana: ['grafana-operator'],
   'grafana-dashboard': ['grafana'],
   'grafana-operator': [checkpoints.argocd],
-  headlamp: [checkpoints.argocd],
+  headlamp: [checkpoints.argocd, 'kubescape'],
   istio: ['istio-base', 'istio-cni'],
   'istio-base': [
     'crds',  // Gateway CRD

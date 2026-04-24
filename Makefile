@@ -308,6 +308,14 @@ outbound-http:
 outbound-tls:
 	sudo tshark -i eth0 -Y tls.handshake
 
+.PHONY: grype-all
+grype-all:
+	@for i in $$(kubectl get sbomsyfts -n kubescape -oname | cut -d/ -f2); do \
+		echo $$i; \
+		kubectl get sbomsyfts -n kubescape $$i -ojson | jq .spec.syft | grype; \
+		echo; \
+	done
+
 .PHONY: deploy-cattage
 deploy-cattage:
 	@$(MAKE) --no-print-directory ensure-cert-manager
