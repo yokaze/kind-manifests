@@ -1,0 +1,37 @@
+#!/bin/sh
+set -eu
+PATH=/opt/deck:/opt/scripts:${PATH}
+BASE_URL=http://dependency-track-api-server.dependency-track.svc:8080
+SECRET_NAME=dependency-track-sbom-uploader
+
+if [ -z "${JWT}"]; then
+    echo "JWT is not set"
+    exit 1
+fi
+
+echo 'Adding sbom-uploader team...'
+TEAM_JSON=$(
+    curl -fsS -X PUT "${BASE_URL}/api/v1/team" \
+        -H "Authorization: Bearer ${JWT}" \
+        -H 'Content-Type: application/json' \
+        --data '{ "name": "sbom-uploader" }' | jq -c
+)
+TEAM_UUID=$(echo "${TEAM_JSON}" | jq -r '.uuid')
+
+echo 'Setting permission for sbom-uploader...'
+for PERMISSION in BOM_UPLOAD PROJECT_CREATION_UPLOAD; do
+    curl -fsS -o /dev/null -X POST \
+        "${BASE_URL}/api/v1/permission/${PERMISSION}/team/${TEAM_UUID}" \
+        -H "Authorization: Bearer ${JWT}" \
+        -H 'Content-Type: application/json' \
+        --data '{}'
+done
+
+echo 'Issuing API key...'
+API_KEY=$(
+    curl -fsS -X PUT "${BASE_URL}/api/v1/team/${TEAM_UUID}/key" \
+        -H "Authorization: Bearer ${JWT}" | jq -er .key
+)
+
+kubectl create secret generic -n deck ${SECRET_NAME} \
+    --from-literal=key=${API_KEY}

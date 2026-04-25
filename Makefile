@@ -451,6 +451,7 @@ setup:
 	cp $$(aqua which jq) node/deck/jq
 	cp $$(aqua which kubectl) node/deck/kubectl
 	cp $$(aqua which stern) node/deck/stern
+	cp $$(aqua which syft) node/deck/syft
 	cp $$(aqua which yq) node/deck/yq
 	wget -qO- https://github.com/kubernetes-sigs/gwctl/releases/download/v$(GWCTL_VERSION)/gwctl_Linux_$(ARCH_X86_64_ARM64).tar.gz | tar xzv -O gwctl > node/deck/gwctl
 	wget -qO- https://github.com/cilium/hubble/releases/download/v$(CILIUM_VERSION)/hubble-linux-$(ARCH_AMD64_ARM64).tar.gz | tar xzv -O hubble > node/deck/hubble

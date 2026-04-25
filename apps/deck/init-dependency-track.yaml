@@ -9,8 +9,8 @@ spec:
       labels:
         app.kuberenetes.io/name: init-dependency-track
     spec:
-      containers:
-        - name: password
+      initContainers:
+        - name: init
           image: ghcr.io/cybozu/ubuntu:24.04
           command:
             - /opt/scripts/init-all
@@ -21,6 +21,20 @@ spec:
             - name: tools
               mountPath: /opt/deck
               readOnly: true
+      containers:
+        - name: sbom
+          image: ghcr.io/cybozu/ubuntu:24.04
+          command:
+            - /opt/scripts/upload-sbom
+          volumeMounts:
+            - name: scripts
+              mountPath: /opt/scripts
+              readOnly: true
+            - name: tools
+              mountPath: /opt/deck
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
       restartPolicy: Never
       serviceAccountName: pilot
       volumes:
@@ -31,3 +45,5 @@ spec:
         - name: tools
           hostPath:
             path: /node/deck/
+        - name: tmp
+          emptyDir: {}

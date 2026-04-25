@@ -4,11 +4,14 @@ namespace: deck
 configMapGenerator:
   - name: init-dependency-track
     files:
+      - init-dependency-track/add-team
       - init-dependency-track/feature-dependency-track
       - init-dependency-track/generate-password
       - init-dependency-track/init-all
+      - init-dependency-track/login-jwt
       - init-dependency-track/set-password
-      - init-dependency-track/try-login
+      - init-dependency-track/test-password
+      - init-dependency-track/upload-sbom
 resources:
   - alias.yaml
   - init-dependency-track.yaml
