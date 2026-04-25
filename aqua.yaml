@@ -18,6 +18,7 @@ packages:
 - name: google/go-jsonnet@v0.21.0
 - name: helm/helm@v3.19.2
 - name: istio/istio/istioctl@1.28.0
+- name: jqlang/jq@jq-1.8.1
 - name: kubernetes-sigs/kind@v0.30.0
 - name: kubernetes-sigs/kustomize@kustomize/v5.8.0
 - name: kubernetes/kubectl@v1.34.2

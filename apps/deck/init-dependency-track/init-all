@@ -1,0 +1,29 @@
+#!/bin/sh
+set -eu
+PATH=/opt/deck:/opt/scripts:${PATH}
+
+if ! feature-dependency-track; then
+    echo 'Dependency-Track is disabled'
+    exit
+fi
+
+generate-password
+
+# Wait service startup
+while curl -sS -o /dev/null http://dependency-track-api-server.dependency-track.svc:8080; do
+    sleep 10
+done
+
+set-password
+
+# Test password
+USERNAME=$(kubectl get secret -n deck dependency-track -ojson | jq -r .data.username | base64 -d)
+PASSWORD=$(kubectl get secret -n deck dependency-track -ojson | jq -r .data.password | base64 -d)
+
+for i in $(seq 5); do
+    if try-login ${USERNAME} ${PASSWORD}; then
+        exit
+    fi
+    sleep 10
+done
+exit 1

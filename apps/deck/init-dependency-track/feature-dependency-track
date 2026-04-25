@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+PATH=/opt/deck:/opt/scripts/:${PATH}
+
+if ! [ -f /opt/deck/features.yaml ]; then
+    exit 1
+fi
+
+yq -e '.apps // [] | any_c(. == "dependency-track")' /opt/deck/features.yaml

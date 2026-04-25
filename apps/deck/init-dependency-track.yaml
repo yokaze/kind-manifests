@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  namespace: deck
+  name: init-dependency-track
+spec:
+  template:
+    metadata:
+      labels:
+        app.kuberenetes.io/name: init-dependency-track
+    spec:
+      containers:
+        - name: password
+          image: ghcr.io/cybozu/ubuntu:24.04
+          command:
+            - /opt/scripts/init-all
+          volumeMounts:
+            - name: scripts
+              mountPath: /opt/scripts
+              readOnly: true
+            - name: tools
+              mountPath: /opt/deck
+              readOnly: true
+      restartPolicy: Never
+      serviceAccountName: pilot
+      volumes:
+        - name: scripts
+          configMap:
+            name: init-dependency-track
+            defaultMode: 0755
+        - name: tools
+          hostPath:
+            path: /node/deck/

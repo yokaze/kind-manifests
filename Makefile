@@ -55,6 +55,7 @@ stop-git:
 
 .PHONY: cluster
 cluster: sync-git stop
+	$(MAKE) --no-print-directory features > node/deck/features.yaml
 	http_proxy=http://localhost:30128 \
 	kind create cluster --config cluster/cluster.yaml
 
@@ -239,11 +240,19 @@ waves:
 login-argocd:
 	argocd login localhost:30080 --plaintext --username admin --password $$(kubectl get secret -n argocd argocd-initial-admin-secret -oyaml | yq .data.password | base64 -d)
 
+.PHONY: dependency-track-password
+dependency-track-password:
+	@kubectl get secret -n deck dependency-track -oyaml | yq .data.password | base64 -d
+
 .PHONY: grafana-password
 grafana-password:
 	@USER=$$(kubectl get secret -n grafana grafana-admin-credentials -ojson | jq -r .data.GF_SECURITY_ADMIN_USER | base64 -d); \
 	PASSWORD=$$(kubectl get secret -n grafana grafana-admin-credentials -ojson | jq -r .data.GF_SECURITY_ADMIN_PASSWORD | base64 -d); \
 	echo $${USER}:$${PASSWORD}
+
+.PHONY: headlamp-token
+headlamp-token:
+	@kubectl exec -n deck deploy/pilot -- cat /var/run/secrets/kubernetes.io/serviceaccount/token; echo
 
 .PHONY: pilot
 pilot:
@@ -439,6 +448,7 @@ setup:
 	cp $$(aqua which argocd) node/deck/argocd
 	cp $$(aqua which cilium) node/deck/cilium
 	cp $$(aqua which cmctl) node/deck/cmctl
+	cp $$(aqua which jq) node/deck/jq
 	cp $$(aqua which kubectl) node/deck/kubectl
 	cp $$(aqua which stern) node/deck/stern
 	cp $$(aqua which yq) node/deck/yq

@@ -1,0 +1,29 @@
+#!/bin/sh
+set -eu
+PATH=/opt/deck:${PATH}
+
+USERNAME=$1
+PASSWORD=$2
+
+RESULT=$(
+    curl -sS \
+    -X POST http://dependency-track-api-server.dependency-track.svc:8080/api/v1/user/login \
+    -H 'Content-Type: application/x-www-form-urlencoded' \
+    --data-urlencode "username=${USERNAME}" \
+    --data-urlencode "password=${PASSWORD}" || true
+)
+
+if [ "${RESULT}" = "FORCE_PASSWORD_CHANGE" ]; then
+    exit
+fi
+
+HTTP_STATUS=$(curl -sS -o /dev/null -w '%{http_code}' \
+    -X POST http://dependency-track-api-server.dependency-track.svc:8080/api/v1/user/login \
+    -H 'Content-Type: application/x-www-form-urlencoded' \
+    --data-urlencode "username=${USERNAME}" \
+    --data-urlencode "password=${PASSWORD}")
+
+if ! [ "${HTTP_STATUS}" = "200" ]; then
+    echo "HTTP_STATUS: ${HTTP_STATUS}"
+    exit 1
+fi
