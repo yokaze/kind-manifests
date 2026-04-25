@@ -5,6 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/component: grafana
 spec:
+  version: 12.4.3
   config:
     auth:
       disable_login_form: "false"
