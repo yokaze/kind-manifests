@@ -6,22 +6,42 @@ CDX_FILE=/tmp/sbom.cdx.json
 BASE_URL=http://dependency-track-api-server.dependency-track.svc:8080
 API_KEY=$(kubectl get secret -n deck dependency-track-sbom-uploader -ojson | jq -r .data.key | base64 -d)
 
-while true; do
-    sleep 60
-    for i in $(kubectl get sbomsyfts -n kubescape -oname | cut -d/ -f2); do
-        RESOURCE=$(kubectl get sbomsyfts -n kubescape $i -ojson | jq -c)
-        printf '%s' "${RESOURCE}" | jq .spec.syft > ${SYFT_FILE}
-        syft -q convert ${SYFT_FILE} "-o=cyclonedx-json=${CDX_FILE}"
+while ! kubectl api-resources | grep sbomsyfts > /dev/null; do
+    sleep 5
+done
+while ! kubectl get sbomsyfts -n kubescape -oname > /dev/null; do
+    sleep 5
+done
 
+while true; do
+    echo "Listing SBOMs..."
+    for i in $(kubectl get sbomsyfts -n kubescape -oname | cut -d/ -f2 || true); do
+        RESOURCE=$(kubectl get sbomsyfts -n kubescape $i -ojson | jq -c)
+        RESOURCE_STATUS=$(printf '%s' "${RESOURCE}" | jq -r '.metadata.annotations["kubescape.io/status"]')
         PACKAGE_NAME=$(printf '%s' "${RESOURCE}" | jq -r '.metadata.annotations["kubescape.io/image-tag"]' | cut -d: -f1)
         PACKAGE_TAG=$(printf '%s' "${RESOURCE}" | jq -r '.metadata.annotations["kubescape.io/image-tag"]' | cut -d: -f2)
 
-        curl -fsS \
+        if [ "${RESOURCE_STATUS}" != "ready" ]; then
+            echo "SBOM for ${PACKAGE_NAME}:${PACKAGE_TAG} is not ready: ${RESOURCE_STATUS}"
+            continue
+        fi
+
+        printf '%s' "${RESOURCE}" | jq .spec.syft > ${SYFT_FILE}
+        syft -q convert ${SYFT_FILE} "-o=cyclonedx-json=${CDX_FILE}"
+
+        echo "Uploading SBOM for ${PACKAGE_NAME}:${PACKAGE_TAG}"
+        HTTP_STATUS=$(curl -sS -o /dev/null -w '%{http_code}' \
             -X POST "${BASE_URL}/api/v1/bom" \
             -H "X-Api-Key: ${API_KEY}" \
             -F "autoCreate=true" \
             -F "projectName=${PACKAGE_NAME}" \
             -F "projectVersion=${PACKAGE_TAG}" \
             -F "bom=@${CDX_FILE};type=application/json"
+        )
+        if ! [ "${HTTP_STATUS}" = "200" ]; then
+            echo "HTTP_STATUS: ${HTTP_STATUS}" > /dev/stderr
+            exit 1
+        fi
     done
+    sleep 60
 done
