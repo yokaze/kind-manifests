@@ -7,7 +7,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kuberenetes.io/name: init-dependency-track
+        app.kubernetes.io/name: init-dependency-track
     spec:
       initContainers:
         - name: init
