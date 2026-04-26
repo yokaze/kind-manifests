@@ -6,9 +6,13 @@ HELM_VERSION ?= $(shell if [ -z "$(HELM_REPO)" ]; then echo latest; else helm sh
 ARCH_AMD64_ARM64 := $(shell if [ "$$(uname -m)" = "aarch64" ]; then echo arm64; else echo amd64; fi)
 ARCH_X86_64_ARM64 := $(shell if [ "$$(uname -m)" = "aarch64" ]; then echo arm64; else echo x86_64; fi)
 
-# Cluster Targets
+.PHONY: help
+help: ## Display this help
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-30s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+##@ Local services
 .PHONY: registry
-registry:
+registry: ## Start the image registry proxy containers
 	docker run -d --expose 5000 -e REGISTRY_PROXY_REMOTEURL=https://registry-1.docker.io --name=mirror-docker --restart=always registry:2
 	docker run -d --expose 5000 -e REGISTRY_PROXY_REMOTEURL=https://public.ecr.aws --name=mirror-ecr --restart=always registry:2
 	docker run -d --expose 5000 -e REGISTRY_PROXY_REMOTEURL=https://ghcr.io --name=mirror-ghcr --restart=always registry:2
@@ -19,7 +23,7 @@ registry:
 	docker network connect kind mirror-quay
 
 .PHONY: stop-registry
-stop-registry:
+stop-registry: ## Stop the image registry proxy containers
 	docker stop mirror-docker || true
 	docker stop mirror-ecr || true
 	docker stop mirror-ghcr || true
@@ -30,7 +34,7 @@ stop-registry:
 	docker rm mirror-quay || true
 
 .PHONY: git
-git: sync-git
+git: sync-git ## Start the local Git server
 	docker run -d --name mirror-git --restart=always --mount type=bind,src=$(ROOT_DIR)/mirror-git,dst=/git \
 		ghcr.io/cybozu/ubuntu-dev:24.04 bash -c 'git daemon --reuseaddr --verbose --base-path=/git --export-all'
 	docker network connect kind mirror-git
@@ -49,12 +53,13 @@ sync-git:
 	sudo chown -R root:root mirror-git/kind-manifests.git
 
 .PHONY: stop-git
-stop-git:
+stop-git: ## Stop the local Git server
 	docker stop mirror-git || true
 	docker rm mirror-git || true
 
+##@ Cluster operations
 .PHONY: cluster
-cluster: sync-git stop
+cluster: sync-git stop ## Create the kind cluster
 	$(MAKE) --no-print-directory features > node/deck/features.yaml
 	http_proxy=http://localhost:30128 \
 	kind create cluster --config cluster/cluster.yaml
@@ -105,7 +110,7 @@ cluster: sync-git stop
 	@echo
 
 .PHONY: stop
-stop:
+stop: ## Delete the kind cluster
 	kind delete cluster
 
 .PHONY: wait-nodes
@@ -135,37 +140,9 @@ rollout-all:
 		kubectl uncordon $$n; \
 	done
 
-.PHONY: images
-images:
-	@{ \
-		kubectl get po -Aojson | jq -r '.items[].spec.initContainers[]?.image'; \
-		kubectl get po -Aojson | jq -r '.items[].spec.containers[].image'; \
-	} | sort -u
-
-.PHONY: scrape
-scrape:
-	kubectl exec -n deck deploy/pilot -- curl -s http://vmagent-vm-agent.victoria-metrics.svc:8429/targets
-
-.PHONY: metrics
-metrics:
-	@JOBS=$$(kubectl exec -n deck deploy/pilot -- curl -s http://vmselect-vm-cluster.victoria-metrics:8481/select/0/prometheus/api/v1/label/job/values | jq -r '.data[]'); \
-	for i in $${JOBS}; do \
-		echo $$i:; \
-		kubectl exec -n deck deploy/pilot -- curl -s http://vmselect-vm-cluster.victoria-metrics:8481/select/0/prometheus/api/v1/label/__name__/values -d "match[]={job=\"$$i\"}" | jq -r '.data[]' | sed 's/^/- /'; \
-	done | yq
-
-.PHONY: logs
-logs:
-	@stern . -A --max-log-requests 100 \
-		-e '(^|\s)I\d+\s' \
-		-e 'level=(info|INFO|debug)' \
-		-e '\"info\"' \
-		-e '\s(info|INFO)\s' \
-		-e '\[(info|INFO)\]'
-
-# Manifest Targets
+##@ Manifests
 .PHONY: format
-format:
+format: ## Format manifests
 	@for i in $$(git ls-files | grep -e '[.]json$$' | sort); do \
 		echo $$i; \
 		jq . $$i | sponge $$i; \
@@ -211,7 +188,7 @@ reference-template:
 	@kustomize build --enable-helm apps/$(HELM_NAME) | yq --no-doc -s '"reference/" + "\(.metadata.namespace // \"cluster\")" + "/" + "\(.kind)" + "/" + "\(.metadata.name).yaml"'
 
 .PHONY: reference
-reference:
+reference: ## Render hydrated manifests to /reference
 	@rm -rf reference
 	@for i in $$(jsonnet template/apps.jsonnet | jq -r '.[].metadata.name'); do \
 		$(MAKE) --no-print-directory HELM_NAME=$$i reference-template; \
@@ -226,40 +203,43 @@ resources:
 	done
 
 .PHONY: features
-features:
+features: ## Show all enabled features
 	@jsonnet template/features.jsonnet | yq -P
 
 .PHONY: waves
-waves:
+waves: ## Show Argo CD sync waves for apps
 	@for i in $$(find apps/config -name '*.yaml' | grep -v 'kustomization.yaml'); do \
 		yq '[.metadata.name, .metadata.annotations."argocd.argoproj.io/sync-wave"] | @tsv' $$i; \
 	done | sort -Vk2 | column -t
 
-# Rules for deploying
+##@ Admin access
 .PHONY: login-argocd
 login-argocd:
 	argocd login localhost:30080 --plaintext --username admin --password $$(kubectl get secret -n argocd argocd-initial-admin-secret -oyaml | yq .data.password | base64 -d)
 
+.PHONY: pilot
+pilot: ## Open a shell in the admin toolbox pod
+	kubectl exec -it -n deck deploy/pilot -- bash
+
+##@ Passwords and tokens
+
 .PHONY: dependency-track-password
-dependency-track-password:
+dependency-track-password: ## Show the Dependency-Track password
 	@kubectl get secret -n deck dependency-track -oyaml | yq .data.password | base64 -d
 
 .PHONY: grafana-password
-grafana-password:
+grafana-password: ## Show the Grafana password
 	@USER=$$(kubectl get secret -n grafana grafana-admin-credentials -ojson | jq -r .data.GF_SECURITY_ADMIN_USER | base64 -d); \
 	PASSWORD=$$(kubectl get secret -n grafana grafana-admin-credentials -ojson | jq -r .data.GF_SECURITY_ADMIN_PASSWORD | base64 -d); \
 	echo $${USER}:$${PASSWORD}
 
 .PHONY: headlamp-token
-headlamp-token:
+headlamp-token: ## Show the Headlamp login token
 	@kubectl exec -n deck deploy/pilot -- cat /var/run/secrets/kubernetes.io/serviceaccount/token; echo
 
-.PHONY: pilot
-pilot:
-	kubectl exec -it -n deck deploy/pilot -- bash
-
+##@ Inspection
 .PHONY: pid
-pid:
+pid: ## Show process IDs for all containers
 	@{ echo NAMESPACE NAME CONTAINER NODE HOST-PID PID; \
 	{ for n in $$(kubectl get node -oname | cut -d/ -f2); do \
 		INFO=$$(for c in $$(docker exec $$n crictl ps -o json | jq -r '.containers[].id'); do \
@@ -275,7 +255,7 @@ pid:
 	done; } | sort; } | column -t
 
 .PHONY: pods
-pods:
+pods: ## Show all pods in short format
 	@PODS=$$(kubectl get po -A --no-headers \
 	| tr -s ' ' | tr ' ' ',' \
 	| sed -e 's|Init:[0-9]/[0-9]|in|g' \
@@ -306,8 +286,36 @@ pods:
 	done
 
 .PHONY: nsinfo
-nsinfo:
+nsinfo: ## Show Istio injection and PSS status by namespace
 	@{ echo NAME ISTIO PSS; kubectl get ns -ojson | jq -r '.items[].metadata | [.name, .labels."istio-injection" // "-", .labels."pod-security.kubernetes.io/enforce" // "-"] | @tsv'; } | column -t
+
+.PHONY: images
+images: ## List container images used in the cluster
+	@{ \
+		kubectl get po -Aojson | jq -r '.items[].spec.initContainers[]?.image'; \
+		kubectl get po -Aojson | jq -r '.items[].spec.containers[].image'; \
+	} | sort -u
+
+.PHONY: scrape
+scrape:
+	kubectl exec -n deck deploy/pilot -- curl -s http://vmagent-vm-agent.victoria-metrics.svc:8429/targets
+
+.PHONY: metrics
+metrics:
+	@JOBS=$$(kubectl exec -n deck deploy/pilot -- curl -s http://vmselect-vm-cluster.victoria-metrics:8481/select/0/prometheus/api/v1/label/job/values | jq -r '.data[]'); \
+	for i in $${JOBS}; do \
+		echo $$i:; \
+		kubectl exec -n deck deploy/pilot -- curl -s http://vmselect-vm-cluster.victoria-metrics:8481/select/0/prometheus/api/v1/label/__name__/values -d "match[]={job=\"$$i\"}" | jq -r '.data[]' | sed 's/^/- /'; \
+	done | yq
+
+.PHONY: logs
+logs: ## Tail noteworthy logs from all pods
+	@stern . -A --max-log-requests 1000 \
+		-e '(^|\s)I\d+\s' \
+		-e 'level=(info|INFO|debug)' \
+		-e '\"info\"' \
+		-e '\s(info|INFO)\s' \
+		-e '\[(info|INFO)\]'
 
 .PHONY: outbound-http
 outbound-http:
@@ -318,7 +326,7 @@ outbound-tls:
 	sudo tshark -i eth0 -Y tls.handshake
 
 .PHONY: grype-all
-grype-all:
+grype-all: ## Run Grype on all Kubescape SBOMs
 	@for i in $$(kubectl get sbomsyfts -n kubescape -oname | cut -d/ -f2); do \
 		echo $$i; \
 		kubectl get sbomsyfts -n kubescape $$i -ojson | jq .spec.syft | grype; \
@@ -435,11 +443,7 @@ delete-vault:
 
 # Rules for upstream manifests
 ACCURATE_VERSION := 1.6.0
-ARGOCD_VERSION := 2.1.2
-CERT_MANAGER_VERSION := 1.5.3
 CSI_DRIVER_SPIFFE_VERSION := 0.8.1
-GWCTL_VERSION := 0.1.0
-MOCO_VERSION := 0.10.5
 
 .PHONY: setup
 setup:
@@ -448,16 +452,14 @@ setup:
 	cp $$(aqua which argocd) node/deck/argocd
 	cp $$(aqua which cilium) node/deck/cilium
 	cp $$(aqua which cmctl) node/deck/cmctl
+	cp $$(aqua which gwctl) node/deck/gwctl
+	cp $$(aqua which hubble) node/deck/hubble
 	cp $$(aqua which jq) node/deck/jq
 	cp $$(aqua which kubectl) node/deck/kubectl
 	cp $$(aqua which stern) node/deck/stern
 	cp $$(aqua which syft) node/deck/syft
 	cp $$(aqua which yq) node/deck/yq
-	wget -qO- https://github.com/kubernetes-sigs/gwctl/releases/download/v$(GWCTL_VERSION)/gwctl_Linux_$(ARCH_X86_64_ARM64).tar.gz | tar xzv -O gwctl > node/deck/gwctl
-	wget -qO- https://github.com/cilium/hubble/releases/download/v$(CILIUM_VERSION)/hubble-linux-$(ARCH_AMD64_ARM64).tar.gz | tar xzv -O hubble > node/deck/hubble
 	wget -qO- https://github.com/cybozu-go/accurate/releases/download/v$(ACCURATE_VERSION)/kubectl-accurate_v$(ACCURATE_VERSION)_linux_$(ARCH_AMD64_ARM64).tar.gz | tar xzv -O kubectl-accurate > node/deck/kubectl-accurate
-	chmod +x node/deck/gwctl
-	chmod +x node/deck/hubble
 	chmod +x node/deck/kubectl-accurate
 	sudo chown 13:13 node/squid
 	$(MAKE) -C images all
