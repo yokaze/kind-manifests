@@ -156,6 +156,13 @@ format: ## Format manifests
 		yq -iP $$i; \
 	done
 
+.PHONY: lint
+lint:
+	@{ \
+		git ls-files '*.sh'; \
+		git grep -IlE '^#!.*\b(bash|sh)\b' -- .; \
+	} | sort -u | xargs shellcheck
+
 .PHONY: manifests
 manifests:
 	rm -rf manifests

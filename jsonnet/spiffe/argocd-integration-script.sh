@@ -16,20 +16,20 @@ tar xzvf /tmp/hydra.tar.gz -O hydra > /tmp/hydra
 chmod +x /tmp/hydra
 
 for i in $(/tmp/hydra --endpoint http://hydra-admin.hydra-system:4445 list clients --format json | jq -r '.items[].client_id'); do
-    /tmp/hydra --endpoint http://hydra-admin.hydra-system:4445 delete client $i
+    /tmp/hydra --endpoint http://hydra-admin.hydra-system:4445 delete client "$i"
 done
 /tmp/hydra --endpoint http://hydra-admin.hydra-system:4445 list clients
 /tmp/hydra --endpoint http://hydra-admin.hydra-system:4445 create client --name argocd-client --grant-type 'urn:ietf:params:oauth:grant-type:jwt-bearer' --format json | jq . > /tmp/client.json
 /tmp/hydra --endpoint http://hydra-admin.hydra-system:4445 create client --name argocd-server --format json | jq . > /tmp/argocd.json
 /tmp/hydra --endpoint http://hydra-admin.hydra-system:4445 list clients --format json | jq .
 
-curl -sL -o /tmp/kubectl https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
+curl -sL -o /tmp/kubectl "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 chmod +x /tmp/kubectl
 
 if /tmp/kubectl get secret oauth2-client 2>/dev/null; then
     /tmp/kubectl delete secret oauth2-client
 fi
 /tmp/kubectl create secret generic oauth2-client \
-    --from-literal=client_id=$(cat /tmp/client.json | jq -r '.client_id') \
-    --from-literal=client_secret=$(cat /tmp/client.json | jq -r '.client_secret')
+    --from-literal=client_id="$(cat /tmp/client.json | jq -r '.client_id')" \
+    --from-literal=client_secret="$(cat /tmp/client.json | jq -r '.client_secret')"
 pause

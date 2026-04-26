@@ -10,12 +10,14 @@ fi
 generate-password
 
 # Wait service startup
-while curl -sS -o /dev/null http://dependency-track-api-server.dependency-track.svc:8080; do
+while ! curl -sS -o /dev/null http://dependency-track-api-server.dependency-track.svc:8080; do
     sleep 10
 done
 
 set-password
 test-password
 
-export JWT=$(login-jwt)
+JWT=$(login-jwt)
+export JWT
+
 add-team

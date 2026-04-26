@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 curl -sL -o /tmp/argocd https://github.com/argoproj/argo-cd/releases/download/v2.13.0/argocd-linux-amd64
 chmod +x /tmp/argocd
-curl -sL -o /tmp/kubectl https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
+curl -sL -o /tmp/kubectl "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 chmod +x /tmp/kubectl
 
 curl -sL -o /tmp/hydra.tar.gz https://github.com/ory/hydra/releases/download/v2.2.0/hydra_2.2.0-linux_64bit.tar.gz
@@ -9,7 +9,7 @@ tar xzvf /tmp/hydra.tar.gz -O hydra > /tmp/hydra
 chmod +x /tmp/hydra
 
 ADMIN_PASSWORD=$(/tmp/kubectl get secret -n argocd argocd-initial-admin-secret -o json | jq -r .data.password | base64 -d)
-/tmp/argocd login argocd-server.argocd --username admin --password ${ADMIN_PASSWORD} --plaintext
+/tmp/argocd login argocd-server.argocd --username admin --password "${ADMIN_PASSWORD}" --plaintext
 /tmp/argocd app list
 /tmp/argocd logout argocd-server.argocd
 

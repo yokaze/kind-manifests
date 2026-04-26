@@ -4,7 +4,7 @@ PATH=/opt/deck:/opt/scripts:${PATH}
 BASE_URL=http://dependency-track-api-server.dependency-track.svc:8080
 SECRET_NAME=dependency-track-sbom-uploader
 
-if [ -z "${JWT}"]; then
+if [ -z "${JWT}" ]; then
     echo "JWT is not set"
     exit 1
 fi
@@ -34,4 +34,4 @@ API_KEY=$(
 )
 
 kubectl create secret generic -n deck ${SECRET_NAME} \
-    --from-literal=key=${API_KEY}
+    --from-literal=key="${API_KEY}"
