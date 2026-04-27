@@ -1,0 +1,169 @@
+{
+  "checksums": [
+    {
+      "id": "github_release/github.com/anchore/grype/v0.111.1/grype_0.111.1_darwin_arm64.tar.gz",
+      "checksum": "87B71207A657818ADCD1AA65073AD854E516F5DFD91C0A66C333064C7312F355",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/anchore/grype/v0.111.1/grype_0.111.1_linux_amd64.tar.gz",
+      "checksum": "2BC0BC60F1F4E10B0429F5E84517EC4CF0D769D2EF66875C64FC6640E136FD8F",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/anchore/syft/v1.43.0/syft_1.43.0_darwin_arm64.tar.gz",
+      "checksum": "3640E2181C8BE7A56377F3C96E520D5380C924DBAFD115EE3C8D45FCBC89CAC2",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/anchore/syft/v1.43.0/syft_1.43.0_linux_amd64.tar.gz",
+      "checksum": "7B98251D2D08926BB5D4639B56B1F0996A58EF6667C5830E3FE3CD3AD5F4214A",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/argoproj/argo-cd/v3.2.1/argocd-darwin-arm64",
+      "checksum": "2DCC01C36AADF7F83BAB6081D3EFD0FE94062B7883460D742BEBACC0246DFB2A",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/argoproj/argo-cd/v3.2.1/argocd-linux-amd64",
+      "checksum": "41ED7D1D2B4ED893E2351F781B0BF2A58301521D12D23DFD0CB3DF40F7A7A38D",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/cert-manager/cmctl/v2.3.0/cmctl_darwin_arm64",
+      "checksum": "B26026E31838577BB833F83F56B4F25209491C8F3098E395503555E4073F2AC7",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/cert-manager/cmctl/v2.3.0/cmctl_linux_amd64",
+      "checksum": "EA41FDEF6BB6009216D479EFC2990C90A8525E929FCB8CE1894207BE64A91DA9",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/cilium/cilium-cli/v0.18.9/cilium-darwin-arm64.tar.gz",
+      "checksum": "A817B8231C93DB20C79D6AC24E10D8895F3E5672C02092D7BBCCC99103B355FA",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/cilium/cilium-cli/v0.18.9/cilium-linux-amd64.tar.gz",
+      "checksum": "15978AAF82373B0682AA87AB217848B3FB6E3CD80ADAD365D34696FE92543923",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/cilium/hubble/v1.19.3/hubble-darwin-arm64.tar.gz",
+      "checksum": "863C6FE9E897BAD8527963E0E6A12A4C487B37EA85FCA21390D8791B60363266",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/cilium/hubble/v1.19.3/hubble-linux-amd64.tar.gz",
+      "checksum": "E0E555001A46921FF2501DDC874ED1F4C68BA20CDB00CF4EA8263BE4395EB008",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/google/go-jsonnet/v0.21.0/go-jsonnet_Darwin_arm64.tar.gz",
+      "checksum": "398189A264E31A2C1316EED8EE6308306A221FD10B72F405DEF0100D295EFEAC",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/google/go-jsonnet/v0.21.0/go-jsonnet_Linux_x86_64.tar.gz",
+      "checksum": "AD3181FDE77726B02D17EB4E72687020BF2CB35B9336CDEAACA4783C7FF104F7",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/istio/istio/1.28.0/istioctl-1.28.0-linux-amd64.tar.gz",
+      "checksum": "60BD2F5AFB7F175D3851315BC75F3C1335D9E051941743B034A7ED7EDCCF308F",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/istio/istio/1.28.0/istioctl-1.28.0-osx-arm64.tar.gz",
+      "checksum": "178A82F22478A1840E50CEE6EFDDCCC0E8A483B55E7F8C638F9B937FB7D98537",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/jqlang/jq/jq-1.8.1/jq-linux-amd64",
+      "checksum": "020468DE7539CE70EF1BCEAF7CDE2E8C4F2CA6C3AFB84642AABC5C97D9FC2A0D",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/jqlang/jq/jq-1.8.1/jq-macos-arm64",
+      "checksum": "A9FE3EA2F86DFC72F6728417521EC9067B343277152B114F4E98D8CB0E263603",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/koalaman/shellcheck/v0.11.0/shellcheck-v0.11.0.darwin.aarch64.tar.xz",
+      "checksum": "56AFFDD8DE5527894DCA6DC3D7E0A99A873B0F004D7AABC30AE407D3F48B0A79",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/koalaman/shellcheck/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz",
+      "checksum": "8C3BE12B05D5C177A04C29E3C78CE89AC86F1595681CAB149B65B97C4E227198",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/kubernetes-sigs/gwctl/v0.2.0/gwctl_Darwin_arm64.tar.gz",
+      "checksum": "7FB9FC0BE8DD528E51C7FA297DE1CD6B4DDA24AFD54D12D916D34DADBC0514F3",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/kubernetes-sigs/gwctl/v0.2.0/gwctl_Linux_x86_64.tar.gz",
+      "checksum": "1D8246EF659AE7DDC183EE18D82AB20FB1AC7ABD8D8DDFCAD6CD5C32EC7F1022",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/kubernetes-sigs/kind/v0.30.0/kind-darwin-arm64",
+      "checksum": "CEAF40DF1D1551C481FB50E3DEB5C3DEECAD5FD599DF5469626B70DDF52A1518",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/kubernetes-sigs/kind/v0.30.0/kind-linux-amd64",
+      "checksum": "517AB7FC89DDEED5FA65ABF71530D90648D9638EF0C4CDE22C2C11F8097B8889",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/kubernetes-sigs/kustomize/kustomize/v5.8.0/kustomize_v5.8.0_darwin_arm64.tar.gz",
+      "checksum": "D098F62ECDA500C752303163838AF823F947D245927F3000B629199C1EEEAE0F",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/kubernetes-sigs/kustomize/kustomize/v5.8.0/kustomize_v5.8.0_linux_amd64.tar.gz",
+      "checksum": "4DFA8307358DD9284AA4D2B1D5596766A65B93433E8FA3F9F74498941F01C5EF",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/stern/stern/v1.33.1/stern_1.33.1_darwin_arm64.tar.gz",
+      "checksum": "BDCA897B9BD5A0EE8B4D1F4E00C8E63CF503D2F85ABCEAB4AE6A276A7D232D95",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "github_release/github.com/stern/stern/v1.33.1/stern_1.33.1_linux_amd64.tar.gz",
+      "checksum": "185BE29C6A22BD07C0791EC697900943C0CC27292E5A5640A07A543886F1BFC9",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "http/dl.k8s.io/v1.34.2/bin/darwin/arm64/kubectl",
+      "checksum": "8F38D3A38AE317B00EBF90254DC274DD28D8C6EEA4A4B30C5CB12D3D27017B6D",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "http/dl.k8s.io/v1.34.2/bin/linux/amd64/kubectl",
+      "checksum": "9591F3D75E1581F3F7392E6AD119AAB2F28AE7D6C6E083DC5D22469667F27253",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "http/get.helm.sh/helm-v3.19.2-darwin-arm64.tar.gz",
+      "checksum": "F0847F899479B66A6DD8D9FCD452E8DB2562E4CF3F7DE28103F9FCF2B824F1D5",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "http/get.helm.sh/helm-v3.19.2-linux-amd64.tar.gz",
+      "checksum": "2114C9DEA2844DCE6D0EE2D792A9AAE846BE8CF53D5B19DC2988B5A0E8FEC26E",
+      "algorithm": "sha256"
+    },
+    {
+      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.442.1/registry.yaml",
+      "checksum": "6F5166C504FBBB6FBF3ED0A3C3BE3B436C5880B1E62402DA8AE6FB16DDFFD93B",
+      "algorithm": "sha256"
+    }
+  ]
+}
