@@ -3,6 +3,6 @@ kind: Kustomization
 helmCharts:
   - repo: oci://ghcr.io/prometheus-community/charts
     name: kube-state-metrics
-    version: 7.2.2
+    version: 7.3.0
     releaseName: kube-state-metrics
     namespace: kube-state-metrics
