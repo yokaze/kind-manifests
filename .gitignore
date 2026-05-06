@@ -1,4 +1,5 @@
 *.swp
+/.helm
 /apps/*/charts
 /bin
 /mirror-git
