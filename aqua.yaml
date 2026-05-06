@@ -7,6 +7,7 @@ checksum:
   supported_envs:
   - darwin/arm64
   - linux/amd64
+  - linux/arm64
 registries:
 - type: standard
   ref: v4.507.0 # renovate: depName=aquaproj/aqua-registry
