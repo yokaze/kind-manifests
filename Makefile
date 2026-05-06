@@ -484,6 +484,11 @@ clean: ## Clean temporary files
 
 .PHONY: update
 update: ## Update dependencies
+update: \
+	update-aqua
+
+.PHONY: update-aqua
+update-aqua:
 	GH_TOKEN=$$(gh auth token); \
 	aqua update; \
 	aqua update-checksum -prune
