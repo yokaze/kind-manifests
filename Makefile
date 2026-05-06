@@ -448,14 +448,17 @@ delete-vault:
 	helm uninstall vault --namespace vault
 	kubectl delete ns vault
 
+##@ Maintenance
+
 # Rules for upstream manifests
 ACCURATE_VERSION := 1.6.0
 CSI_DRIVER_SPIFFE_VERSION := 0.8.1
 
 .PHONY: setup
-setup:
+setup: ## Setup files
 	mkdir -p node/deck
 	mkdir -p node/squid
+	aqua install
 	cp $$(aqua which argocd) node/deck/argocd
 	cp $$(aqua which cilium) node/deck/cilium
 	cp $$(aqua which cmctl) node/deck/cmctl
@@ -472,12 +475,18 @@ setup:
 	$(MAKE) -C images all
 
 .PHONY: clean
-clean:
+clean: ## Clean temporary files
 	rm -rf apps/*/charts
 	rm -rf bin
 	rm -rf reference
 	rm -rf upstream
 	sudo rm -rf $(ROOT_DIR)/node/squid
+
+.PHONY: update
+update: ## Update dependencies
+	GH_TOKEN=$$(gh auth token); \
+	aqua update; \
+	aqua update-checksum -prune
 
 .PHONY: upstream
 upstream: \
