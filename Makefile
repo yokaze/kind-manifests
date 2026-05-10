@@ -445,7 +445,6 @@ CSI_DRIVER_SPIFFE_VERSION := 0.8.1
 
 .PHONY: setup
 setup: ## Setup files
-	mkdir -p $(HELM_DIR)
 	mkdir -p node/deck
 	mkdir -p node/squid
 	aqua install
@@ -462,6 +461,7 @@ setup: ## Setup files
 	wget -qO- https://github.com/cybozu-go/accurate/releases/download/v$(ACCURATE_VERSION)/kubectl-accurate_v$(ACCURATE_VERSION)_linux_$(ARCH_AMD64_ARM64).tar.gz | tar xzv -O kubectl-accurate > node/deck/kubectl-accurate
 	chmod +x node/deck/kubectl-accurate
 	sudo chown 13:13 node/squid
+	$(MAKE) -f update.mk setup
 	$(MAKE) -C images all
 
 .PHONY: clean

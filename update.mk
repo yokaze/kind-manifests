@@ -2,6 +2,10 @@ ROOT_DIR := $(shell git rev-parse --show-toplevel)
 HELM_DIR := $(ROOT_DIR)/.helm
 HELM := helm --repository-config $(HELM_DIR)/repositories.yaml --repository-cache $(HELM_DIR)/repository
 
+.PHONY: setup
+setup:
+	mkdir -p $(HELM_DIR)
+
 .PHONY: clean
 clean:
 	rm -rf $(HELM_DIR)
