@@ -6,3 +6,4 @@ helmCharts:
     name: prometheus-node-exporter
     namespace: node-exporter
     valuesFile: values.yaml
+    version: 4.55.0

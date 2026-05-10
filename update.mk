@@ -6,6 +6,11 @@ HELM := helm --repository-config $(HELM_DIR)/repositories.yaml --repository-cach
 clean:
 	rm -rf $(HELM_DIR)
 
+.PHONY: update-helm-prometheus-community
+update-helm-prometheus-community:
+	$(HELM) repo add prometheus-community https://prometheus-community.github.io/helm-charts
+	$(HELM) repo update prometheus-community
+
 .PHONY: update
 update: ## Update dependencies
 update: \
@@ -13,7 +18,8 @@ update: \
 	update-argocd \
 	update-grafana-operator \
 	update-kube-state-metrics \
-	update-moco
+	update-moco \
+	update-node-exporter
 
 .PHONY: update-aqua
 update-aqua:
@@ -34,9 +40,7 @@ update-grafana-operator:
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/grafana-operator/kustomization.yaml
 
 .PHONY: update-kube-state-metrics
-update-kube-state-metrics:
-	$(HELM) repo add prometheus-community https://prometheus-community.github.io/helm-charts
-	$(HELM) repo update prometheus-community
+update-kube-state-metrics: update-helm-prometheus-community
 	NEW_VERSION=$$($(HELM) search repo prometheus-community/kube-state-metrics --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/kube-state-metrics/kustomization.yaml
 
@@ -46,3 +50,8 @@ update-moco:
 	$(HELM) repo update moco
 	NEW_VERSION=$$($(HELM) search repo moco/moco --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/moco/kustomization.yaml
+
+.PHONY: update-node-exporter
+update-node-exporter: update-helm-prometheus-community
+	NEW_VERSION=$$($(HELM) search repo prometheus-community/prometheus-node-exporter --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/node-exporter/kustomization.yaml
