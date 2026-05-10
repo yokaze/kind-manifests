@@ -6,6 +6,11 @@ HELM := helm --repository-config $(HELM_DIR)/repositories.yaml --repository-cach
 clean:
 	rm -rf $(HELM_DIR)
 
+.PHONY: update-helm-jetstack
+update-helm-jetstack:
+	$(HELM) repo add jetstack https://charts.jetstack.io
+	$(HELM) repo update jetstack
+
 .PHONY: update-helm-prometheus-community
 update-helm-prometheus-community:
 	$(HELM) repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -16,12 +21,14 @@ update: ## Update dependencies
 update: \
 	update-aqua \
 	update-argocd \
+	update-cert-manager \
 	update-grafana-operator \
 	update-kube-state-metrics \
 	update-loki \
 	update-moco \
 	update-node-exporter \
-	update-traefik
+	update-traefik \
+	update-trust-manager
 
 .PHONY: update-aqua
 update-aqua:
@@ -35,6 +42,11 @@ update-argocd:
 	$(HELM) repo update argo
 	NEW_VERSION=$$($(HELM) search repo argo/argo-cd --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/argocd/kustomization.yaml
+
+.PHONY: update-cert-manager
+update-cert-manager: update-helm-jetstack
+	NEW_VERSION=$$($(HELM) search repo jetstack/cert-manager --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/cert-manager/kustomization.yaml
 
 .PHONY: update-grafana-operator
 update-grafana-operator:
@@ -71,3 +83,8 @@ update-traefik:
 	$(HELM) repo update traefik
 	NEW_VERSION=$$($(HELM) search repo traefik/traefik --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/traefik/kustomization.yaml
+
+.PHONY: update-trust-manager
+update-trust-manager: update-helm-jetstack
+	NEW_VERSION=$$($(HELM) search repo jetstack/trust-manager --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/trust-manager/kustomization.yaml

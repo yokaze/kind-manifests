@@ -6,3 +6,4 @@ helmCharts:
     repo: https://charts.jetstack.io
     name: trust-manager
     namespace: cert-manager
+    version: v0.22.1

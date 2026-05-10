@@ -6,3 +6,4 @@ helmCharts:
     name: cert-manager
     namespace: cert-manager
     valuesFile: values.yaml
+    version: v1.20.2
