@@ -25,6 +25,7 @@ update: ## Update dependencies
 update: \
 	update-aqua \
 	update-argocd \
+	update-cadvisor \
 	update-cert-manager \
 	update-dependency-track \
 	update-grafana-operator \
@@ -47,6 +48,11 @@ update-argocd:
 	$(HELM) repo update argo
 	NEW_VERSION=$$($(HELM) search repo argo/argo-cd --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/argocd/kustomization.yaml
+
+.PHONY: update-cadvisor
+update-cadvisor:
+	NEW_VERSION=$$($(ROOT_DIR)/scripts/fetch-gh-releases google/cadvisor | tail -n1); \
+	yq -iP ".resources[0] = \"https://github.com/google/cadvisor//deploy/kubernetes/base?ref=$${NEW_VERSION}\"" apps/cadvisor/kustomization.yaml
 
 .PHONY: update-cert-manager
 update-cert-manager: update-helm-jetstack
