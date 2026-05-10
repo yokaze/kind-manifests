@@ -32,6 +32,7 @@ update: \
 	update-grafana-operator \
 	update-headlamp \
 	update-kube-state-metrics \
+	update-kubescape \
 	update-loki \
 	update-moco \
 	update-node-exporter \
@@ -91,6 +92,13 @@ update-headlamp:
 update-kube-state-metrics: update-helm-prometheus-community
 	NEW_VERSION=$$($(HELM) search repo prometheus-community/kube-state-metrics --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/kube-state-metrics/kustomization.yaml
+
+.PHONY: update-kubescape
+update-kubescape:
+	$(HELM) repo add kubescape https://kubescape.github.io/helm-charts
+	$(HELM) repo update kubescape
+	NEW_VERSION=$$($(HELM) search repo kubescape/kubescape-operator --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/kubescape/kustomization.yaml
 
 .PHONY: update-loki
 update-loki:
