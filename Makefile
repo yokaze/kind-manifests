@@ -340,17 +340,6 @@ grype-all: ## Run Grype on all Kubescape SBOMs
 		echo; \
 	done
 
-.PHONY: deploy-cattage
-deploy-cattage:
-	@$(MAKE) --no-print-directory ensure-cert-manager
-	helm install cattage cattage/cattage --namespace cattage --create-namespace
-	@$(MAKE) --no-print-directory wait-all
-
-.PHONY: delete-cattage
-delete-cattage:
-	helm uninstall cattage --namespace cattage
-	kubectl delete ns cattage
-
 .PHONY: deploy-cert-manager
 deploy-cert-manager:
 	jsonnet helm/cert-manager.jsonnet | yq -P | helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --values -
@@ -492,9 +481,7 @@ update:
 .PHONY: upstream
 upstream: \
 	upstream-jetstack
-	helm repo add argo https://argoproj.github.io/argo-helm
 	helm repo add bitnami https://charts.bitnami.com/bitnami
-	helm repo add cattage https://cybozu-go.github.io/cattage/
 	helm repo add cilium https://helm.cilium.io/
 	helm repo add coredns https://coredns.github.io/helm
 	helm repo add istio https://istio-release.storage.googleapis.com/charts
