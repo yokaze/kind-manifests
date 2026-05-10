@@ -13,7 +13,7 @@ spec:
         app: squid
     spec:
       initContainers:
-        - image: yokaze/squid:dev
+        - image: ghcr.io/cybozu/squid-dev:7.5.0.2
           name: squid-init
           command:
             - squid
@@ -32,7 +32,7 @@ spec:
               mountPath: /var/spool/squid
               readOnly: false
       containers:
-        - image: yokaze/squid:dev
+        - image: ghcr.io/cybozu/squid-dev:7.5.0.2
           name: squid
           command:
             - squid
@@ -52,6 +52,10 @@ spec:
               readOnly: false
       nodeSelector:
         kubernetes.io/hostname: kind-worker
+      securityContext:
+        runAsUser: 13
+        runAsGroup: 13
+        runAsNonRoot: true
       volumes:
         - name: config
           configMap:

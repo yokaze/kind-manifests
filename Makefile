@@ -457,7 +457,6 @@ setup: ## Setup files
 	chmod +x node/deck/kubectl-accurate
 	sudo chown 13:13 node/squid
 	$(MAKE) -f update.mk setup
-	$(MAKE) -C images all
 
 .PHONY: clean
 clean: ## Clean temporary files

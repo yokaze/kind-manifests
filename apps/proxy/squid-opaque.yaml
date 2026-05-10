@@ -13,7 +13,7 @@ spec:
         app: squid-opaque
     spec:
       containers:
-        - image: yokaze/squid:dev
+        - image: ghcr.io/cybozu/squid-dev:7.5.0.2
           name: squid
           command:
             - squid

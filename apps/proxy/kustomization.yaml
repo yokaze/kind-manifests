@@ -4,9 +4,11 @@ namespace: proxy
 configMapGenerator:
   - name: squid
     files:
+      - mime.conf
       - squid.conf
   - name: squid-opaque
     files:
+      - mime.conf
       - squid.conf=squid-opaque.conf
 resources:
   - certificate.yaml
