@@ -26,6 +26,7 @@ update: \
 	update-aqua \
 	update-argocd \
 	update-cert-manager \
+	update-dependency-track \
 	update-grafana-operator \
 	update-kube-state-metrics \
 	update-loki \
@@ -51,6 +52,13 @@ update-argocd:
 update-cert-manager: update-helm-jetstack
 	NEW_VERSION=$$($(HELM) search repo jetstack/cert-manager --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/cert-manager/kustomization.yaml
+
+.PHONY: update-dependency-track
+update-dependency-track:
+	$(HELM) repo add dependency-track https://dependencytrack.github.io/helm-charts
+	$(HELM) repo update dependency-track
+	NEW_VERSION=$$($(HELM) search repo dependency-track/dependency-track --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/dependency-track/kustomization.yaml
 
 .PHONY: update-grafana-operator
 update-grafana-operator:
