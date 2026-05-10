@@ -416,11 +416,6 @@ deploy-spire:
 template-spire:
 	jsonnet helm/spire.jsonnet | yq -P | helm template spire spire/spire --values -
 
-.PHONY: deploy-trust-manager
-deploy-trust-manager: ensure-cert-manager
-	jsonnet helm/trust-manager.jsonnet | yq -P | helm install trust-manager cert-manager/trust-manager --values -
-	@$(MAKE) --no-print-directory wait-all
-
 .PHONY: deploy-vault
 VAULT_CHART_VERSION := 0.18.0
 
