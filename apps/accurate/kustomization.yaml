@@ -6,3 +6,4 @@ helmCharts:
     name: accurate
     namespace: accurate
     valuesFile: values.yaml
+    version: 0.7.12

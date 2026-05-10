@@ -23,6 +23,7 @@ update-helm-prometheus-community:
 .PHONY: update
 update: ## Update dependencies
 update: \
+	update-accurate \
 	update-aqua \
 	update-argocd \
 	update-cadvisor \
@@ -36,6 +37,13 @@ update: \
 	update-node-exporter \
 	update-traefik \
 	update-trust-manager
+
+.PHONY: update-accurate
+update-accurate:
+	$(HELM) repo add accurate https://cybozu-go.github.io/accurate
+	$(HELM) repo update accurate
+	NEW_VERSION=$$($(HELM) search repo accurate/accurate --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/accurate/kustomization.yaml
 
 .PHONY: update-aqua
 update-aqua:
