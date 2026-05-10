@@ -19,7 +19,8 @@ update: \
 	update-grafana-operator \
 	update-kube-state-metrics \
 	update-moco \
-	update-node-exporter
+	update-node-exporter \
+	update-traefik
 
 .PHONY: update-aqua
 update-aqua:
@@ -55,3 +56,10 @@ update-moco:
 update-node-exporter: update-helm-prometheus-community
 	NEW_VERSION=$$($(HELM) search repo prometheus-community/prometheus-node-exporter --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/node-exporter/kustomization.yaml
+
+.PHONY: update-traefik
+update-traefik:
+	$(HELM) repo add traefik https://traefik.github.io/charts
+	$(HELM) repo update traefik
+	NEW_VERSION=$$($(HELM) search repo traefik/traefik --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/traefik/kustomization.yaml
