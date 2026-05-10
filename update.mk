@@ -29,6 +29,7 @@ update: \
 	update-cert-manager \
 	update-dependency-track \
 	update-grafana-operator \
+	update-headlamp \
 	update-kube-state-metrics \
 	update-loki \
 	update-moco \
@@ -70,6 +71,13 @@ update-dependency-track:
 update-grafana-operator:
 	NEW_VERSION=$$(crane ls ghcr.io/grafana/helm-charts/grafana-operator | grep -e '^[0-9]' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/grafana-operator/kustomization.yaml
+
+.PHONY: update-headlamp
+update-headlamp:
+	$(HELM) repo add headlamp https://kubernetes-sigs.github.io/headlamp
+	$(HELM) repo update headlamp
+	NEW_VERSION=$$($(HELM) search repo headlamp/headlamp --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/headlamp/kustomization.yaml
 
 .PHONY: update-kube-state-metrics
 update-kube-state-metrics: update-helm-prometheus-community
