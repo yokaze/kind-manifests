@@ -482,6 +482,7 @@ clean: ## Clean temporary files
 	rm -rf reference
 	rm -rf upstream
 	sudo rm -rf $(ROOT_DIR)/node/squid
+	$(MAKE) -f update.mk clean
 
 .PHONY: update
 update: ## Update dependencies

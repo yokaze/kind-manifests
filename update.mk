@@ -2,13 +2,18 @@ ROOT_DIR := $(shell git rev-parse --show-toplevel)
 HELM_DIR := $(ROOT_DIR)/.helm
 HELM := helm --repository-config $(HELM_DIR)/repositories.yaml --repository-cache $(HELM_DIR)/repository
 
+.PHONY: clean
+clean:
+	rm -rf $(HELM_DIR)
+
 .PHONY: update
 update: ## Update dependencies
 update: \
 	update-aqua \
 	update-argocd \
 	update-grafana-operator \
-	update-kube-state-metrics
+	update-kube-state-metrics \
+	update-moco
 
 .PHONY: update-aqua
 update-aqua:
@@ -34,3 +39,10 @@ update-kube-state-metrics:
 	$(HELM) repo update prometheus-community
 	NEW_VERSION=$$($(HELM) search repo prometheus-community/kube-state-metrics --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/kube-state-metrics/kustomization.yaml
+
+.PHONY: update-moco
+update-moco:
+	$(HELM) repo add moco https://cybozu-go.github.io/moco
+	$(HELM) repo update moco
+	NEW_VERSION=$$($(HELM) search repo moco/moco --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/moco/kustomization.yaml
