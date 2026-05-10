@@ -7,6 +7,7 @@ update: ## Update dependencies
 update: \
 	update-aqua \
 	update-argocd \
+	update-grafana-operator \
 	update-kube-state-metrics
 
 .PHONY: update-aqua
@@ -21,6 +22,11 @@ update-argocd:
 	$(HELM) repo update argo
 	NEW_VERSION=$$($(HELM) search repo argo/argo-cd --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/argocd/kustomization.yaml
+
+.PHONY: update-grafana-operator
+update-grafana-operator:
+	NEW_VERSION=$$(crane ls ghcr.io/grafana/helm-charts/grafana-operator | grep -e '^[0-9]' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/grafana-operator/kustomization.yaml
 
 .PHONY: update-kube-state-metrics
 update-kube-state-metrics:
