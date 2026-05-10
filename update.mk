@@ -18,6 +18,7 @@ update: \
 	update-argocd \
 	update-grafana-operator \
 	update-kube-state-metrics \
+	update-loki \
 	update-moco \
 	update-node-exporter \
 	update-traefik
@@ -44,6 +45,13 @@ update-grafana-operator:
 update-kube-state-metrics: update-helm-prometheus-community
 	NEW_VERSION=$$($(HELM) search repo prometheus-community/kube-state-metrics --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/kube-state-metrics/kustomization.yaml
+
+.PHONY: update-loki
+update-loki:
+	$(HELM) repo add grafana https://grafana.github.io/helm-charts
+	$(HELM) repo update grafana
+	NEW_VERSION=$$($(HELM) search repo grafana/loki --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/loki/kustomization.yaml
 
 .PHONY: update-moco
 update-moco:
