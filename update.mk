@@ -31,6 +31,7 @@ update: \
 	update-dependency-track \
 	update-grafana-operator \
 	update-headlamp \
+	update-istio \
 	update-kube-state-metrics \
 	update-kubescape \
 	update-loki \
@@ -87,6 +88,15 @@ update-headlamp:
 	$(HELM) repo update headlamp
 	NEW_VERSION=$$($(HELM) search repo headlamp/headlamp --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/headlamp/kustomization.yaml
+
+.PHONY: update-istio
+update-istio:
+	$(HELM) repo add istio https://istio-release.storage.googleapis.com/charts
+	$(HELM) repo update istio
+	NEW_VERSION=$$($(HELM) search repo istio/base --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/istio-base/kustomization.yaml; \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/istio/kustomization.yaml; \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/istio-cni/kustomization.yaml
 
 .PHONY: update-kube-state-metrics
 update-kube-state-metrics: update-helm-prometheus-community

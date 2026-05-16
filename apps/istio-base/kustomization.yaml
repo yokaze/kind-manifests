@@ -6,3 +6,4 @@ helmCharts:
     name: base
     namespace: istio-system
     valuesFile: values.yaml
+    version: 1.29.2

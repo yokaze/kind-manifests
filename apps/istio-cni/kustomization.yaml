@@ -5,3 +5,4 @@ helmCharts:
     repo: https://istio-release.storage.googleapis.com/charts
     name: cni
     namespace: istio-system
+    version: 1.29.2
