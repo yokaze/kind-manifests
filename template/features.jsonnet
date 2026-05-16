@@ -16,7 +16,7 @@ local features = {
   grafana: true,
   'grafana-dashboard': true,
   headlamp: true,
-  kiali: false,
+  kiali: true,
   'kube-state-metrics': true,
   kubescape: true,
   loki: false,

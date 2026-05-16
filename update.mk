@@ -32,6 +32,7 @@ update: \
 	update-grafana-operator \
 	update-headlamp \
 	update-istio \
+	update-kiali \
 	update-kube-state-metrics \
 	update-kubescape \
 	update-loki \
@@ -97,6 +98,13 @@ update-istio:
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/istio-base/kustomization.yaml; \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/istio/kustomization.yaml; \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/istio-cni/kustomization.yaml
+
+.PHONY: update-kiali
+update-kiali:
+	$(HELM) repo add kiali https://kiali.org/helm-charts
+	$(HELM) repo update kiali
+	NEW_VERSION=$$($(HELM) search repo kiali/kiali-operator --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/kiali/kustomization.yaml
 
 .PHONY: update-kube-state-metrics
 update-kube-state-metrics: update-helm-prometheus-community
