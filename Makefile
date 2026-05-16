@@ -4,7 +4,6 @@ CILIUM_VERSION := 1.16.4
 HELM_VERSION ?= $(shell if [ -z "$(HELM_REPO)" ]; then echo latest; else helm show chart $(HELM_REPO) | yq .version; fi)
 
 ARCH_AMD64_ARM64 := $(shell if [ "$$(uname -m)" = "aarch64" ]; then echo arm64; else echo amd64; fi)
-ARCH_X86_64_ARM64 := $(shell if [ "$$(uname -m)" = "aarch64" ]; then echo arm64; else echo x86_64; fi)
 
 .PHONY: help
 help: ## Display this help

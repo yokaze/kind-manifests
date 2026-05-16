@@ -7,6 +7,6 @@ helmCharts:
     name: dependency-track
     namespace: dependency-track
     valuesFile: values.yaml
-    version: 0.45.0
+    version: 0.46.0
 resources:
   - reference-grant.yaml

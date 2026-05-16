@@ -31,18 +31,18 @@
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/argoproj/argo-cd/v3.4.1/argocd-darwin-arm64",
-      "checksum": "26AA39EBAC220A9594E6A72A0977DF4C14D51FC3DCF89F21624CDB058D786B4E",
+      "id": "github_release/github.com/argoproj/argo-cd/v3.4.2/argocd-darwin-arm64",
+      "checksum": "25C82417F3A487079FED4975744B3571F66FF6CAF479A888246B2491ED66B680",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/argoproj/argo-cd/v3.4.1/argocd-linux-amd64",
-      "checksum": "0C7BC33AFE6BA9D3FF713E482975B5A8BC83EFE208FCE4EB24D27478BEB3CB90",
+      "id": "github_release/github.com/argoproj/argo-cd/v3.4.2/argocd-linux-amd64",
+      "checksum": "D4CB1AC8002BAAB8AFACA2DA3DE597B613DF8459074BC7C6D96DC95161C2A33F",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/argoproj/argo-cd/v3.4.1/argocd-linux-arm64",
-      "checksum": "764844E421AEF30BD21D886465C959870F61AF7F21712DB92FE114E5C5EF1A8D",
+      "id": "github_release/github.com/argoproj/argo-cd/v3.4.2/argocd-linux-arm64",
+      "checksum": "D0B74511242B2B4827DEA6435092EF8B1402EB26C29C00944934E546A6445944",
       "algorithm": "sha256"
     },
     {
@@ -226,38 +226,38 @@
       "algorithm": "sha256"
     },
     {
-      "id": "http/dl.k8s.io/v1.36.0/bin/darwin/arm64/kubectl",
-      "checksum": "4BCF268EACDC1D2DF74E37D86F639F27CA7DEA3AE185B7B452B73B9FB5DDC14E",
+      "id": "http/dl.k8s.io/v1.36.1/bin/darwin/arm64/kubectl",
+      "checksum": "9092778ABAEF3079449DA4CD70DED0E4BE112480C93EFCDEACE3155968D1D133",
       "algorithm": "sha256"
     },
     {
-      "id": "http/dl.k8s.io/v1.36.0/bin/linux/amd64/kubectl",
-      "checksum": "123D8C8844F46B1244C547FFFB3C17180C0C26DAC9890589FE7E67763298748E",
+      "id": "http/dl.k8s.io/v1.36.1/bin/linux/amd64/kubectl",
+      "checksum": "629D3F410E09BF49B64AE7079F7F0BDA1191EFED311F7D37FDBAB0AD5B0EC2B7",
       "algorithm": "sha256"
     },
     {
-      "id": "http/dl.k8s.io/v1.36.0/bin/linux/arm64/kubectl",
-      "checksum": "9F9D9C44A7B5264515AC9DA5991584E2395BD50662E651132337E7B4D0C56F8F",
+      "id": "http/dl.k8s.io/v1.36.1/bin/linux/arm64/kubectl",
+      "checksum": "59F7EE8E477FAE658447607DC3C8790AC17A1B016C01C622C12070E969E2D4E7",
       "algorithm": "sha256"
     },
     {
-      "id": "http/get.helm.sh/helm-v4.1.4-darwin-arm64.tar.gz",
-      "checksum": "7C2ECA678E8001FA863CDF8CBF6AC1B3799F9404A89EB55C08260EF5732E658D",
+      "id": "http/get.helm.sh/helm-v4.2.0-darwin-arm64.tar.gz",
+      "checksum": "F13F959015447B6BC309F9FD506509926543988A39035C088B52522EC95E2ACB",
       "algorithm": "sha256"
     },
     {
-      "id": "http/get.helm.sh/helm-v4.1.4-linux-amd64.tar.gz",
-      "checksum": "70B2C30A19DA4DB264DFD68C8A3664E05093A361CEFD89572FFB36F8ABFA3D09",
+      "id": "http/get.helm.sh/helm-v4.2.0-linux-amd64.tar.gz",
+      "checksum": "97DBEB971BE4AC4B27E3839976D9564C0FB35C6F3B1DA89DD1E292D236AF4096",
       "algorithm": "sha256"
     },
     {
-      "id": "http/get.helm.sh/helm-v4.1.4-linux-arm64.tar.gz",
-      "checksum": "13D03672BE289045D2FF00E4E345D61DE1C6F21C1257A45955A30E8AE036D8F1",
+      "id": "http/get.helm.sh/helm-v4.2.0-linux-arm64.tar.gz",
+      "checksum": "1F8DE130DFBD04DE64978E7B852A7A547BE1404956A366608276D2520B678670",
       "algorithm": "sha256"
     },
     {
-      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.510.0/registry.yaml",
-      "checksum": "98B3C7425FFB0CE2D4B9164E4BEC9F5DC0781CC5E40B1C87EE20E200EAAA3DB68A08106CCD63CDF6FCC240EF419E1AC2B956661E7EE8693C470AA40E9744FF2F",
+      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.512.0/registry.yaml",
+      "checksum": "A0CBEAB68533DFB4E72A44811EF8ADE659D2A2669BBECCF4884DF1BE181F058A9C40AC147720720F40AE745ECFB27AE22BB5A05965BA389967D6783EFB747149",
       "algorithm": "sha512"
     }
   ]

@@ -10,22 +10,22 @@ checksum:
   - linux/arm64
 registries:
 - type: standard
-  ref: v4.510.0 # renovate: depName=aquaproj/aqua-registry
+  ref: v4.512.0 # renovate: depName=aquaproj/aqua-registry
 packages:
 - name: anchore/grype@v0.112.0
 - name: anchore/syft@v1.44.0
-- name: argoproj/argo-cd@v3.4.1
+- name: argoproj/argo-cd@v3.4.2
 - name: cert-manager/cmctl@v2.5.0
 - name: cilium/cilium-cli@v0.19.2
 - name: cilium/hubble@v1.19.3
 - name: google/go-containerregistry@v0.21.5
 - name: google/go-jsonnet@v0.22.0
-- name: helm/helm@v4.1.4
+- name: helm/helm@v4.2.0
 - name: istio/istio/istioctl@1.29.2
 - name: jqlang/jq@jq-1.8.1
 - name: koalaman/shellcheck@v0.11.0
 - name: kubernetes-sigs/gwctl@v0.2.0
 - name: kubernetes-sigs/kind@v0.31.0
 - name: kubernetes-sigs/kustomize@kustomize/v5.8.1
-- name: kubernetes/kubectl@v1.36.0
+- name: kubernetes/kubectl@v1.36.1
 - name: stern/stern@v1.34.0
