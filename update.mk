@@ -28,6 +28,7 @@ update: \
 	update-argocd \
 	update-cadvisor \
 	update-cert-manager \
+	update-crds-gateway \
 	update-dependency-track \
 	update-grafana-operator \
 	update-headlamp \
@@ -70,6 +71,11 @@ update-cadvisor:
 update-cert-manager: update-helm-jetstack
 	NEW_VERSION=$$($(HELM) search repo jetstack/cert-manager --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/cert-manager/kustomization.yaml
+
+.PHONY: update-crds-gateway
+update-crds-gateway:
+	NEW_VERSION=$$(gh release view -R kubernetes-sigs/gateway-api --json tagName --jq .tagName); \
+	yq -iP "(.resources[] | select(contains(\"gateway-api\"))) = \"https://github.com/kubernetes-sigs/gateway-api/releases/download/$${NEW_VERSION}/standard-install.yaml\"" apps/crds/kustomization.yaml
 
 .PHONY: update-dependency-track
 update-dependency-track:
