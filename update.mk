@@ -87,6 +87,7 @@ update-dependency-track:
 .PHONY: update-grafana-operator
 update-grafana-operator:
 	NEW_VERSION=$$(crane ls ghcr.io/grafana/helm-charts/grafana-operator | grep -e '^[0-9]' | sort -V | tail -n1); \
+	yq -iP "(.resources[] | select(contains(\"grafana-operator\"))) = \"https://github.com/grafana/grafana-operator/releases/download/v$${NEW_VERSION}/crds.yaml\"" apps/crds/kustomization.yaml; \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/grafana-operator/kustomization.yaml
 
 .PHONY: update-headlamp
