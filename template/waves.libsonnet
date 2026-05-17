@@ -18,7 +18,6 @@ local dependency = {
   'collect-audit': [checkpoints.logging],
   'collect-pods': [checkpoints.logging],
   'crd-gallery': [checkpoints.argocd],
-  dashboard: [checkpoints.argocd],
   datasource: ['grafana'],
   deck: ['proxy'],
   'dependency-track': [checkpoints.argocd],

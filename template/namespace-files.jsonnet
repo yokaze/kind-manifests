@@ -4,7 +4,6 @@ local namespaces = [
   { name: 'accurate', istio: true },
   { name: 'argocd', istio: true },
   { name: 'cert-manager', istio: false },
-  { name: 'dashboard', istio: true },
   { name: 'deck', istio: true, pss: pss.privileged },
   { name: 'dependency-track' },
   { name: 'egress', istio: true },

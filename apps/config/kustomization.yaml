@@ -16,7 +16,6 @@ resources:
   - config.yaml
   - crd-gallery.yaml
   - crds.yaml
-  - dashboard.yaml
   - datasource.yaml
   - deck.yaml
   - dependency-track.yaml

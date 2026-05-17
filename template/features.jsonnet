@@ -8,7 +8,6 @@ local features = {
   'collect-audit': false,
   'collect-pods': false,
   'crd-gallery': true,
-  dashboard: false,
   deck: true,
   'dependency-track': true,
   egress: true,

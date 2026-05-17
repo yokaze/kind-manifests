@@ -14,7 +14,6 @@ local apps = [
   { name: 'config', sync: false, finalizer: false },
   { name: 'crd-gallery' },
   { name: 'crds' },
-  { name: 'dashboard' },
   { name: 'datasource', sync: false },
   { name: 'deck' },
   { name: 'dependency-track' },
