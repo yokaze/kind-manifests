@@ -218,6 +218,10 @@ waves: ## Show Argo CD sync waves for apps
 		yq '[.metadata.name, .metadata.annotations."argocd.argoproj.io/sync-wave"] | @tsv' $$i; \
 	done | sort -Vk2 | column -t
 
+.PHONY: chart-versions
+chart-versions: ## Show Helm chart versions used by apps
+	yq 'select(.helmCharts) | [filename, .helmCharts[].version] | @tsv' apps/*/kustomization.yaml | column -t
+
 ##@ Admin access
 .PHONY: login-argocd
 login-argocd:
