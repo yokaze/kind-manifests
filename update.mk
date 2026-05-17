@@ -29,6 +29,7 @@ update: \
 	update-argocd \
 	update-cadvisor \
 	update-cert-manager \
+	update-cilium \
 	update-crds-gateway \
 	update-dependency-track \
 	update-grafana-operator \
@@ -77,6 +78,13 @@ update-cadvisor:
 update-cert-manager: update-helm-jetstack
 	NEW_VERSION=$$($(HELM) search repo jetstack/cert-manager --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/cert-manager/kustomization.yaml
+
+.PHONY: update-cilium
+update-cilium:
+	$(HELM) repo add cilium https://helm.cilium.io
+	$(HELM) repo update cilium
+	NEW_VERSION=$$($(HELM) search repo cilium/cilium --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/cilium/kustomization.yaml
 
 .PHONY: update-crds-gateway
 update-crds-gateway:
