@@ -24,6 +24,7 @@ update-helm-prometheus-community:
 update: ## Update dependencies
 update: \
 	update-accurate \
+	update-approver-policy \
 	update-aqua \
 	update-argocd \
 	update-cadvisor \
@@ -48,6 +49,11 @@ update-accurate:
 	$(HELM) repo update accurate
 	NEW_VERSION=$$($(HELM) search repo accurate/accurate --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/accurate/kustomization.yaml
+
+.PHONY: update-approver-policy
+update-approver-policy: update-helm-jetstack
+	NEW_VERSION=$$($(HELM) search repo jetstack/cert-manager-approver-policy --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/approver-policy/kustomization.yaml
 
 .PHONY: update-aqua
 update-aqua:
