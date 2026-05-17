@@ -233,6 +233,10 @@ pilot: ## Open a shell in the admin toolbox pod
 
 ##@ Passwords and tokens
 
+.PHONY: argocd-password
+argocd-password: ## Show the Argo CD password
+	@kubectl get secret -n argocd argocd-initial-admin-secret -oyaml | yq .data.password | base64 -d
+
 .PHONY: dependency-track-password
 dependency-track-password: ## Show the Dependency-Track password
 	@kubectl get secret -n deck dependency-track -oyaml | yq .data.password | base64 -d

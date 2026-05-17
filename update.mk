@@ -10,6 +10,11 @@ setup:
 clean:
 	rm -rf $(HELM_DIR)
 
+.PHONY: update-helm-grafana
+update-helm-grafana:
+	$(HELM) repo add grafana https://grafana.github.io/helm-charts
+	$(HELM) repo update grafana
+
 .PHONY: update-helm-jetstack
 update-helm-jetstack:
 	$(HELM) repo add jetstack https://charts.jetstack.io
@@ -41,6 +46,7 @@ update: \
 	update-loki \
 	update-moco \
 	update-node-exporter \
+	update-tempo \
 	update-traefik \
 	update-trust-manager
 
@@ -140,9 +146,7 @@ update-kubescape:
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/kubescape/kustomization.yaml
 
 .PHONY: update-loki
-update-loki:
-	$(HELM) repo add grafana https://grafana.github.io/helm-charts
-	$(HELM) repo update grafana
+update-loki: update-helm-grafana
 	NEW_VERSION=$$($(HELM) search repo grafana/loki --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/loki/kustomization.yaml
 
@@ -157,6 +161,11 @@ update-moco:
 update-node-exporter: update-helm-prometheus-community
 	NEW_VERSION=$$($(HELM) search repo prometheus-community/prometheus-node-exporter --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/node-exporter/kustomization.yaml
+
+.PHONY: update-tempo
+update-tempo: update-helm-grafana
+	NEW_VERSION=$$($(HELM) search repo grafana/tempo --versions -ojson | jq -r '.[] | select(.name == "grafana/tempo") | .version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/tempo/kustomization.yaml
 
 .PHONY: update-traefik
 update-traefik:

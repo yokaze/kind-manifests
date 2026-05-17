@@ -5,3 +5,4 @@ helmCharts:
     repo: https://grafana.github.io/helm-charts
     name: tempo
     namespace: tempo
+    version: 1.24.4
