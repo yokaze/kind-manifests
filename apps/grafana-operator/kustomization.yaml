@@ -3,7 +3,7 @@ kind: Kustomization
 helmCharts:
   - repo: oci://ghcr.io/grafana/helm-charts
     name: grafana-operator
-    version: 5.22.2
+    version: 5.23.0
     releaseName: grafana-operator
     namespace: grafana-operator
     valuesFile: values.yaml

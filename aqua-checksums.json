@@ -31,18 +31,18 @@
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/argoproj/argo-cd/v3.4.2/argocd-darwin-arm64",
-      "checksum": "25C82417F3A487079FED4975744B3571F66FF6CAF479A888246B2491ED66B680",
+      "id": "github_release/github.com/argoproj/argo-cd/v3.4.3/argocd-darwin-arm64",
+      "checksum": "686BEBE42EC299D7C49CA0EF12BA2E1E2677766177D74CA36C97C131CC8F3F93",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/argoproj/argo-cd/v3.4.2/argocd-linux-amd64",
-      "checksum": "D4CB1AC8002BAAB8AFACA2DA3DE597B613DF8459074BC7C6D96DC95161C2A33F",
+      "id": "github_release/github.com/argoproj/argo-cd/v3.4.3/argocd-linux-amd64",
+      "checksum": "FB230F97BA87B393746ACCF167067E0B75D20D2DE5EE7CF847D50D4361F92E5F",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/argoproj/argo-cd/v3.4.2/argocd-linux-arm64",
-      "checksum": "D0B74511242B2B4827DEA6435092EF8B1402EB26C29C00944934E546A6445944",
+      "id": "github_release/github.com/argoproj/argo-cd/v3.4.3/argocd-linux-arm64",
+      "checksum": "8705AA2489A5B3B9AF0DB87A960F49E36E2E3F3DC4489736F1D28F31B4F7E356",
       "algorithm": "sha256"
     },
     {
@@ -61,18 +61,18 @@
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/cilium/cilium-cli/v0.19.2/cilium-darwin-arm64.tar.gz",
-      "checksum": "C1254BD1F94711804A1276F2F2F56297A615A8A6FA4F6BA077EA895E997E16BB",
+      "id": "github_release/github.com/cilium/cilium-cli/v0.19.4/cilium-darwin-arm64.tar.gz",
+      "checksum": "9E58B4B8CB6D926946B2E59EB25FC2FB923965D3E000E00325E0227704FCD318",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/cilium/cilium-cli/v0.19.2/cilium-linux-amd64.tar.gz",
-      "checksum": "AA25CD2542614051573008ED18ADB7D697FD78E4B0345DB83D1650CDAF4492DE",
+      "id": "github_release/github.com/cilium/cilium-cli/v0.19.4/cilium-linux-amd64.tar.gz",
+      "checksum": "98ECD554591A592B0EE32F5D73871133BCEE06639619F1C032BCBA339340DC26",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/cilium/cilium-cli/v0.19.2/cilium-linux-arm64.tar.gz",
-      "checksum": "205AD0EBA18A105E4542A5FF41FEA74929F8CB4AF831D35C0FAC591BFE48BBF1",
+      "id": "github_release/github.com/cilium/cilium-cli/v0.19.4/cilium-linux-arm64.tar.gz",
+      "checksum": "866C86683AA63C943A94CA2AF5DC2B0DB3483D1C3ED8C72BAEEABD13061A7E42",
       "algorithm": "sha256"
     },
     {
@@ -91,18 +91,18 @@
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/google/go-containerregistry/v0.21.5/go-containerregistry_Darwin_arm64.tar.gz",
-      "checksum": "A41938CDBD8BECC59E90F4BB491A557D52DCE5681F9812C961854CAB706F5F59",
+      "id": "github_release/github.com/google/go-containerregistry/v0.21.6/go-containerregistry_Darwin_arm64.tar.gz",
+      "checksum": "A124F297D1E63E8B6C63C2463E43565290D2FD074C1DADB5CA73D737BC7B2484",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/google/go-containerregistry/v0.21.5/go-containerregistry_Linux_arm64.tar.gz",
-      "checksum": "3A47C6DA5A0BA1CA7A93DEF41036D8F262A2160799E5D4CA25DBA3CFA47DAB41",
+      "id": "github_release/github.com/google/go-containerregistry/v0.21.6/go-containerregistry_Linux_arm64.tar.gz",
+      "checksum": "6F61571CA0C2A5DA27C2927FCB143255CCB2B74B8977DFCB44645B372AB0F951",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/google/go-containerregistry/v0.21.5/go-containerregistry_Linux_x86_64.tar.gz",
-      "checksum": "9F823AE5EE25803161110F957B5FD4538F714D40CDF25DACB4914FEFAFD246BF",
+      "id": "github_release/github.com/google/go-containerregistry/v0.21.6/go-containerregistry_Linux_x86_64.tar.gz",
+      "checksum": "7EBBDCD05B652345C1F5105F8475E518534B90D66F3BDB50017BE63F426EA435",
       "algorithm": "sha256"
     },
     {
@@ -121,18 +121,18 @@
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/istio/istio/1.29.2/istioctl-1.29.2-linux-amd64.tar.gz",
-      "checksum": "E507D6396349B53DAD4198C3C489A512535CE03D5950736CBF66758E91681290",
+      "id": "github_release/github.com/istio/istio/1.30.0/istioctl-1.30.0-linux-amd64.tar.gz",
+      "checksum": "685CBDD29B8D4AAD8801A98401009431307D79C040A0FF03E04C6CF30823E589",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/istio/istio/1.29.2/istioctl-1.29.2-linux-arm64.tar.gz",
-      "checksum": "B83E4FDE0F220DE00926E3A7E8A4B579C38F08827791CF9D4AB57F04F0124DE6",
+      "id": "github_release/github.com/istio/istio/1.30.0/istioctl-1.30.0-linux-arm64.tar.gz",
+      "checksum": "ABAAC1253CE812B5E262C1C16D272A7EF9AD941035099F2DAEEB1665698B9EBA",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/istio/istio/1.29.2/istioctl-1.29.2-osx-arm64.tar.gz",
-      "checksum": "D61B683595912666247831E267444C0526CFAEB313EFB62C2D604B79B037C8D1",
+      "id": "github_release/github.com/istio/istio/1.30.0/istioctl-1.30.0-osx-arm64.tar.gz",
+      "checksum": "D875B2D9B4309A99EBAAB73B0988C9E80A2A8E4B858F7487D712CF044E170415",
       "algorithm": "sha256"
     },
     {
@@ -256,8 +256,8 @@
       "algorithm": "sha256"
     },
     {
-      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.512.1/registry.yaml",
-      "checksum": "3410BBCC283F917A9AE3FE3E3D63DFD69C6BCCB2814D23EF5CC328C4DD5B78F6BDCE37711BED5B6DA69F846D83C5E7CC520C78C3088B998AC43D18FCF463416A",
+      "id": "registries/github_content/github.com/aquaproj/aqua-registry/v4.518.0/registry.yaml",
+      "checksum": "651C354169F3BDB9E70F4D468934C96B3C2C48282444CEAD53BD182DF67F8E910DC08270A91454E70BB12B1CB7D2E1E081333BC14616BC6FCE409D50F5843AAE",
       "algorithm": "sha512"
     }
   ]
