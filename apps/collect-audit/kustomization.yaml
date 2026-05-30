@@ -7,3 +7,4 @@ helmCharts:
     name: alloy
     namespace: logging
     valuesFile: values.yaml
+    version: 1.8.2

@@ -29,6 +29,7 @@ update-helm-prometheus-community:
 update: ## Update dependencies
 update: \
 	update-accurate \
+	update-alloy \
 	update-approver-policy \
 	update-aqua \
 	update-argocd \
@@ -56,6 +57,13 @@ update-accurate:
 	$(HELM) repo update accurate
 	NEW_VERSION=$$($(HELM) search repo accurate/accurate --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
 	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/accurate/kustomization.yaml
+
+.PHONY: update-alloy
+update-alloy: update-helm-grafana
+	NEW_VERSION=$$($(HELM) search repo grafana/alloy --versions -ojson | jq -r '.[].version' | sort -V | tail -n1); \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/collect-audit/kustomization.yaml; \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/collect-pods/kustomization.yaml; \
+	yq -iP ".helmCharts[0].version = \"$${NEW_VERSION}\"" $(ROOT_DIR)/apps/profile-cilium/kustomization.yaml
 
 .PHONY: update-approver-policy
 update-approver-policy: update-helm-jetstack

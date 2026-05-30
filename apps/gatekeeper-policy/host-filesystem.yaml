@@ -20,3 +20,5 @@ spec:
     allowedHostPaths:
       - readOnly: true
         pathPrefix: /node/deck/
+      - readOnly: true
+        pathPrefix: /var/log/kubernetes/audit/
