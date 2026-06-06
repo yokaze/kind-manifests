@@ -1,5 +1,3 @@
-server = "https://ghcr.io"
-
-[host."http://mirror-ghcr:5000"]
-  capabilities = ["pull", "resolve"]
-  skip_verify = true
+server = "http://mirror-ghcr:5000"
+capabilities = ["pull", "resolve"]
+skip_verify = true

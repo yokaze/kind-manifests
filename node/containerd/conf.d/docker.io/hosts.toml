@@ -1,4 +1,2 @@
-server = "https://docker.io"
-
-[host."http://mirror-docker:5000"]
-  capabilities = ["pull", "resolve"]
+server = "http://mirror-docker:5000"
+capabilities = ["pull", "resolve"]

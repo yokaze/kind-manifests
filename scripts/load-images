@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+pending=$(kubectl get pods -A '--field-selector=spec.nodeName!=,status.phase=Pending' -ojson | jq -c '.items')
+images=$(printf '%s' "${pending}" | jq -r '[.[].spec | (.initContainers[]?.image, .containers[].image)] | unique | .[]')
+for i in ${images}; do
+    echo "📦 Loading $i ..."
+    nodes=$(printf '%s' "${pending}" | jq -r --arg i "$i" '[
+        .[].spec
+        | select(((.initContainers // []) + (.containers // [])) | map(.image) | index($i) != null)
+        | .nodeName
+    ] | unique | join(",")')
+    echo "node: ${nodes}"
+
+    docker pull "$i"
+    tag=$(echo "$i" | cut -d@ -f1)
+    digest=$(docker image inspect "${tag}" | jq -r .[0].RepoDigests[0])
+    kind load docker-image "${tag}" --nodes "${nodes}"
+    for n in $(echo "${nodes}" | tr ',' '\n'); do
+        repo_tag=$(docker exec "$n" crictl inspecti "${tag}" | jq -r '.status.repoTags[0]')
+        docker exec "$n" ctr -n k8s.io images tag --force "${repo_tag}" "${digest}"
+    done
+done
