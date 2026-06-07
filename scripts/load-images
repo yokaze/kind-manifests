@@ -5,19 +5,32 @@ pending=$(kubectl get pods -A '--field-selector=spec.nodeName!=,status.phase=Pen
 images=$(printf '%s' "${pending}" | jq -r '[.[].spec | (.initContainers[]?.image, .containers[].image)] | unique | .[]')
 for i in ${images}; do
     echo "📦 Loading $i ..."
-    nodes=$(printf '%s' "${pending}" | jq -r --arg i "$i" '[
+    nodes=$(printf '%s' "${pending}" | jq -c --arg i "$i" '[
         .[].spec
         | select(((.initContainers // []) + (.containers // [])) | map(.image) | index($i) != null)
         | .nodeName
-    ] | unique | join(",")')
+    ] | unique')
     echo "node: ${nodes}"
 
-    docker pull "$i"
+    if ! docker image inspect "$i" > /dev/null; then
+        docker pull "$i"
+    fi
     tag=$(echo "$i" | cut -d@ -f1)
     digest=$(docker image inspect "${tag}" | jq -r .[0].RepoDigests[0])
-    kind load docker-image "${tag}" --nodes "${nodes}"
-    for n in $(echo "${nodes}" | tr ',' '\n'); do
-        repo_tag=$(docker exec "$n" crictl inspecti "${tag}" | jq -r '.status.repoTags[0]')
-        docker exec "$n" ctr -n k8s.io images tag --force "${repo_tag}" "${digest}"
+
+    nodes2='[]'
+    for n in $(printf '%s' "${nodes}" | jq -r '.[]'); do
+        if ! docker exec "$n" ctr -n k8s.io images inspect "${tag}" > /dev/null 2>&1; then
+            nodes2=$(printf '%s' "${nodes2}" | jq -c --arg n "$n" '. + [$n]')
+        fi
     done
+    nodes=$nodes2
+
+    if [ "${nodes}" != '[]' ]; then
+        kind load docker-image "${tag}" --nodes "$(printf '%s' "${nodes}" | jq -r 'join(",")')"
+        for n in $(printf '%s' "${nodes}" | jq -r '.[]'); do
+            repo_tag=$(docker exec "$n" crictl inspecti "${tag}" | jq -r '.status.repoTags[0]')
+            docker exec "$n" ctr -n k8s.io images tag --force "${repo_tag}" "${digest}"
+        done
+    fi
 done
